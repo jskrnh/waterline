@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waterline — find the day you go under</title>
+<meta name="description" content="Project your bank balance day by day and find the lowest point before it arrives.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B2233; --ink-soft:#3E5568; --ink-faint:#8397A6;
+  --paper:#E9EDEF; --card:#FFFFFF; --rule:#CBD5DA;
+  --sea:#0F5C6B; --sea-wash:rgba(15,92,107,.14);
+  --signal:#B3202C; --signal-wash:#FBE9EA;
+  --gain:#1F6F4A;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+
+/* ---------- account strip ---------- */
+.acct{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule);font-size:13px;color:var(--ink-soft)}
+.acct .who{font-weight:600;color:var(--ink)}
+.acct .spacer{margin-left:auto}
+.linkbtn{font-family:Archivo;font-size:13px;font-weight:600;border:0;background:transparent;color:var(--sea);cursor:pointer;padding:4px 2px;text-decoration:underline;text-underline-offset:3px}
+.linkbtn.danger{color:var(--signal)}
+.pill{font-family:Archivo;font-size:13px;font-weight:600;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;padding:7px 14px}
+.pill.ghost{background:transparent;color:var(--ink)}
+
+/* ---------- masthead ---------- */
+.masthead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:24px;padding:26px 0 18px;border-bottom:2px solid var(--ink)}
+.brand{margin-right:auto}
+.brand h1{font-size:34px;font-weight:800;letter-spacing:-.035em;margin:0;line-height:1}
+.brand p{font-family:Newsreader,Georgia,serif;font-size:16px;color:var(--ink-soft);margin:6px 0 0;max-width:44ch}
+.seed{display:flex;gap:18px;flex-wrap:wrap}
+.seed label{display:block}
+.seed span{display:block;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;margin-bottom:3px}
+.seed input{font-family:Archivo;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;border:0;border-bottom:2px solid var(--rule);background:transparent;color:var(--ink);padding:3px 2px;width:130px}
+.seed input:focus{outline:none;border-bottom-color:var(--sea)}
+
+/* ---------- verdict ---------- */
+.verdict{margin:22px 0 0;padding:22px 24px;background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--sea);display:flex;flex-wrap:wrap;gap:32px;align-items:baseline}
+.verdict.under{border-left-color:var(--signal);background:var(--signal-wash)}
+.verdict-lead{flex:1 1 320px;min-width:280px}
+.verdict-lead h2{font-size:26px;font-weight:800;letter-spacing:-.03em;margin:0 0 4px;line-height:1.15}
+.verdict-lead p{font-family:Newsreader,Georgia,serif;font-size:16px;color:var(--ink-soft);margin:0;max-width:52ch}
+.stat{min-width:104px}
+.stat b{display:block;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stat span{display:block;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;margin-top:2px}
+.neg{color:var(--signal)} .pos{color:var(--gain)}
+
+/* ---------- chart ---------- */
+.chartbox{margin-top:22px;background:var(--card);border:1px solid var(--rule);padding:8px 8px 0}
+svg.chart{display:block;width:100%;height:auto}
+.chart-foot{display:flex;flex-wrap:wrap;gap:18px;padding:8px 14px 12px;font-size:12px;color:var(--ink-faint);border-top:1px solid var(--rule);margin-top:4px}
+.chart-foot i{font-style:normal;display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:3px;display:inline-block}
+
+.horizon{display:flex;margin:18px 0 0;border:1px solid var(--rule);width:fit-content;background:var(--card)}
+.horizon button{font-family:Archivo;font-size:13px;font-weight:600;padding:7px 16px;border:0;background:transparent;color:var(--ink-soft);cursor:pointer;border-right:1px solid var(--rule)}
+.horizon button:last-child{border-right:0}
+.horizon button[aria-pressed="true"]{background:var(--ink);color:#fff}
+
+/* ---------- columns ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px}
+@media(max-width:820px){.cols{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--rule)}
+.panel > header{display:flex;align-items:baseline;gap:10px;padding:13px 16px;border-bottom:1px solid var(--rule)}
+.panel > header h3{font-size:15px;font-weight:700;margin:0;letter-spacing:-.01em}
+.panel > header em{font-style:normal;margin-left:auto;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.row{display:grid;grid-template-columns:1fr 92px 118px 74px 30px;gap:8px;align-items:center;padding:8px 16px;border-bottom:1px solid #EDF1F3}
+.row:last-of-type{border-bottom:0}
+.row input,.row select{font-family:Archivo;font-size:14px;border:1px solid transparent;background:#F4F7F8;padding:6px 8px;color:var(--ink);width:100%;border-radius:2px}
+.row input:focus,.row select:focus{outline:none;border-color:var(--sea);background:#fff}
+.row input.amt{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+.row .kill{border:0;background:transparent;color:var(--ink-faint);cursor:pointer;font-size:17px;line-height:1;padding:4px}
+.row .kill:hover{color:var(--signal)}
+.rowhead{display:grid;grid-template-columns:1fr 92px 118px 74px 30px;gap:8px;padding:7px 16px;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;border-bottom:1px solid var(--rule)}
+.rowhead span:nth-child(2){text-align:right}
+.addbtn{display:block;width:100%;padding:11px;border:0;border-top:1px solid var(--rule);background:transparent;font-family:Archivo;font-size:13px;font-weight:600;color:var(--sea);cursor:pointer}
+.addbtn:hover{background:#F4F7F8}
+.empty{padding:20px 16px;font-family:Newsreader,Georgia,serif;color:var(--ink-faint);font-size:15px}
+
+/* ---------- ledger ---------- */
+.ledger{margin-top:26px;background:var(--card);border:1px solid var(--rule)}
+.ledger > header{display:flex;align-items:baseline;padding:13px 16px;border-bottom:1px solid var(--rule)}
+.ledger > header h3{font-size:15px;font-weight:700;margin:0}
+.ledger > header p{font-family:Newsreader,Georgia,serif;font-size:14px;color:var(--ink-faint);margin:0 0 0 auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font-size:11px;color:var(--ink-faint);letter-spacing:.04em;font-weight:500;text-align:left;padding:8px 16px;border-bottom:1px solid var(--rule)}
+th.r,td.r{text-align:right}
+td{padding:8px 16px;font-size:14px;border-bottom:1px solid #EDF1F3}
+tr.dip td{background:var(--signal-wash)}
+tr.trough td{background:var(--signal);color:#fff}
+tr.trough td b{color:#fff}
+td.mv{color:var(--ink-soft);font-size:13px}
+td.bal{font-weight:700}
+.moretbn{display:block;width:100%;padding:11px;border:0;border-top:1px solid var(--rule);background:transparent;font-family:Archivo;font-size:13px;font-weight:600;color:var(--sea);cursor:pointer}
+
+/* ---------- footer ---------- */
+.foot{margin-top:34px;padding-top:18px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.foot p{font-family:Newsreader,Georgia,serif;font-size:14px;color:var(--ink-faint);margin:0;max-width:60ch}
+.foot .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.foot button{font-family:Archivo;font-size:13px;font-weight:600;padding:8px 14px;border:1px solid var(--rule);background:var(--card);color:var(--ink-soft);cursor:pointer}
+.foot button:hover{border-color:var(--signal);color:var(--signal)}
+.saved{font-size:12px;color:var(--ink-faint);min-height:16px}
+
+/* ---------- auth sheet ---------- */
+.veil{position:fixed;inset:0;background:rgba(11,34,51,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.veil[data-open="1"]{display:flex}
+.sheet{background:var(--card);border:1px solid var(--rule);max-width:420px;width:100%;padding:28px}
+.sheet h2{font-size:23px;font-weight:800;letter-spacing:-.03em;margin:0 0 6px}
+.sheet p{font-family:Newsreader,Georgia,serif;font-size:15px;color:var(--ink-soft);margin:0 0 18px}
+.sheet input[type=email]{font-family:Archivo;font-size:15px;width:100%;padding:10px 12px;border:1px solid var(--rule);background:#F4F7F8}
+.sheet input[type=email]:focus{outline:none;border-color:var(--sea);background:#fff}
+.sheet .acts{display:flex;gap:10px;align-items:center;margin-top:14px}
+.sheet .msg{font-size:13px;margin-top:12px;min-height:18px;color:var(--sea)}
+.sheet .msg.err{color:var(--signal)}
+.notice{background:#FFF6E3;border:1px solid #E7CF9B;padding:10px 14px;font-size:13px;color:#6B4E10;margin-top:14px}
+:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){
+  .drawline{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1.1s ease-out forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="acct">
+    <span id="acctState">Working on this device</span>
+    <span class="spacer"></span>
+    <button class="pill" id="signInBtn">Save across devices</button>
+    <button class="linkbtn" id="signOutBtn" hidden>Sign out</button>
+    <button class="linkbtn danger" id="deleteBtn" hidden>Delete account</button>
+  </div>
+
+  <div class="masthead">
+    <div class="brand">
+      <h1>Waterline</h1>
+      <p>Your monthly average hides the day you run out. This charts every payment on the day it lands, and finds the lowest point.</p>
+    </div>
+    <div class="seed">
+      <label><span>Balance today</span><input id="seedBal" type="number" step="0.01" value="1500"></label>
+      <label><span>Starting</span><input id="seedDate" type="date"></label>
+    </div>
+  </div>
+
+  <div class="verdict" id="verdict">
+    <div class="verdict-lead">
+      <h2 id="vTitle">Add your income and bills</h2>
+      <p id="vBody">Nothing is shared and nothing connects to a bank.</p>
+    </div>
+    <div class="stat"><b id="sLow">—</b><span>lowest point</span></div>
+    <div class="stat"><b id="sDays">—</b><span>days below zero</span></div>
+    <div class="stat"><b id="sNet">—</b><span>monthly net</span></div>
+  </div>
+
+  <div class="horizon" role="group" aria-label="Forecast length">
+    <button data-h="90" aria-pressed="false">3 months</button>
+    <button data-h="180" aria-pressed="true">6 months</button>
+    <button data-h="365" aria-pressed="false">12 months</button>
+  </div>
+
+  <div class="chartbox">
+    <svg class="chart" id="chart" viewBox="0 0 960 300" preserveAspectRatio="none" role="img" aria-label="Projected balance over time"></svg>
+    <div class="chart-foot">
+      <i><span class="sw" style="background:var(--sea)"></span> balance</i>
+      <i><span class="sw" style="background:var(--sea-wash)"></span> below zero</i>
+      <i><span class="sw" style="background:var(--signal)"></span> lowest point</i>
+    </div>
+  </div>
+
+  <div class="cols">
+    <section class="panel">
+      <header><h3>Money in</h3><em id="inTot">$0 / mo</em></header>
+      <div class="rowhead"><span>Source</span><span>Amount</span><span>How often</span><span>Starting</span><span></span></div>
+      <div id="inList"></div>
+      <button class="addbtn" data-add="in">Add income</button>
+    </section>
+    <section class="panel">
+      <header><h3>Money out</h3><em id="outTot">$0 / mo</em></header>
+      <div class="rowhead"><span>Bill</span><span>Amount</span><span>How often</span><span>Starting</span><span></span></div>
+      <div id="outList"></div>
+      <button class="addbtn" data-add="out">Add bill</button>
+    </section>
+  </div>
+
+  <section class="ledger">
+    <header><h3>Day by day</h3><p id="ledgerNote">Days with movement only</p></header>
+    <table>
+      <thead><tr><th>Date</th><th>What moves</th><th class="r">Change</th><th class="r">Balance</th></tr></thead>
+      <tbody id="ledgerBody"></tbody>
+    </table>
+    <button class="moretbn" id="moreBtn">Show more</button>
+  </section>
+
+  <div class="foot">
+    <p>Waterline projects forward from what you enter. It never asks for bank logins or account numbers.</p>
+    <span class="right">
+      <span class="saved" id="savedNote"></span>
+      <button id="resetBtn">Clear everything</button>
+    </span>
+  </div>
+</div>
+
+<div class="veil" id="veil">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <h2 id="authTitle">Save across devices</h2>
+    <p>Enter your email and we'll send a sign-in link. No password to remember.</p>
+    <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email">
+    <div class="acts">
+      <button class="pill" id="sendLink">Send the link</button>
+      <button class="linkbtn" id="closeAuth">Keep using without an account</button>
+    </div>
+    <div class="msg" id="authMsg"></div>
+  </div>
+</div>
+
+<script type="module">
+/* ============================================================
+   1. CONFIG — paste your Supabase project values here.
+   Leave blank to run device-only with no accounts.
+   The anon key is safe in public: row-level security protects data.
+   ============================================================ */
+const SUPABASE_URL = "https://wfkdadalaujprxoeidic.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indma2RhZGFsYXVqcHJ4b2VpZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MjQ5ODAsImV4cCI6MjEwNDQwMDk4MH0.5f_FOCVPOz1iUGxxF-T316DN1JigMc4Y5JNzZtaShC8";
+
+let sb = null, user = null;
+if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+  const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+  sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+/* ============================================================
+   2. LOCAL STORE — works even where localStorage is blocked
+   ============================================================ */
+const local = (() => {
+  let mem = null, ok = true;
+  try { localStorage.setItem("__t","1"); localStorage.removeItem("__t"); } catch(e){ ok = false; }
+  return {
+    get(){ try { return ok ? localStorage.getItem("waterline:plan") : mem; } catch(e){ return mem; } },
+    set(v){ try { ok ? localStorage.setItem("waterline:plan", v) : (mem = v); } catch(e){ mem = v; } },
+    clear(){ try { ok && localStorage.removeItem("waterline:plan"); } catch(e){} mem = null; }
+  };
+})();
+
+/* ============================================================
+   3. FORECAST ENGINE
+   ============================================================ */
+const FREQS=[["once","One time"],["weekly","Weekly"],["biweekly","Every 2 weeks"],["monthly","Monthly"],["quarterly","Every 3 months"],["yearly","Yearly"]];
+const iso=d=>d.toISOString().slice(0,10);
+const parseD=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)};
+const money=n=>(n<0?"-":"")+"$"+Math.abs(n).toLocaleString("en-CA",{minimumFractionDigits:0,maximumFractionDigits:0});
+const money2=n=>(n<0?"-":"")+"$"+Math.abs(n).toLocaleString("en-CA",{minimumFractionDigits:2,maximumFractionDigits:2});
+const dLabel=d=>d.toLocaleDateString("en-CA",{month:"short",day:"numeric"});
+const dLong=d=>d.toLocaleDateString("en-CA",{weekday:"long",month:"long",day:"numeric"});
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const id=()=>Math.random().toString(36).slice(2,9);
+
+let state=null, horizon=180, ledgerRows=40;
+
+function seedState(){
+  const t=new Date();t.setHours(0,0,0,0);
+  const on=n=>{const d=new Date(t);d.setDate(d.getDate()+n);return iso(d)};
+  return{ balance:1500, start:iso(t),
+    inflow:[{id:id(),name:"Paycheque",amount:2100,freq:"biweekly",start:on(4)}],
+    outflow:[
+      {id:id(),name:"Rent",amount:1700,freq:"monthly",start:on(10)},
+      {id:id(),name:"Car payment",amount:159,freq:"biweekly",start:on(2)},
+      {id:id(),name:"Insurance",amount:300,freq:"monthly",start:on(16)},
+      {id:id(),name:"Phone and internet",amount:150,freq:"monthly",start:on(12)},
+      {id:id(),name:"Groceries",amount:120,freq:"weekly",start:on(1)},
+      {id:id(),name:"Card minimums",amount:175,freq:"monthly",start:on(8)}
+    ]};
+}
+function step(d,freq,dir){
+  const n=new Date(d);
+  if(freq==="weekly")n.setDate(n.getDate()+7*dir);
+  else if(freq==="biweekly")n.setDate(n.getDate()+14*dir);
+  else if(freq==="monthly")n.setMonth(n.getMonth()+dir);
+  else if(freq==="quarterly")n.setMonth(n.getMonth()+3*dir);
+  else if(freq==="yearly")n.setFullYear(n.getFullYear()+dir);
+  else n.setDate(n.getDate()+3650*dir);
+  return n;
+}
+function occurrences(item,from,to){
+  const out=[]; if(!item.start||!item.amount) return out;
+  const anchor=parseD(item.start);
+  if(item.freq==="once"){ if(anchor>=from&&anchor<=to)out.push(new Date(anchor)); return out; }
+  // day-based: exact steps, no drift
+  if(item.freq==="weekly"||item.freq==="biweekly"){
+    let d=new Date(anchor), i=0;
+    while(d>from&&i++<3000)d=step(d,item.freq,-1);
+    i=0;
+    while(d<=to&&i++<3000){ if(d>=from)out.push(new Date(d)); d=step(d,item.freq,1); }
+    return out;
+  }
+  // month-based: always recompute from the anchor day, clamped to month length,
+  // so a bill due on the 31st does not creep forward through short months
+  const gap=item.freq==="monthly"?1:item.freq==="quarterly"?3:12;
+  const day=anchor.getDate();
+  const at=k=>{const y=anchor.getFullYear(),m=anchor.getMonth()+k*gap,dim=new Date(y,m+1,0).getDate();return new Date(y,m,Math.min(day,dim))};
+  let k=Math.floor(((from.getFullYear()*12+from.getMonth())-(anchor.getFullYear()*12+anchor.getMonth()))/gap)-1;
+  let i=0;
+  while(i++<3000){ const d=at(k); if(d>to)break; if(d>=from)out.push(d); k++; }
+  return out;
+}
+const monthly=it=>({once:0,weekly:(+it.amount||0)*52/12,biweekly:(+it.amount||0)*26/12,monthly:+it.amount||0,quarterly:(+it.amount||0)/3,yearly:(+it.amount||0)/12}[it.freq]||0);
+
+function project(){
+  const from=parseD(state.start), to=new Date(from); to.setDate(to.getDate()+horizon);
+  const map=new Map();
+  const push=(d,name,amt)=>{const k=iso(d);if(!map.has(k))map.set(k,{date:new Date(d),items:[],delta:0});const e=map.get(k);e.items.push({name,amt});e.delta+=amt};
+  state.inflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Income",+it.amount||0)));
+  state.outflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Bill",-(+it.amount||0))));
+  const days=[...map.values()].sort((a,b)=>a.date-b.date);
+  let bal=+state.balance||0;
+  const series=[{date:new Date(from),bal,items:[],delta:0}];
+  let low={bal,date:new Date(from)},under=0;
+  days.forEach(d=>{ if(d.date<from)return; bal+=d.delta; series.push({date:d.date,bal,items:d.items,delta:d.delta}); if(bal<low.bal)low={bal,date:d.date}; });
+  for(let i=0;i<series.length;i++){
+    if(series[i].bal<0){ const nxt=i+1<series.length?series[i+1].date:to; under+=Math.max(0,Math.round((nxt-series[i].date)/864e5)); }
+  }
+  return{series,low,under,from,to};
+}
+
+/* ============================================================
+   4. CHART
+   ============================================================ */
+function drawChart(p){
+  const W=960,H=300,PL=58,PR=16,PT=18,PB=26;
+  const svg=document.getElementById("chart"), s=p.series;
+  if(s.length<2){svg.innerHTML="";return}
+  const t0=p.from.getTime(),t1=p.to.getTime(),vals=s.map(d=>d.bal);
+  let lo=Math.min(0,...vals),hi=Math.max(0,...vals);
+  const pad=(hi-lo)*.12||100; lo-=pad; hi+=pad;
+  const X=t=>PL+((t-t0)/(t1-t0))*(W-PL-PR);
+  const Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
+  const zeroY=Y(0);
+  let dPath=`M ${X(s[0].date.getTime())} ${Y(s[0].bal)}`;
+  for(let i=1;i<s.length;i++) dPath+=` L ${X(s[i].date.getTime())} ${Y(s[i-1].bal)} L ${X(s[i].date.getTime())} ${Y(s[i].bal)}`;
+  dPath+=` L ${X(t1)} ${Y(s[s.length-1].bal)}`;
+  const fill=dPath+` L ${X(t1)} ${zeroY} L ${X(t0)} ${zeroY} Z`;
+  let grid="",cur=new Date(p.from.getFullYear(),p.from.getMonth()+1,1);
+  while(cur<p.to){
+    const x=X(cur.getTime());
+    grid+=`<line x1="${x}" y1="${PT}" x2="${x}" y2="${H-PB}" stroke="#E2E8EB" stroke-width="1"/><text x="${x+5}" y="${H-9}" font-size="11" fill="#8397A6" font-family="Archivo">${cur.toLocaleDateString("en-CA",{month:"short"})}</text>`;
+    cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);
+  }
+  let yl=""; [hi,(hi+lo)/2,lo].forEach(v=>{ yl+=`<text x="${PL-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#8397A6" font-family="Archivo">${money(Math.round(v))}</text>` });
+  const lx=X(p.low.date.getTime()), ly=Y(p.low.bal), flip=lx>W-190;
+  svg.innerHTML=`
+    <clipPath id="below"><rect x="0" y="${zeroY}" width="${W}" height="${H-zeroY}"/></clipPath>
+    ${grid}
+    <path d="${fill}" fill="var(--sea-wash)" clip-path="url(#below)"/>
+    <line x1="${PL}" y1="${zeroY}" x2="${W-PR}" y2="${zeroY}" stroke="#0B2233" stroke-width="1.5"/>
+    <text x="${W-PR}" y="${zeroY-6}" text-anchor="end" font-size="11" fill="#0B2233" font-family="Archivo">zero</text>
+    <path class="drawline" d="${dPath}" fill="none" stroke="var(--sea)" stroke-width="2.25" stroke-linejoin="round"/>
+    ${yl}
+    <line x1="${lx}" y1="${PT}" x2="${lx}" y2="${H-PB}" stroke="#B3202C" stroke-width="1" stroke-dasharray="3 3"/>
+    <circle cx="${lx}" cy="${ly}" r="5" fill="#B3202C"/>
+    <text x="${flip?lx-11:lx+11}" y="${ly-12}" text-anchor="${flip?"end":"start"}" font-size="14" font-weight="700" fill="#B3202C" font-family="Archivo">${money2(p.low.bal)}</text>
+    <text x="${flip?lx-11:lx+11}" y="${ly+4}" text-anchor="${flip?"end":"start"}" font-size="11" fill="#B3202C" font-family="Archivo">${dLabel(p.low.date)}</text>`;
+  const path=svg.querySelector(".drawline");
+  if(path) path.style.setProperty("--len", path.getTotalLength());
+}
+
+/* ============================================================
+   5. RENDER
+   ============================================================ */
+function render(){
+  const p=project();
+  drawChart(p);
+  const inM=state.inflow.reduce((a,i)=>a+monthly(i),0), outM=state.outflow.reduce((a,i)=>a+monthly(i),0);
+  document.getElementById("inTot").textContent=money(Math.round(inM))+" / mo";
+  document.getElementById("outTot").textContent=money(Math.round(outM))+" / mo";
+  const net=inM-outM, nEl=document.getElementById("sNet");
+  nEl.textContent=(net>=0?"+":"")+money(Math.round(net)); nEl.className=net<0?"neg":"pos";
+  updateVerdict(p);
+  rows("in"); rows("out"); ledger(p); save();
+}
+function updateVerdict(p){
+  const lEl=document.getElementById("sLow");
+  lEl.textContent=money2(p.low.bal); lEl.className=p.low.bal<0?"neg":"";
+  document.getElementById("sDays").textContent=p.under;
+  const box=document.getElementById("verdict"), title=document.getElementById("vTitle"), body=document.getElementById("vBody");
+  if(!state.inflow.length&&!state.outflow.length){
+    box.classList.remove("under");
+    title.textContent="Add your income and bills";
+    body.textContent="Nothing is shared and nothing connects to a bank.";
+  }else if(p.low.bal<0){
+    box.classList.add("under");
+    title.textContent=`You go under on ${dLong(p.low.date)}`;
+    body.textContent=`The balance bottoms out at ${money2(p.low.bal)}. Cover ${money2(Math.abs(p.low.bal))} before then and every payment clears.`;
+  }else{
+    box.classList.remove("under");
+    title.textContent="You stay above zero";
+    body.textContent=`The tightest moment is ${dLong(p.low.date)} at ${money2(p.low.bal)}. That is your real buffer, not the month-end figure.`;
+  }
+}
+function rows(kind){
+  const list=kind==="in"?state.inflow:state.outflow;
+  const el=document.getElementById(kind==="in"?"inList":"outList");
+  if(!list.length){ el.innerHTML=`<p class="empty">Nothing here yet.</p>`; return; }
+  el.innerHTML=list.map(it=>`
+    <div class="row" data-id="${it.id}" data-kind="${kind}">
+      <input class="nm" value="${esc(it.name)}" placeholder="${kind==="in"?"Paycheque":"Rent"}" aria-label="Name">
+      <input class="amt" type="number" step="0.01" value="${it.amount}" aria-label="Amount">
+      <select class="fq" aria-label="How often">${FREQS.map(([v,l])=>`<option value="${v}"${v===it.freq?" selected":""}>${l}</option>`).join("")}</select>
+      <input class="st" type="date" value="${it.start}" aria-label="Starting date">
+      <button class="kill" title="Remove" aria-label="Remove">&times;</button>
+    </div>`).join("");
+}
+function ledger(p){
+  const body=document.getElementById("ledgerBody");
+  const moves=p.series.filter(d=>d.items.length), show=moves.slice(0,ledgerRows);
+  document.getElementById("ledgerNote").textContent=`${moves.length} days with movement`;
+  document.getElementById("moreBtn").style.display=moves.length>ledgerRows?"block":"none";
+  body.innerHTML=show.map(d=>{
+    const cls=(+d.date===+p.low.date)?"trough":(d.bal<0?"dip":"");
+    return `<tr class="${cls}"><td>${dLabel(d.date)}</td><td class="mv">${esc(d.items.map(i=>i.name).join(", "))}</td><td class="r">${d.delta>=0?"+":""}${money2(d.delta)}</td><td class="r bal"><b>${money2(d.bal)}</b></td></tr>`;
+  }).join("");
+}
+
+/* ============================================================
+   6. SYNC — cloud when signed in, device otherwise
+   ============================================================ */
+let saveTimer=null;
+function flag(t,ms=1500){ const n=document.getElementById("savedNote"); n.textContent=t; if(ms) setTimeout(()=>{ if(n.textContent===t) n.textContent="" }, ms); }
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    local.set(JSON.stringify(state));
+    if(sb&&user){
+      const{error}=await sb.from("plans").upsert({user_id:user.id,data:state,updated_at:new Date().toISOString()});
+      flag(error?"Saved on this device only":"Saved to your account");
+    }else flag("Saved on this device");
+  },600);
+}
+async function loadCloud(){
+  if(!sb||!user)return null;
+  const{data,error}=await sb.from("plans").select("data").eq("user_id",user.id).maybeSingle();
+  if(error)return null;
+  return data?.data??null;
+}
+function loadLocal(){
+  try{ const raw=local.get(); return raw?JSON.parse(raw):null; }catch(e){ return null; }
+}
+
+/* ============================================================
+   7. AUTH
+   ============================================================ */
+const veil=document.getElementById("veil");
+function openAuth(){ veil.dataset.open="1"; document.getElementById("authEmail").focus(); }
+function closeAuth(){ veil.dataset.open="0"; document.getElementById("authMsg").textContent=""; }
+
+function paintAccount(){
+  const state1=document.getElementById("acctState");
+  const inBtn=document.getElementById("signInBtn"), outBtn=document.getElementById("signOutBtn"), delBtn=document.getElementById("deleteBtn");
+  if(user){
+    state1.innerHTML=`Signed in as <span class="who">${esc(user.email)}</span> — saved to your account`;
+    inBtn.hidden=true; outBtn.hidden=false; delBtn.hidden=false;
+  }else{
+    state1.textContent = sb ? "Working on this device — sign in to keep it anywhere" : "Working on this device";
+    inBtn.hidden=!sb; outBtn.hidden=true; delBtn.hidden=true;
+  }
+}
+
+async function onSignedIn(){
+  const cloud=await loadCloud(), localPlan=loadLocal();
+  const localHasData = localPlan && ((localPlan.inflow||[]).length + (localPlan.outflow||[]).length) > 0;
+  if(cloud){
+    if(localHasData && confirm("You have a plan saved on this device and one in your account. Use the device version and overwrite your account?")){
+      state=localPlan;
+    }else state=cloud;
+  }else if(localHasData){
+    state=localPlan;
+  }
+  fillSeed(); render();
+}
+
+document.getElementById("signInBtn").addEventListener("click",openAuth);
+document.getElementById("closeAuth").addEventListener("click",closeAuth);
+veil.addEventListener("click",e=>{ if(e.target===veil) closeAuth(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&veil.dataset.open==="1") closeAuth(); });
+
+document.getElementById("sendLink").addEventListener("click",async()=>{
+  const email=document.getElementById("authEmail").value.trim();
+  const msg=document.getElementById("authMsg");
+  msg.className="msg";
+  if(!email||!email.includes("@")){ msg.className="msg err"; msg.textContent="Enter a valid email address."; return; }
+  if(!sb){ msg.className="msg err"; msg.textContent="Accounts are not configured on this copy."; return; }
+  msg.textContent="Sending…";
+  const{error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.href}});
+  if(error){ msg.className="msg err"; msg.textContent=error.message; }
+  else msg.textContent="Check your email for the sign-in link. You can close this window.";
+});
+
+document.getElementById("signOutBtn").addEventListener("click",async()=>{
+  if(sb) await sb.auth.signOut();
+  user=null; paintAccount(); flag("Signed out");
+});
+
+document.getElementById("deleteBtn").addEventListener("click",async()=>{
+  if(!sb||!user)return;
+  if(!confirm("Delete your saved plan and sign out? This cannot be undone."))return;
+  await sb.from("plans").delete().eq("user_id",user.id);
+  await sb.auth.signOut();
+  user=null; local.clear(); state=seedState(); fillSeed(); paintAccount(); render();
+  alert("Your data has been deleted. To remove the login itself, email us and we'll close the account.");
+});
+
+/* ============================================================
+   8. EVENTS
+   ============================================================ */
+document.addEventListener("input",e=>{
+  const row=e.target.closest(".row");
+  if(row){
+    const list=row.dataset.kind==="in"?state.inflow:state.outflow;
+    const it=list.find(x=>x.id===row.dataset.id); if(!it)return;
+    if(e.target.classList.contains("nm"))it.name=e.target.value;
+    if(e.target.classList.contains("amt"))it.amount=e.target.value;
+    if(e.target.classList.contains("st"))it.start=e.target.value;
+    const p=project(); drawChart(p); ledger(p); updateVerdict(p);
+    document.getElementById("inTot").textContent=money(Math.round(state.inflow.reduce((a,i)=>a+monthly(i),0)))+" / mo";
+    document.getElementById("outTot").textContent=money(Math.round(state.outflow.reduce((a,i)=>a+monthly(i),0)))+" / mo";
+    save(); return;
+  }
+  if(e.target.id==="seedBal"){ state.balance=e.target.value; render(); }
+  if(e.target.id==="seedDate"){ state.start=e.target.value; render(); }
+});
+document.addEventListener("change",e=>{
+  const row=e.target.closest(".row");
+  if(row&&e.target.classList.contains("fq")){
+    const list=row.dataset.kind==="in"?state.inflow:state.outflow;
+    const it=list.find(x=>x.id===row.dataset.id);
+    if(it){ it.freq=e.target.value; render(); }
+  }
+});
+document.addEventListener("click",e=>{
+  if(e.target.classList.contains("kill")){
+    const row=e.target.closest(".row");
+    if(row.dataset.kind==="in")state.inflow=state.inflow.filter(x=>x.id!==row.dataset.id);
+    else state.outflow=state.outflow.filter(x=>x.id!==row.dataset.id);
+    render(); return;
+  }
+  if(e.target.dataset.add){
+    const kind=e.target.dataset.add;
+    (kind==="in"?state.inflow:state.outflow).push({id:id(),name:"",amount:0,freq:"monthly",start:state.start});
+    render();
+    const last=document.getElementById(kind==="in"?"inList":"outList").querySelector(".row:last-of-type .nm");
+    if(last)last.focus();
+    return;
+  }
+  const hb=e.target.closest(".horizon button");
+  if(hb){ horizon=+hb.dataset.h; document.querySelectorAll(".horizon button").forEach(x=>x.setAttribute("aria-pressed",x===hb)); render(); return; }
+  if(e.target.id==="moreBtn"){ ledgerRows+=40; ledger(project()); return; }
+  if(e.target.id==="resetBtn"){
+    if(confirm("Clear all entries and start from the sample plan?")){ state=seedState(); ledgerRows=40; fillSeed(); render(); }
+  }
+});
+
+/* ============================================================
+   9. BOOT
+   ============================================================ */
+function fillSeed(){
+  document.getElementById("seedBal").value=state.balance;
+  document.getElementById("seedDate").value=state.start;
+}
+state = loadLocal() || seedState();
+if(!Array.isArray(state.inflow))state.inflow=[];
+if(!Array.isArray(state.outflow))state.outflow=[];
+fillSeed(); paintAccount(); render();
+
+if(sb){
+  const{data:{session}}=await sb.auth.getSession();
+  if(session){ user=session.user; paintAccount(); await onSignedIn(); }
+  sb.auth.onAuthStateChange(async(evt,sess)=>{
+    if(evt==="SIGNED_IN"&&sess){ user=sess.user; closeAuth(); paintAccount(); await onSignedIn(); }
+    if(evt==="SIGNED_OUT"){ user=null; paintAccount(); }
+  });
+}
+</script>
+</body>
+</html>
