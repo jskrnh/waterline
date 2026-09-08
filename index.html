@@ -221,7 +221,7 @@ td.bal{font-weight:700}
   <div class="acct">
     <span id="acctState">Working on this device</span>
     <span class="spacer"></span>
-    <button class="pill" id="signInBtn">Save across devices</button>
+    <button class="pill" id="signInBtn">Sign in</button>
     <button class="linkbtn" id="signOutBtn" hidden>Sign out</button>
     <button class="linkbtn danger" id="deleteBtn" hidden>Delete account</button>
   </div>
@@ -303,14 +303,14 @@ td.bal{font-weight:700}
     <p>Waterline projects forward from what you enter. It never asks for bank logins or account numbers. <a href="/privacy.html" style="color:var(--sea)">Privacy</a></p>
     <span class="right">
       <span class="saved" id="savedNote"></span>
-      <button id="resetBtn">Clear everything</button>
+      <button id="resetBtn">Delete all my data</button>
     </span>
   </div>
 </div>
 
 <div class="veil" id="veil">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <h2 id="authTitle">Save across devices</h2>
+    <h2 id="authTitle">Sign in</h2>
     <p id="authBlurb">Your plan follows you to any device you sign in on.</p>
 
     <button class="gbtn" id="googleBtn">
@@ -401,6 +401,11 @@ function seedState(){
     ]};
 }
 function seedDoc(){ const sc=seedState(); return{scenarios:[sc],activeId:sc.id,baseId:sc.id,compare:false} }
+function emptyDoc(){
+  const t=new Date(); t.setHours(0,0,0,0);
+  const sc={id:id(),name:"Current plan",balance:0,start:iso(t),inflow:[],outflow:[]};
+  return{scenarios:[sc],activeId:sc.id,baseId:sc.id,compare:false};
+}
 
 /* Accepts the old single-plan shape and lifts it into a scenario. */
 function normalise(raw){
@@ -631,9 +636,10 @@ function ledger(p){
 /* ============================================================
    6. SYNC — cloud when signed in, device otherwise
    ============================================================ */
-let saveTimer=null;
+let saveTimer=null, savePaused=false;
 function flag(t,ms=1500){ const n=document.getElementById("savedNote"); n.textContent=t; if(ms) setTimeout(()=>{ if(n.textContent===t) n.textContent="" }, ms); }
 function save(){
+  if(savePaused)return;
   clearTimeout(saveTimer);
   saveTimer=setTimeout(async()=>{
     local.set(JSON.stringify(doc));
@@ -660,13 +666,19 @@ const veil=document.getElementById("veil");
 function openAuth(){ veil.dataset.open="1"; document.getElementById("authEmail").focus(); }
 function closeAuth(){ veil.dataset.open="0"; document.getElementById("authMsg").textContent=""; }
 
+function displayName(u){
+  const m=u.user_metadata||{};
+  const n=m.full_name||m.name||m.given_name||m.preferred_username;
+  if(n) return String(n).trim().split(/\s+/)[0];
+  return (u.email||"").split("@")[0]||"you";
+}
 function paintAccount(){
   const g=document.getElementById("googleBtn"), o=document.querySelector(".or");
   if(g) g.hidden=!sb; if(o) o.hidden=!sb;
   const state1=document.getElementById("acctState");
   const inBtn=document.getElementById("signInBtn"), outBtn=document.getElementById("signOutBtn"), delBtn=document.getElementById("deleteBtn");
   if(user){
-    state1.innerHTML=`Signed in as <span class="who">${esc(user.email)}</span> — saved to your account`;
+    state1.innerHTML=`Hi <span class="who">${esc(displayName(user))}</span> — your plan is saved to your account`;
     inBtn.hidden=true; outBtn.hidden=false; delBtn.hidden=false;
   }else{
     state1.textContent = sb
@@ -763,9 +775,11 @@ document.getElementById("signOutBtn").addEventListener("click",async()=>{
 document.getElementById("deleteBtn").addEventListener("click",async()=>{
   if(!sb||!user)return;
   if(!confirm("Delete your saved plan and sign out? This cannot be undone."))return;
+  savePaused=true; clearTimeout(saveTimer);
   await sb.from("plans").delete().eq("user_id",user.id);
   await sb.auth.signOut();
-  user=null; local.clear(); doc=seedDoc(); setActive(doc.activeId); fillSeed(); paintAccount(); render();
+  user=null; local.clear(); doc=emptyDoc(); setActive(doc.activeId); fillSeed(); paintAccount(); render();
+  savePaused=false;
   alert("Your data has been deleted. To remove the login itself, email us and we'll close the account.");
 });
 
@@ -847,10 +861,27 @@ document.addEventListener("click",e=>{
   const hb=e.target.closest(".horizon button");
   if(hb){ horizon=+hb.dataset.h; document.querySelectorAll(".horizon button").forEach(x=>x.setAttribute("aria-pressed",x===hb)); render(); return; }
   if(e.target.id==="moreBtn"){ ledgerRows+=40; ledger(project()); return; }
-  if(e.target.id==="resetBtn"){
-    if(confirm("Clear every scenario and start from the sample plan?")){ doc=seedDoc(); setActive(doc.activeId); ledgerRows=40; fillSeed(); render(); }
-  }
+  if(e.target.id==="resetBtn"){ wipeEverything(); return; }
 });
+
+async function wipeEverything(){
+  const signedIn = !!(sb&&user);
+  const msg = signedIn
+    ? "Delete every scenario from this device and from your account? This cannot be undone."
+    : "Delete every scenario stored on this device? This cannot be undone.";
+  if(!confirm(msg))return;
+
+  savePaused=true;              // nothing may re-save while we clear
+  clearTimeout(saveTimer);
+  local.clear();
+  if(signedIn){
+    const{error}=await sb.from("plans").delete().eq("user_id",user.id);
+    if(error){ savePaused=false; flag("Could not clear your account copy",4000); console.error(error); return; }
+  }
+  doc=emptyDoc(); setActive(doc.activeId); ledgerRows=40; fillSeed(); render();
+  savePaused=false;             // the next edit starts a fresh record
+  flag(signedIn?"Everything deleted":"Cleared from this device",2500);
+}
 
 /* ============================================================
    9. BOOT
