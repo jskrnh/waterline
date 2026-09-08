@@ -7,5 +7,5 @@
 
    config.js is never overwritten by an index.html update. */
 
-export const SUPABASE_URL      = "sb_publishable_qiBj4zfwjGSXohbXznsc6Q_6qKZbFAB";
-export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indma2RhZGFsYXVqcHJ4b2VpZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MjQ5ODAsImV4cCI6MjEwNDQwMDk4MH0.5f_FOCVPOz1iUGxxF-T316DN1JigMc4Y5JNzZtaShC8";
+export const SUPABASE_URL      = "https://wfkdadalaujprxoeidic.supabase.co";
+export const SUPABASE_ANON_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indma2RhZGFsYXVqcHJ4b2VpZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MjQ5ODAsImV4cCI6MjEwNDQwMDk4MH0.5f_FOCVPOz1iUGxxF-T316DN1JigMc4Y5JNzZtaShC8";
