@@ -100,3 +100,74 @@ Everything is plain JavaScript. No framework, no bundler, no dependencies beyond
 - **Interest on debts** — carry a balance and an APR, accrue monthly.
 - **Shareable read-only link** — a plan you can send to a partner without giving them edit access.
 - **CSV import** — read a bank export and suggest recurring items automatically.
+
+---
+
+## Update — September 2026
+
+Added: icon set, Open Graph share card, privacy page, password + Google sign-in, PWA manifest and service worker, mobile layout.
+
+### Enabling Google sign-in
+
+The button is already in the page. To make it work:
+
+1. Google Cloud Console → APIs & Services → Credentials → Create OAuth client ID → Web application
+2. Authorised redirect URI: `https://<your-project-ref>.supabase.co/auth/v1/callback`
+3. Copy the Client ID and Secret into Supabase → Authentication → Providers → Google → Enable
+
+### Enabling passwords
+
+Supabase → Authentication → Providers → Email. Password sign-in is on by default. If you want people signed in immediately rather than confirming by email first, turn off "Confirm email" in that same panel.
+
+### Files
+
+| File | Purpose |
+|---|---|
+| `index.html` | The app |
+| `privacy.html` | Privacy policy — update the contact email |
+| `schema.sql` | Database table and row-level security |
+| `manifest.webmanifest` | Makes it installable to a home screen |
+| `sw.js` | Offline shell cache, network-first |
+| `icon.svg`, `icon-180/192/512.png` | Favicon and app icons |
+| `og.png` | Link preview image (1200×630) |
+| `robots.txt`, `sitemap.xml` | Search engines |
+
+### After deploying
+
+- Set up `privacy@wtrline.com` as a forwarding address (free in Cloudflare under Email → Email Routing)
+- Test the share card at opengraph.xyz
+- Install to your phone home screen to check the PWA works
+
+---
+
+## Scenarios
+
+Waterline holds several versions of a plan side by side. Tabs sit above the chart.
+
+- **Duplicate as what-if** copies the current scenario and switches to it. Comparison turns on automatically, with the original set as the baseline.
+- **Compare against** overlays the chosen baseline as a dashed grey line and adds a strip under the chart showing both troughs and the difference between them.
+- **Rename** and **Delete** act on the scenario currently open.
+
+Only the open scenario is editable — the rows, chart and ledger always reflect it.
+
+### Stored shape
+
+```json
+{
+  "scenarios": [
+    { "id": "...", "name": "Current plan", "balance": 1500, "start": "2026-09-08",
+      "inflow": [...], "outflow": [...] }
+  ],
+  "activeId": "...",
+  "baseId": "...",
+  "compare": false
+}
+```
+
+Plans saved under the older single-plan shape are lifted into a scenario named "Current plan" on first load, so existing accounts keep their data.
+
+### Two engine fixes
+
+**Month-end drift.** Stepping a date with `setMonth` turns Jan 31 into Feb 28, then Mar 28 — creeping earlier forever. Month-based items now recompute from the anchor day each time and clamp to the month's length: Sep 30, Oct 31, Nov 30, Dec 31.
+
+**Back-filled start dates.** An item starting on a future date was generating occurrences before it, so a bill moved to next month still fired this month. Occurrences are now clamped to the later of the item's start date and the forecast start. Past-dated anchors still rewind, so a paycheque anchored months ago keeps its correct fortnightly rhythm.
