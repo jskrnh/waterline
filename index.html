@@ -337,17 +337,25 @@ td.bal{font-weight:700}
 
 <script type="module">
 /* ============================================================
-   1. CONFIG — paste your Supabase project values here.
-   Leave blank to run device-only with no accounts.
-   The anon key is safe in public: row-level security protects data.
+   1. CONFIG — lives in config.js, NOT in this file.
+   Copy config.example.js to config.js and put your Supabase
+   values there. Updating index.html then never wipes your keys.
+   With no config.js the app runs device-only, no accounts.
    ============================================================ */
-const SUPABASE_URL = "";
-const SUPABASE_ANON_KEY = "";
+let SUPABASE_URL = "", SUPABASE_ANON_KEY = "", configFound = false;
+try{
+  const cfg = await import("./config.js");
+  SUPABASE_URL = cfg.SUPABASE_URL || "";
+  SUPABASE_ANON_KEY = cfg.SUPABASE_ANON_KEY || "";
+  configFound = true;
+}catch(err){ /* no config.js — device-only mode */ }
 
 let sb = null, user = null;
 if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-  const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-  sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  try{
+    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+    sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }catch(err){ console.error("Waterline: could not load the Supabase client.", err); }
 }
 
 /* ============================================================
@@ -661,7 +669,10 @@ function paintAccount(){
     state1.innerHTML=`Signed in as <span class="who">${esc(user.email)}</span> — saved to your account`;
     inBtn.hidden=true; outBtn.hidden=false; delBtn.hidden=false;
   }else{
-    state1.textContent = sb ? "Working on this device — sign in to keep it anywhere" : "Working on this device";
+    state1.textContent = sb
+      ? "Working on this device — sign in to keep it anywhere"
+      : (configFound ? "Working on this device — accounts unavailable (check config.js)"
+                     : "Working on this device — accounts not set up (add config.js)");
     inBtn.hidden=!sb; outBtn.hidden=true; delBtn.hidden=true;
   }
 }
