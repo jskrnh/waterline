@@ -9,6 +9,28 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.2 — 15 October 2026
+
+**The chart window holds still while you explore.**
+
+### Fixed
+
+- **On desktop the window jumped around as you moved across the chart.** It sized itself to the
+  day you'd picked, so a day with four payments made it taller than a day with one, and because it
+  sits in the middle of the screen, the whole window shifted. On desktop it's now a fixed size:
+  - **Only the payment list scrolls,** inside the window.
+  - **The chart, overview strip and summary stay exactly where they are** as you glide.
+  - **On shorter screens the chart gives up a little height** so at least two payments always
+    show.
+  - **Phones are unchanged.**
+- **The × wasn't centred** in its circle. It's now drawn as an icon in the true centre, with a soft
+  filled background so it reads differently from the outlined − and + zoom buttons.
+- **3M and All could both be highlighted** on a three-month forecast. The daylight-saving change on
+  Nov 1 made the range an hour longer than three months, so the two never matched exactly. 3M is
+  now hidden when it's the whole forecast, and only one range chip is ever lit.
+
+---
+
 ## 3.1 — 15 October 2026
 
 **A tidy top bar on phones.**

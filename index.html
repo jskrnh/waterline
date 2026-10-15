@@ -408,9 +408,10 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 .sheet.cwsheet{max-width:1000px;padding:20px 22px 16px;max-height:92vh;overflow:auto;overscroll-behavior:contain}
 .cwhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .cwhead h2{margin:0;font-size:22px}
-.cwx{margin-left:auto;width:34px;height:34px;border-radius:var(--pill);border:1px solid var(--line);background:none;
-  color:var(--ink-soft);font-size:20px;line-height:1;cursor:pointer;font-family:var(--font)}
-.cwx:hover{color:var(--ink);border-color:var(--ink-faint)}
+.cwx{margin-left:auto;width:32px;height:32px;padding:0;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:var(--pill);border:0;background:color-mix(in srgb,var(--ink) 9%,transparent);color:var(--ink-soft);cursor:pointer;flex:none}
+.cwx svg{display:block}
+.cwx:hover{background:color-mix(in srgb,var(--ink) 16%,transparent);color:var(--ink)}
 .cwbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .cwbar .chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .cwzoom{margin-left:auto;display:flex;gap:6px}
@@ -442,6 +443,14 @@ svg.cwmini:active{cursor:grabbing}
 .cwhint{margin-top:12px;text-align:center}
 .cwhint .touch{display:none}
 @media (hover:none){ .cwhint .touch{display:inline} .cwhint .mouse{display:none} }
+@media(min-width:761px){
+  .sheet.cwsheet{height:min(860px,92vh);display:flex;flex-direction:column;overflow:hidden}
+  .cwsheet>*{flex:none}
+  .cwdetail{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+  .cwdetail .cwsum{flex:none}
+  .cwday{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+  .cwhint{margin-top:10px}
+}
 @media(max-width:760px){
   .veil.cwveil{align-items:flex-end;padding:0}
   .sheet.cwsheet{max-width:none;width:100%;border-radius:20px 20px 0 0;padding:14px 14px 18px;max-height:94vh}
@@ -1401,7 +1410,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   <div class="sheet cwsheet" role="dialog" aria-modal="true" aria-labelledby="cwTitle">
     <div class="cwhead">
       <h2 id="cwTitle">Balance forecast</h2>
-      <button class="cwx" id="cwClose" aria-label="Close">&times;</button>
+      <button class="cwx" id="cwClose" aria-label="Close"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     </div>
     <div class="cwbar">
       <span class="chiprow" id="cwRanges">
@@ -1798,7 +1807,7 @@ function cwOpen(src){
 function cwClose(){ CW.open=false; $("cwVeil").dataset.open="0"; document.body.style.overflow=""; }
 function cwHeight(){
   const w=$("cwChart").getBoundingClientRect().width;
-  return w<560?Math.round(Math.min(330,Math.max(230,innerHeight*0.4))):Math.round(Math.min(400,Math.max(280,innerHeight*0.42)));
+  return w<560?Math.round(Math.min(330,Math.max(230,innerHeight*0.4))):Math.round(Math.min(380,Math.max(190,Math.min(860,innerHeight*0.92)-470)));   // leave room for at least two payments below
 }
 let cwRaf=0;
 function cwDraw(){
@@ -1868,8 +1877,8 @@ function cwChips(){
   const span=(CW.t1-CW.t0)/DAY, all=(CW.max-CW.min)/DAY;
   document.querySelectorAll("[data-cw]").forEach(b=>{
     const v=b.dataset.cw==="all"?all:+b.dataset.cw;
-    b.classList.toggle("on",Math.abs(span-Math.min(v,all))<1.5);
-    b.hidden=b.dataset.cw!=="all"&&+b.dataset.cw>=all;
+    b.classList.toggle("on",!b.hidden&&Math.abs(span-Math.min(v,all))<1.5);
+    b.hidden=b.dataset.cw!=="all"&&+b.dataset.cw>=all-1;
   });
   $("cwIn").disabled=span<=7.5; $("cwOut").disabled=span>=all-0.5;
 }
