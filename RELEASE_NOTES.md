@@ -9,6 +9,26 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.6 — 15 October 2026
+
+**Your starting balance gets out of the way.**
+
+### Changed
+
+- **The Starting point card folds into a pill once it's set.** After the first time, *Balance
+  today* no longer takes up the top of Overview. A small pill under the page title takes its place:
+
+  > 🏛 Starting balance **$200.00** · from Oct 15 · **Edit**
+
+  Click the pill and the card opens with the balance selected, ready to type over. Press Enter or
+  **Done** to fold it away, or just move to another page. A negative balance shows in red.
+- **The same pill sits on the Forecast page.** That's where the starting balance matters most.
+  Clicking it takes you to Overview with the editor open.
+- **First visit is unchanged.** A blank plan opens with the card showing, so new users are asked
+  for their balance first. Plans saved before this update open folded.
+
+---
+
 ## Android app 1.0 — 15 October 2026
 
 **Waterline is now an Android app.**

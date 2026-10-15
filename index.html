@@ -374,6 +374,23 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 .card.money .addrow:hover{background:color-mix(in srgb,var(--tone) 10%,var(--panel))}
 .card.money .endbtn{background:var(--panel)}
 
+/* starting balance: a quiet pill once it's set */
+.seedpill{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:7px 8px 7px 13px;
+  border:1px solid var(--line);border-radius:var(--pill);background:var(--panel);color:var(--ink-soft);
+  font-family:var(--font);font-size:14px;letter-spacing:-.006em;cursor:pointer;max-width:100%}
+.seedpill:hover{border-color:var(--ink-faint);color:var(--ink)}
+.seedpill svg{color:var(--accent);flex:none}
+.seedpill b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.seedpill b.neg{color:var(--signal)}
+.seedpill .pd{color:var(--ink-faint)}
+.seedpill .ed{font-size:12.5px;font-weight:500;color:var(--accent);background:var(--accent-wash);
+  padding:3px 10px;border-radius:var(--pill);flex:none}
+#seedCard{scroll-margin-top:80px}
+@media (prefers-reduced-motion:no-preference){
+  #seedCard.reveal{animation:seedin .28s var(--ease)}
+  @keyframes seedin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+}
+
 /* compact summary line: phones only */
 .sum{display:none}
 
@@ -865,13 +882,19 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <h1>Overview</h1>
       <p class="lede">Everything you earn and everything you owe each month. This is where the
         forecast gets its numbers.</p>
+      <button class="seedpill" id="seedPill" title="Change your starting balance">
+        <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 15.5h14M4.5 15.5V9m3.7 6.5V9m3.6 6.5V9m3.7 6.5V9M2.8 7.2 10 3.3l7.2 3.9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>Starting balance <b class="pb"></b> <span class="pd"></span></span>
+        <span class="ed">Edit</span>
+      </button>
     </div>
 
     <div class="stack">
       <div id="uncatFlag"></div>
 
-      <div class="card">
-        <header><h3>Starting point</h3><span class="sub">where the forecast begins</span></header>
+      <div class="card" id="seedCard">
+        <header><h3>Starting point</h3><span class="sub">where the forecast begins</span>
+          <button class="btn fill sm" id="seedDone" style="margin-left:auto">Done</button></header>
         <div class="body grid g2">
           <div>
             <label class="tiny" for="seedBal" style="display:block;margin-bottom:6px">Balance today</label>
@@ -954,6 +977,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <h1>Forecast</h1>
       <p class="lede">Your budget played forward, day by day. Add the one-off things that don't
         repeat — a repair, a refund, a fee — straight onto the date they land.</p>
+      <button class="seedpill" id="fcSeedPill" title="Change your starting balance">
+        <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 15.5h14M4.5 15.5V9m3.7 6.5V9m3.6 6.5V9m3.7 6.5V9M2.8 7.2 10 3.3l7.2 3.9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>Starting balance <b class="pb"></b> <span class="pd"></span></span>
+        <span class="ed">Edit</span>
+      </button>
     </div>
 
     <div class="stack">
@@ -1302,7 +1330,7 @@ function seedState(){
 }
 function baseDoc(sc,debts){
   return{ scenarios:[sc], activeId:sc.id, baseId:sc.id, compare:false,
-    debts:debts||[], split:{need:70,want:20,save:10}, payoffMonths:36, seen:false, theme:"system" };
+    debts:debts||[], split:{need:70,want:20,save:10}, payoffMonths:36, seen:false, theme:"system", seedSet:true };
 }
 function seedDoc(){
   return baseDoc(seedState(),[
@@ -1311,7 +1339,9 @@ function seedDoc(){
 }
 function emptyDoc(){
   const t=new Date(); t.setHours(0,0,0,0);
-  return baseDoc({id:id(),name:"Current plan",balance:0,start:iso(t),inflow:[],outflow:[],oneoffs:[]},[]);
+  const d=baseDoc({id:id(),name:"Current plan",balance:0,start:iso(t),inflow:[],outflow:[],oneoffs:[]},[]);
+  d.seedSet=false;      // a blank plan opens with the starting balance card showing
+  return d;
 }
 /* Accepts every earlier saved shape and lifts it forward. */
 function normalise(raw){
@@ -1353,6 +1383,8 @@ function normalise(raw){
   ["need","want","save"].forEach(k=>{ if(typeof d.split[k]!=="number") d.split[k]={need:70,want:20,save:10}[k]; });
   if(typeof d.payoffMonths!=="number") d.payoffMonths=36;
   d.seen=!!d.seen;
+  /* plans saved before the pill existed: treat the balance as set once anything has been entered */
+  if(typeof d.seedSet!=="boolean") d.seedSet=hasEntries(d)||d.scenarios.some(sc=>(+sc.balance||0)!==0);
   if(!["system","light","dark"].includes(d.theme)) d.theme="system";
   return d;
 }
@@ -2380,6 +2412,8 @@ function go(){
   window.scrollTo(0,0);
 }
 function render(){
+  if(route!=="overview") seedOpen=false;
+  safely(paintSeed);
   if(route==="overview") safely(renderBudget);
   if(route==="forecast") safely(renderForecast);
   if(route==="whatif")   safely(renderWhatIf);
@@ -2655,8 +2689,9 @@ document.addEventListener("input",e=>{
     });
     save(); return;
   }
-  if(e.target.id==="seedBal"){ state.balance=e.target.value; save(); return; }
-  if(e.target.id==="seedDate"){ state.start=e.target.value; calMonth=null; save(); return; }
+  if(e.target.id==="seedBal"||e.target.id==="seedDate"){ if(!doc.seedSet){ doc.seedSet=true; seedOpen=true; } }
+  if(e.target.id==="seedBal"){ state.balance=e.target.value; paintSeed(); save(); return; }
+  if(e.target.id==="seedDate"){ state.start=e.target.value; calMonth=null; paintSeed(); save(); return; }
   if(["tNeed","tWant","tSave"].includes(e.target.id)){
     const k={tNeed:"need",tWant:"want",tSave:"save"}[e.target.id];
     doc.split[k]=Math.max(0,Math.min(100,+e.target.value||0));
@@ -2664,6 +2699,7 @@ document.addEventListener("input",e=>{
   }
 });
 /* an emptied end-date box turns back into "No end date" once you leave it */
+$("seedCard").addEventListener("keydown",e=>{ if(e.key==="Enter"&&e.target.matches("input")){ e.preventDefault(); $("seedDone").click(); } });
 document.addEventListener("focusout",e=>{
   if(!e.target.matches||!e.target.matches(".erow input.en")) return;
   const row=e.target.closest(".erow");
@@ -2729,6 +2765,11 @@ document.addEventListener("click",e=>{
   const sl=e.target.closest("[data-slice]");
   if(sl){ sliceMode=sl.dataset.slice; safely(renderDonut); return; }
 
+  if(e.target.closest("#seedPill")){ openSeed(); return; }
+  if(e.target.closest("#fcSeedPill")){ seedOpen=true; location.hash="#/overview"; setTimeout(openSeed,60); return; }
+  if(e.target.id==="seedDone"){ doc.seedSet=true; seedOpen=false; paintSeed(); save();
+    try{ $("seedPill").scrollIntoView({block:"center",behavior:"smooth"}); }catch(err){}
+    flag("Starting balance saved",1600); return; }
   const sm=e.target.closest(".sum");
   if(sm){ const row=sm.closest(".erow"), id=row.dataset.id, opening=!row.classList.contains("open");
     document.querySelectorAll(".erow.pay.open").forEach(r=>{ r.classList.remove("open"); r.querySelector(".sum").setAttribute("aria-expanded","false"); });
@@ -2878,7 +2919,24 @@ $("addOff").addEventListener("keydown",e=>{
 /* ============================================================
    17. BOOT
    ============================================================ */
-function fillSeed(){ $("seedBal").value=state.balance; $("seedDate").value=state.start; }
+function fillSeed(){ $("seedBal").value=state.balance; $("seedDate").value=state.start; paintSeed(); }
+/* The card shows on a fresh plan; after that it folds into a pill under the page title. */
+let seedOpen=false;
+function paintSeed(){
+  const open=!doc.seedSet||seedOpen;
+  $("seedCard").hidden=!open;
+  const bal=+state.balance||0, when=state.start?parseD(state.start).toLocaleDateString("en-CA",{month:"short",day:"numeric"}):"";
+  ["seedPill","fcSeedPill"].forEach(pid=>{ const p=$(pid); if(!p) return;
+    p.hidden = pid==="seedPill" ? open : false;
+    const b=p.querySelector(".pb"); b.textContent=money2(bal); b.classList.toggle("neg",bal<0);
+    p.querySelector(".pd").textContent=when?`· from ${when}`:""; });
+}
+function openSeed(){
+  seedOpen=true; paintSeed();
+  const c=$("seedCard"); c.classList.remove("reveal"); void c.offsetWidth; c.classList.add("reveal");
+  try{ c.scrollIntoView({block:"start",behavior:"smooth"}); }catch(e){}
+  setTimeout(()=>{ $("seedBal").focus(); $("seedBal").select(); },250);
+}
 if("serviceWorker" in navigator && location.protocol==="https:"){
   window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
 }
