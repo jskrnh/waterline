@@ -354,3 +354,8 @@ See `RELEASE_NOTES.md` for the full list.
 
 Account actions, Report, and *Delete all my data* now live in a menu under the logo in the top-right
 corner. Delete is no longer in the footer. Category dropdown options keep their own colours.
+
+## Update — October 2026: Overview (2.3)
+
+The Budget page is renamed **Overview** (`#/overview`; `#/budget` redirects). The logo moved to the
+top-left beside the name, and the account button shows an avatar.

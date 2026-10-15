@@ -110,7 +110,9 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
   backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
   border-bottom:1px solid var(--line)}
 .nav-in{max-width:1180px;margin:0 auto;height:52px;padding:0 18px;display:flex;align-items:center;gap:20px}
-.mark{font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
+.mark{font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--ink);white-space:nowrap;
+  display:inline-flex;align-items:center;gap:9px}
+.mark .logo{display:block;border-radius:7px;flex:none}
 .mark:hover{text-decoration:none}
 .nav-links{display:flex;gap:24px;list-style:none;margin-left:14px;overflow-x:auto;scrollbar-width:none}
 .nav-links::-webkit-scrollbar{display:none}
@@ -138,11 +140,15 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
 
 /* ---- account menu ---- */
 .acct{position:relative}
-.acctrig{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 8px 0 12px;
+.acctrig{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 10px 0 5px;
   border:1px solid var(--line);border-radius:var(--pill);background:transparent;color:var(--ink-soft);
   cursor:pointer;font-family:var(--font)}
 .acctrig:hover,.acctrig[aria-expanded="true"]{border-color:var(--ink-faint);color:var(--ink)}
-.acctrig .logo{display:block;border-radius:6px;flex:none}
+.acctrig .avatar{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex:none;
+  border-radius:var(--pill);background:var(--paper);color:var(--ink-soft);font-size:11.5px;font-weight:600;letter-spacing:0}
+.acctrig .avatar.on{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .acctrig .avatar.on{color:#06202b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .acctrig .avatar.on{color:#06202b}}
 .acctrig .chev{transition:transform .2s var(--ease)}
 .acctrig[aria-expanded="true"] .chev{transform:rotate(180deg)}
 .acctmenu{position:absolute;right:0;top:calc(100% + 9px);width:286px;z-index:950;
@@ -446,9 +452,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   body{font-size:16px}
   main{padding-block:30px 70px}
   .wide{padding:0 16px}
-  .nav-in{padding:0 14px;gap:12px}
-  .nav-links{gap:16px;margin-left:8px}
+  .nav-in{padding:0 12px;gap:10px}
+  .nav-links{gap:13px;margin-left:2px}
   .whoami{display:none}
+  .mark span{display:none}                 /* logo alone on phones; frees room for the tabs */
+  .acctrig .chev{display:none}
+  .acctrig{padding:0 4px;height:32px}
   .verdict{padding:20px;gap:18px}
   .vlead{flex:1 1 100%}
   .vstat{flex:1 1 30%;min-width:92px}
@@ -630,9 +639,18 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 
 <nav class="top">
   <div class="nav-in">
-    <a class="mark" href="#/budget">Waterline</a>
+    <a class="mark" href="#/overview" aria-label="Waterline home">
+      <svg class="logo" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
+          <defs><clipPath id="wlBelow"><rect x="0" y="34" width="64" height="30"/></clipPath></defs>
+          <rect width="64" height="64" rx="13" fill="#0B2233"/>
+          <path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26 L58 34 L6 34 Z" fill="#0F5C6B" clip-path="url(#wlBelow)"/>
+          <line x1="6" y1="34" x2="58" y2="34" stroke="#E9EDEF" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26" fill="none" stroke="#7FD4E3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="34" cy="50" r="5" fill="#B3202C" stroke="#0B2233" stroke-width="2"/>
+        </svg>
+      <span>Waterline</span></a>
     <ul class="nav-links" id="routes">
-      <li><a href="#/budget" data-r="budget">Budget</a></li>
+      <li><a href="#/overview" data-r="overview">Overview</a></li>
       <li><a href="#/forecast" data-r="forecast">Forecast</a></li>
       <li><a href="#/whatif" data-r="whatif">What-if</a></li>
       <li><a href="#/debt" data-r="debt">Debt</a></li>
@@ -641,15 +659,8 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <button class="themebtn" id="themeBtn" title="Theme" aria-label="Switch theme"></button>
       <div class="acct" id="acct">
         <button class="acctrig" id="acctBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="acctMenu">
+          <span class="avatar" id="avatar" aria-hidden="true"><svg viewBox="0 0 20 20" width="15" height="15"><circle cx="10" cy="7.2" r="3.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.8 17c.9-3.2 3.3-4.9 6.2-4.9s5.3 1.7 6.2 4.9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
           <span class="whoami" id="whoami">Account</span>
-          <svg class="logo" viewBox="0 0 64 64" width="26" height="26" aria-hidden="true">
-          <defs><clipPath id="wlBelow"><rect x="0" y="34" width="64" height="30"/></clipPath></defs>
-          <rect width="64" height="64" rx="13" fill="#0B2233"/>
-          <path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26 L58 34 L6 34 Z" fill="#0F5C6B" clip-path="url(#wlBelow)"/>
-          <line x1="6" y1="34" x2="58" y2="34" stroke="#E9EDEF" stroke-width="2.6" stroke-linecap="round"/>
-          <path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26" fill="none" stroke="#7FD4E3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="34" cy="50" r="5" fill="#B3202C" stroke="#0B2233" stroke-width="2"/>
-        </svg>
           <svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="acctmenu" id="acctMenu" role="menu" hidden>
@@ -744,10 +755,10 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 </section>
 
 <!-- ======================= BUDGET ======================= -->
-<section class="page" id="page-budget">
+<section class="page" id="page-overview">
   <div class="wide">
     <div class="pagehead">
-      <h1>Budget</h1>
+      <h1>Overview</h1>
       <p class="lede">Everything you earn and everything you owe each month. This is where the
         forecast gets its numbers.</p>
     </div>
@@ -843,7 +854,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <div class="verdict" id="verdict">
         <div class="vlead">
           <h2 id="vTitle">Nothing to forecast yet</h2>
-          <p id="vBody">Add your income and bills on the Budget page and this fills in.</p>
+          <p id="vBody">Add your income and bills on the Overview page and this fills in.</p>
         </div>
         <div class="vstat"><b id="sLow">—</b><span>lowest point</span></div>
         <div class="vstat"><b id="sDays">—</b><span>days below zero</span></div>
@@ -1162,7 +1173,7 @@ const id=()=>Math.random().toString(36).slice(2,9);
 const $=s=>document.getElementById(s);
 function safely(fn){ try{ fn(); }catch(err){ console.error("Waterline:",err); } }
 
-let doc=null, state=null, horizon=180, ledgerRows=40, route="budget", ledgerView="cal", calMonth=null;
+let doc=null, state=null, horizon=180, ledgerRows=40, route="overview", ledgerView="cal", calMonth=null;
 
 /* ============================================================
    4. MODEL
@@ -1568,7 +1579,7 @@ function updateVerdict(p){
   const n=state.inflow.length+state.outflow.length+(state.oneoffs||[]).length;
   if(!n){ box.classList.remove("under");
     title.textContent="Nothing to forecast yet";
-    body.innerHTML=`Add your income and bills on the <a href="#/budget">Budget page</a> and this fills in.`; }
+    body.innerHTML=`Add your income and bills on the <a href="#/overview">Overview page</a> and this fills in.`; }
   else if(p.low.bal<0){ box.classList.add("under");
     const fu=p.firstUnder||p.low.date, same=+fu===+p.low.date;
     title.textContent=`You go under on ${dLong(fu)}`;
@@ -1648,7 +1659,7 @@ function renderDayPanel(dm){
       const what=i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
         :`${freqL(i.freq).toLowerCase()} ${i.amt>0?"income":"bill"}${i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:""}`;
       const acts=i.oid?`<span class="acts"><button data-editoff="${i.oid}">Edit</button><button class="rm" data-killoff="${i.oid}">Remove</button></span>`
-        :`<span class="acts"><a href="#/budget" style="font-size:12.5px;color:var(--ink-faint);padding:4px 7px">On Budget</a></span>`;
+        :`<span class="acts"><a href="#/overview" style="font-size:12.5px;color:var(--ink-faint);padding:4px 7px">On Overview</a></span>`;
       return `<li><i style="background:var(--${c})"></i><span class="nm">${esc(i.name)}<small>${esc(what)}</small></span>
         <span class="mv ${i.amt>0?"pos":"neg"}">${i.amt>0?"+":"−"}${money2(Math.abs(i.amt))}</span>${acts}</li>`;
     }).join(""):`<li class="none">Nothing lands on this day.</li>`}</ul>
@@ -1850,7 +1861,7 @@ function renderDebtFigures(){
     box=`<div class="note good"><b>A realistic finish line is ${sg.months} months</b> — about ${money2(needAt)} a month.
       ${sg.basis==="budget"
         ? `That is your minimums plus the ${money(Math.round(budgetTotals().save))} your budget actually leaves over.`
-        : `That is a stretch above your ${money(Math.round(f.mins))} of minimums. Fill in the Budget page and this gets sharper.`}
+        : `That is a stretch above your ${money(Math.round(f.mins))} of minimums. Fill in the Overview page and this gets sharper.`}
       <br><button class="chip" id="useSuggest">Use ${sg.months} months</button></div>`;
   }
   $("suggestBox").innerHTML=box;
@@ -1910,7 +1921,7 @@ function renderReport(){
   };
   const n=state.inflow.length+state.outflow.length+(state.oneoffs||[]).length;
   const page1=o=>{ const items=allItems.slice(0,o.items); return head(1) + (n===0
-    ? `<h2>Nothing to report yet</h2><p class="mini">Add income and bills on the Budget page and this fills in.</p>${foot}`
+    ? `<h2>Nothing to report yet</h2><p class="mini">Add income and bills on the Overview page and this fills in.</p>${foot}`
     : `<h2 style="margin-bottom:2px">Where you stand</h2>
     <p class="mini" style="margin-bottom:12px">Forecast from ${dShort(p.from)} to ${dShort(p.to)} · starting balance ${money2(+state.balance||0)}</p>
     <div class="rverdict ${under?"under":""}"><b>${under?`You go under on ${dLong(p.firstUnder||p.low.date)}`:"You stay above zero"}</b>
@@ -2098,12 +2109,14 @@ function applyTheme(){
 /* ============================================================
    13. ROUTER
    ============================================================ */
-const PAGES=["welcome","budget","forecast","whatif","debt","report"];
-const TITLES={welcome:"Waterline — find the day you go under",budget:"Budget — Waterline",report:"Report — Waterline",
+const PAGES=["welcome","overview","forecast","whatif","debt","report"];
+const TITLES={welcome:"Waterline — find the day you go under",overview:"Overview — Waterline",report:"Report — Waterline",
   forecast:"Forecast — Waterline",whatif:"What-if — Waterline",debt:"Debt — Waterline"};
 function go(){
   const want=location.hash.replace(/^#\/?/,"").split("/")[0];
-  route=PAGES.includes(want)?want:(doc.seen?"budget":"welcome");
+  const ALIAS={budget:"overview"};               // old links and bookmarks keep working
+  const asked=ALIAS[want]||want;
+  route=PAGES.includes(asked)?asked:(doc.seen?"overview":"welcome");
   PAGES.forEach(p=>$("page-"+p).classList.toggle("on",p===route));
   document.querySelectorAll("#routes a").forEach(a=>a.classList.toggle("on",a.dataset.r===route));
   document.title=TITLES[route];
@@ -2111,7 +2124,7 @@ function go(){
   window.scrollTo(0,0);
 }
 function render(){
-  if(route==="budget")   safely(renderBudget);
+  if(route==="overview") safely(renderBudget);
   if(route==="forecast") safely(renderForecast);
   if(route==="whatif")   safely(renderWhatIf);
   if(route==="debt")     safely(renderDebt);
@@ -2172,11 +2185,14 @@ function paintAccount(){
   if(user){
     const full=(user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name))||displayName(user);
     who.textContent=displayName(user);
+    const av=$("avatar"); av.textContent=displayName(user).charAt(0).toUpperCase(); av.classList.add("on");
     nm.textContent=full; sub.textContent=user.email||"Signed in";
     inBtn.hidden=true; outBtn.hidden=false; delBtn.hidden=false;
     $("resetSub").textContent="From this device and your account";
   }else{
     who.textContent="Account";
+    const av=$("avatar"); av.classList.remove("on");
+    av.innerHTML='<svg viewBox="0 0 20 20" width="15" height="15"><circle cx="10" cy="7.2" r="3.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.8 17c.9-3.2 3.3-4.9 6.2-4.9s5.3 1.7 6.2 4.9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
     nm.textContent="Not signed in";
     sub.textContent = sb ? "Your plan is saved on this device only."
       : (configFound ? "Accounts are unavailable right now." : "Your plan is saved on this device only.");
@@ -2522,7 +2538,7 @@ function startWith(d){
   doc=d; doc.seen=true; doc.theme=theme;
   setActive(doc.activeId); applyTheme(); fillSeed();
   calMonth=null; ledgerRows=40;
-  if(location.hash==="#/budget") go(); else location.hash="#/budget";
+  if(location.hash==="#/overview") go(); else location.hash="#/overview";
 }
 
 let editingOff=null;

@@ -9,6 +9,24 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.3 — 15 October 2026
+
+**Budget is now Overview, and the logo moved to the top left.**
+
+### Changed
+
+- **The Budget page is now called Overview.** The tab, page heading, browser title and every
+  "fill in the Budget page" hint now say Overview. The address is `#/overview`. Old `#/budget`
+  links and bookmarks still open the right page.
+- **The Waterline logo sits in the top-left corner**, beside the name, and takes you to Overview
+  when clicked. On a phone the logo shows on its own, which frees enough room for all four tabs at
+  standard phone width.
+- **The account button shows an avatar instead of the logo.** When you're signed in it's your
+  initial in a teal circle, followed by your first name. When you're signed out it's a person icon
+  labelled *Account*. The menu itself is unchanged.
+
+---
+
 ## 2.2 — 15 October 2026
 
 **Everything about your account now lives in one menu, under the Waterline logo.**
