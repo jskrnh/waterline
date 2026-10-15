@@ -9,6 +9,23 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.1 — 15 October 2026
+
+**A tidy top bar on phones.**
+
+### Changed
+
+- **On phones, the page tabs fold into a ☰ menu.** The tabs (Overview · Forecast · What-if · Debt)
+  used to be squeezed into the top bar, and the last one got cut off on narrower screens.
+  - **The bar now shows** the logo, the name of the page you're on, the theme switch, your account
+    and ☰.
+  - **The menu** lists each page with a one-line description, with the current page highlighted.
+    It closes when you choose a page, tap outside it, or press Esc.
+  - **The account menu and the pages menu** never open on top of each other.
+  - **Desktop and tablets in landscape** keep the tabs as before.
+
+---
+
 ## 3.0 — 15 October 2026
 
 **The forecast chart is now something you can explore, and Light mode stays light on phones.**

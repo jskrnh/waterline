@@ -378,6 +378,30 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 .card.money .addrow:hover{background:color-mix(in srgb,var(--tone) 10%,var(--panel))}
 .card.money .endbtn{background:var(--panel)}
 
+/* pages menu (phones) */
+.mark .pagename{display:none}
+.menubtn{display:none;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--line);
+  border-radius:var(--pill);background:transparent;color:var(--ink);cursor:pointer;order:3}
+.menubtn svg path{stroke:currentColor;stroke-width:1.7;stroke-linecap:round;transition:transform .2s var(--ease),opacity .2s;transform-origin:10px 10px}
+.menubtn[aria-expanded="true"] .l1{transform:translateY(4px) rotate(45deg)}
+.menubtn[aria-expanded="true"] .l2{opacity:0}
+.menubtn[aria-expanded="true"] .l3{transform:translateY(-4px) rotate(-45deg)}
+.navmenu{position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--line);
+  padding:8px 10px 12px;box-shadow:0 18px 40px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:2px}
+.navmenu[hidden]{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .navmenu:not([hidden]){animation:menudrop .18s var(--ease) both}
+  @keyframes menudrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+}
+.mitem{display:flex;align-items:center;gap:14px;padding:12px 12px;border-radius:12px;color:var(--ink);text-decoration:none}
+.mitem:hover{text-decoration:none;background:var(--paper)}
+.mitem svg{flex:none;color:var(--ink-faint)}
+.mitem span{font-size:17px;font-weight:500;letter-spacing:-.012em}
+.mitem small{display:block;font-size:12.5px;font-weight:400;color:var(--ink-faint);letter-spacing:0;margin-top:1px}
+.mitem.on{background:var(--accent-wash)}
+.mitem.on svg,.mitem.on span{color:var(--accent)}
+@media(min-width:761px){ .navmenu{display:none!important} }
+
 /* chart window: zoom, pick a day, overview strip */
 .chartcard svg.chart{cursor:zoom-in}
 .chartfoot .zoomhint{margin-left:auto;color:var(--accent)}
@@ -631,7 +655,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .nav-in{padding:0 12px;gap:10px}
   .nav-links{gap:13px;margin-left:2px}
   .whoami{display:none}
-  .mark span{display:none}                 /* logo alone on phones; frees room for the tabs */
+  .mark span{display:none}
+  /* phones: the page tabs fold into the ☰ menu; the current page's name sits by the logo */
+  .nav-links{display:none}
+  .mark .pagename{display:inline;font-size:16px;font-weight:600;letter-spacing:-.016em}
+  .menubtn{display:inline-flex}
   .acctrig .chev{display:none}
   .acctrig{padding:0 4px;height:32px}
   .verdict{padding:20px;gap:18px}
@@ -854,7 +882,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
           <path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26" fill="none" stroke="#7FD4E3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
           <circle cx="34" cy="50" r="5" fill="#B3202C" stroke="#0B2233" stroke-width="2"/>
         </svg>
-      <span>Waterline</span></a>
+      <span>Waterline</span><b class="pagename" id="pageName"></b></a>
     <ul class="nav-links" id="routes">
       <li><a href="#/overview" data-r="overview">Overview</a></li>
       <li><a href="#/forecast" data-r="forecast">Forecast</a></li>
@@ -862,6 +890,9 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <li><a href="#/debt" data-r="debt">Debt</a></li>
     </ul>
     <span class="nav-right">
+      <button class="menubtn" id="menuBtn" aria-label="Open pages menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path class="l1" d="M3.5 6h13"/><path class="l2" d="M3.5 10h13"/><path class="l3" d="M3.5 14h13"/></svg>
+      </button>
       <button class="themebtn" id="themeBtn" title="Theme" aria-label="Switch theme"></button>
       <div class="acct" id="acct">
         <button class="acctrig" id="acctBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="acctMenu">
@@ -902,6 +933,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
         </div>
       </div>
     </span>
+  </div>
+  <div class="navmenu" id="navMenu" role="menu" hidden>
+      <a class="mitem" href="#/overview" data-r="overview" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3.5 4.5h13v11h-13zM3.5 8.5h13M8 8.5v7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Overview<small>Income, bills and where it goes</small></span></a>
+      <a class="mitem" href="#/forecast" data-r="forecast" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3 15.5h14M4 12l3.5-4 3 2.5L16 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Forecast<small>Day by day, and when you go under</small></span></a>
+      <a class="mitem" href="#/whatif" data-r="whatif" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M5 4v4a3 3 0 003 3h7M12 8l3 3-3 3M5 16v-2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>What-if<small>Try a change before you make it</small></span></a>
+      <a class="mitem" href="#/debt" data-r="debt" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 8.5h14M6 12h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>Debt<small>Every balance and the way out</small></span></a>
   </div>
 </nav>
 
@@ -2819,7 +2856,9 @@ function go(){
   const asked=ALIAS[want]||want;
   route=PAGES.includes(asked)?asked:(doc.seen?"overview":"welcome");
   PAGES.forEach(p=>$("page-"+p).classList.toggle("on",p===route));
-  document.querySelectorAll("#routes a").forEach(a=>a.classList.toggle("on",a.dataset.r===route));
+  document.querySelectorAll("#routes a, #navMenu .mitem").forEach(a=>a.classList.toggle("on",a.dataset.r===route));
+  const pn={overview:"Overview",forecast:"Forecast",whatif:"What-if",debt:"Debt",report:"Report",welcome:"About"}[route]||"";
+  $("pageName").textContent=pn;
   document.title=TITLES[route];
   render();
   window.scrollTo(0,0);
@@ -3137,8 +3176,20 @@ function paintAuth(){
 }
 $("signInBtn").addEventListener("click",()=>{ closeMenu(); openAuth(); });
 
+/* pages menu (phones) */
+function closeNavMenu(){ $("navMenu").hidden=true; $("menuBtn").setAttribute("aria-expanded","false"); $("menuBtn").setAttribute("aria-label","Open pages menu"); }
+$("menuBtn").addEventListener("click",e=>{
+  e.stopPropagation(); const open=$("navMenu").hidden;
+  if(open){ closeMenu&&closeMenu(); $("navMenu").hidden=false; $("menuBtn").setAttribute("aria-expanded","true"); $("menuBtn").setAttribute("aria-label","Close pages menu"); }
+  else closeNavMenu();
+});
+document.addEventListener("click",e=>{ if(!$("navMenu").hidden&&!e.target.closest("#navMenu,#menuBtn")) closeNavMenu(); },true);
+$("navMenu").addEventListener("click",e=>{ if(e.target.closest(".mitem")) closeNavMenu(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("navMenu").hidden){ closeNavMenu(); $("menuBtn").focus(); } });
+window.addEventListener("hashchange",closeNavMenu);
+
 /* account menu */
-function openMenu(){ $("acctMenu").hidden=false; $("acctBtn").setAttribute("aria-expanded","true"); }
+function openMenu(){ closeNavMenu(); $("acctMenu").hidden=false; $("acctBtn").setAttribute("aria-expanded","true"); }
 function closeMenu(){ $("acctMenu").hidden=true; $("acctBtn").setAttribute("aria-expanded","false"); }
 $("acctBtn").addEventListener("click",e=>{ e.stopPropagation(); $("acctMenu").hidden?openMenu():closeMenu(); });
 document.addEventListener("click",e=>{
