@@ -359,3 +359,10 @@ corner. Delete is no longer in the footer. Category dropdown options keep their 
 
 The Budget page is renamed **Overview** (`#/overview`; `#/budget` redirects). The logo moved to the
 top-left beside the name, and the account button shows an avatar.
+
+## Update — October 2026: end dates, totals, reordering (2.4)
+
+Recurring items take an optional end date (`end`, empty = none). Each row previews its monthly and
+yearly cost, or the payments left and total remaining once it ends. Each table has a totals footer
+(per month, per year, next 30 days). Rows reorder by dragging the handle or with ↑/↓, and the
+column headings sort.

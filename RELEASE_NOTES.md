@@ -9,6 +9,52 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.4 — 15 October 2026
+
+**Payments can end, every one shows what it really costs, and you can put them in any order.**
+
+### New
+
+**End dates.** Every recurring payment and income now has an **Ends** column. It defaults to *No
+end date*; click it to pick the last payment. The forecast stops the payment after that date, which
+suits a loan with a final instalment, a lease, a contract job or a subscription you're cancelling.
+Clear it with the ×.
+
+**What each payment adds up to.** A line under every name shows its monthly and yearly cost. Once
+a payment has an end date, the line shows how many payments are left and the total still to pay:
+
+> Car loan — ≈ $345/mo · 14 payments left · **$2,226.00** in total
+
+A payment whose end date has passed says *Ended — not counted* and drops out of your totals.
+
+**Totals at the bottom of each table.** Money in and Money out each end with a summary: how many
+payments there are, the total **per month**, **per year**, and what actually leaves in the **next
+30 days**. Any one-offs on the Forecast are mentioned there too, so nothing is hidden.
+
+**Drag to reorder.** Grab the ⋮⋮ handle at the start of any row and drag it up or down. This works
+with a mouse, a finger or a pen. With the keyboard, focus a handle and press ↑ or ↓. The order is
+saved.
+
+**Sort the tables.** Click any column heading (Bill, Amount, How often, Category, First payment,
+Ends) to sort by it, and click again to reverse. Amount sorts by monthly cost, so a $120 weekly
+bill ranks above a $300 monthly one. The sorted order is saved, so you can sort first and then drag
+a few rows to fine-tune. On a phone, the headings appear as a scrollable *Sort* strip.
+
+### Changed
+
+- **The total in each table's header now matches its footer.** *Money out* used to quietly include
+  one-offs spread over the forecast window, so it read $3,526 above a list that added up to
+  $3,449.50. Both now show the recurring figure. The Overview tiles and the donut still include
+  one-offs, as before.
+
+### Under the hood
+
+- Recurring items gain an `end` field. It's an empty string for none, and saved plans get it
+  automatically.
+- Service worker cache bumped to `waterline-v6`.
+
+---
+
 ## 2.3 — 15 October 2026
 
 **Budget is now Overview, and the logo moved to the top left.**

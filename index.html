@@ -290,6 +290,9 @@ svg.chart{display:block;width:100%;height:auto}
 
 /* ---- editable rows ---- */
 .rowhead,.erow{display:grid;grid-template-columns:minmax(0,1fr) 116px 152px 168px 156px 36px;gap:10px;align-items:center}
+/* payment rows: grip · name · amount · often · category · first · ends · remove */
+.rowhead.pay,.erow.pay{grid-template-columns:20px minmax(0,1fr) 106px 156px 144px 142px 140px 32px;gap:9px}
+.rowhead.pay,.erow.pay{padding-left:12px}
 .rowhead{padding:10px 22px;font-size:12px;color:var(--ink-faint);letter-spacing:0;border-bottom:1px solid var(--hair)}
 .rowhead span:nth-child(2){text-align:right}
 .erow{padding:8px 22px;border-bottom:1px solid var(--hair)}
@@ -313,6 +316,58 @@ select.cat option[value="debt"]{color:var(--debt)} select.cat option[value=""]{c
   font-family:var(--font);font-size:15px;color:var(--accent);cursor:pointer;letter-spacing:-.005em}
 .addrow:hover{background:var(--accent-wash)}
 .empty{padding:26px 22px;color:var(--ink-faint);font-size:15px;text-align:center}
+
+/* sortable headers */
+.sorth{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:2px 0;cursor:pointer;
+  font-family:var(--font);font-size:12px;color:var(--ink-faint);letter-spacing:0;text-align:left;white-space:nowrap}
+.sorth.r{justify-content:flex-end}
+.sorth:hover{color:var(--ink)}
+.sorth i{display:inline-block;width:8px;height:8px;opacity:0;transition:opacity .15s}
+.sorth:hover i{opacity:.45}
+.sorth i::before{content:"";display:block;width:0;height:0;margin-top:1px;
+  border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor}
+.sorth.on{color:var(--ink);font-weight:600}
+.sorth.on i{opacity:1}
+.sorth.on.asc i::before{border-top:0;border-bottom:5px solid currentColor}
+
+/* drag handle and drag state */
+.grip{width:20px;height:30px;display:flex;align-items:center;justify-content:center;border:0;background:none;
+  color:var(--ink-faint);cursor:grab;touch-action:none;border-radius:6px;padding:0;opacity:.55}
+.grip:hover,.grip:focus-visible{opacity:1;background:var(--paper)}
+.grip svg{display:block;pointer-events:none}
+.erow.pay.dragging{position:relative;z-index:5;background:var(--panel);
+  box-shadow:0 10px 30px rgba(0,0,0,.16),0 0 0 1px var(--line);border-radius:12px;cursor:grabbing}
+.erow.pay.dragging .grip{cursor:grabbing;opacity:1}
+body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none!important}
+.erow.pay.moved{animation:settle .35s var(--ease)}
+@keyframes settle{from{background:var(--accent-wash)}to{background:transparent}}
+
+/* name cell carries the preview line */
+.nmc{min-width:0;display:flex;flex-direction:column;gap:2px}
+.pv{font-size:11.5px;color:var(--ink-faint);letter-spacing:0;padding:0 10px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.pv b{font-weight:500;color:var(--ink-soft)}
+.pv.ended{color:var(--amber)}
+
+/* end date: a quiet "No end date" until set */
+.endc{min-width:0;position:relative}
+.endbtn{width:100%;font-family:var(--font);font-size:14px;color:var(--ink-faint);background:none;
+  border:1px dashed var(--line);border-radius:9px;padding:7px 10px;cursor:pointer;text-align:left;white-space:nowrap}
+.endbtn:hover{color:var(--ink);border-color:var(--ink-faint)}
+.endc input.en{padding-right:28px}
+.endx{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--ink-faint);
+  font-size:15px;line-height:1;cursor:pointer;padding:4px 5px;border-radius:6px}
+.endx:hover{color:var(--signal);background:var(--signal-wash)}
+
+/* totals */
+.rowfoot{display:flex;flex-wrap:wrap;gap:8px 26px;align-items:baseline;padding:14px 22px;
+  background:var(--paper);border-top:1px solid var(--hair);font-size:13px;color:var(--ink-faint);letter-spacing:0}
+.rowfoot:empty{display:none}
+.rowfoot .tl{font-size:14px;color:var(--ink);font-weight:600;letter-spacing:-.01em;margin-right:auto}
+.rowfoot .tl small{font-weight:400;color:var(--ink-faint);font-size:13px;margin-left:6px}
+.rowfoot span b{display:block;font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.016em;
+  font-variant-numeric:tabular-nums;margin-top:1px}
+.rowfoot span{text-align:right}
 
 /* ---- tables ---- */
 .scroller{overflow-x:auto}
@@ -470,6 +525,17 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .erow .nm{grid-area:nm;font-weight:500}
   .erow .kill{grid-area:kill;justify-self:end;font-size:22px}
   .erow .amt{grid-area:amt} .erow .fq{grid-area:fq} .erow .st{grid-area:st} .erow .cat{grid-area:cat}
+  .rowhead.pay{display:flex;gap:14px;padding:10px 16px;overflow-x:auto;scrollbar-width:none}
+  .rowhead.pay>span{display:none}
+  .rowhead.pay::before{content:"Sort";font-size:12px;color:var(--ink-faint)}
+  .erow.pay{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 34px;padding:14px 12px 14px 8px;
+    grid-template-areas:"grip nm nm kill" ". amt fq fq" ". st en en" ". cat cat cat"}
+  .erow.pay .grip{grid-area:grip;align-self:start;height:36px}
+  .erow.pay .nmc{grid-area:nm} .erow.pay .endc{grid-area:en}
+  .erow.pay .kill{align-self:start}
+  .rowfoot{padding:14px 16px;gap:10px 18px}
+  .rowfoot .tl{flex:1 1 100%}
+  .rowfoot span{text-align:left}
   .rowhead.drow{display:none}
   .erow.drow{grid-template-columns:1fr 1fr;grid-template-areas:"nm nm" "bal rate" "min cost" "del del";gap:9px}
   .erow.drow>span:first-child{grid-area:nm}
@@ -808,15 +874,17 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 
       <div class="card">
         <header><h3>Money in</h3><span class="sub">regular, repeating income</span><span class="fig" id="inTot"></span></header>
-        <div class="rowhead"><span>Source</span><span>Amount</span><span>How often</span><span>Category</span><span>First payment</span><span></span></div>
-        <div id="inList"></div>
+        <div class="rowhead pay" data-for="in"><span></span><button class="sorth" data-sort="name" data-kind="in">Source<i></i></button><button class="sorth r" data-sort="amount" data-kind="in">Amount<i></i></button><button class="sorth" data-sort="freq" data-kind="in">How often<i></i></button><button class="sorth" data-sort="cat" data-kind="in">Category<i></i></button><button class="sorth" data-sort="start" data-kind="in">First payment<i></i></button><button class="sorth" data-sort="end" data-kind="in">Ends<i></i></button><span></span></div>
+        <div id="inList" class="paylist"></div>
+        <div class="rowfoot" id="inFoot"></div>
         <button class="addrow" data-add="in">Add recurring income</button>
       </div>
 
       <div class="card">
         <header><h3>Money out</h3><span class="sub">regular, repeating bills — one-offs live on the Forecast</span><span class="fig" id="outTot"></span></header>
-        <div class="rowhead"><span>Bill</span><span>Amount</span><span>How often</span><span>Category</span><span>First payment</span><span></span></div>
-        <div id="outList"></div>
+        <div class="rowhead pay" data-for="out"><span></span><button class="sorth" data-sort="name" data-kind="out">Bill<i></i></button><button class="sorth r" data-sort="amount" data-kind="out">Amount<i></i></button><button class="sorth" data-sort="freq" data-kind="out">How often<i></i></button><button class="sorth" data-sort="cat" data-kind="out">Category<i></i></button><button class="sorth" data-sort="start" data-kind="out">First payment<i></i></button><button class="sorth" data-sort="end" data-kind="out">Ends<i></i></button><span></span></div>
+        <div id="outList" class="paylist"></div>
+        <div class="rowfoot" id="outFoot"></div>
         <button class="addrow" data-add="out">Add recurring bill</button>
       </div>
 
@@ -1225,6 +1293,7 @@ function normalise(raw){
       sc[k].forEach(it=>{
         if(!it.id) it.id=id();
         if(it.cat===undefined) it.cat="";
+        if(typeof it.end!=="string") it.end="";
         if(it.cat==="save") it.cat="debt";      /* savings is computed now, not a category */
         if(it.freq==="once"){
           sc.oneoffs.push({id:id(),name:it.name||"One-off",amount:Math.abs(+it.amount||0),
@@ -1269,6 +1338,7 @@ function step(d,freq,dir){
 }
 function occurrences(item,from,to){
   const out=[]; if(!item.start||!item.amount) return out;
+  if(item.end){ const e=parseD(item.end); if(e<to) to=e; }   // nothing fires after the end date
   const anchor=parseD(item.start);
   const begin=anchor>from?anchor:from;
   if(item.freq==="weekly"||item.freq==="biweekly"){
@@ -1288,7 +1358,9 @@ function occurrences(item,from,to){
   while(i++<3000){ const d=at(k); if(d>to) break; if(d>=begin) out.push(d); k++; }
   return out;
 }
-const monthly=it=>({weekly:(+it.amount||0)*52/12,biweekly:(+it.amount||0)*26/12,
+/* An item whose end date is before the plan starts no longer costs anything each month. */
+const ended=(it,start)=>!!it.end&&parseD(it.end)<parseD(start||(state&&state.start)||iso(new Date()));
+const monthly=(it,start)=>ended(it,start)?0:({weekly:(+it.amount||0)*52/12,biweekly:(+it.amount||0)*26/12,
   monthly:+it.amount||0,quarterly:(+it.amount||0)/3,yearly:(+it.amount||0)/12}[it.freq]||0);
 
 function project(sc){
@@ -1399,28 +1471,157 @@ function drawChart(target,p,gp){
 const spanMonths=()=>Math.max(1,horizon/30.44);
 function budgetTotals(sc){
   sc=sc||state;
-  const income=sc.inflow.reduce((a,i)=>a+monthly(i),0);
+  const income=sc.inflow.reduce((a,i)=>a+monthly(i,sc.start),0);
   const t={need:0,want:0,debt:0,"":0};
-  sc.outflow.forEach(it=>{ t[it.cat||""]+=monthly(it); });
+  sc.outflow.forEach(it=>{ t[it.cat||""]+=monthly(it,sc.start); });
   const span=spanMonths();
   (sc.oneoffs||[]).forEach(o=>{ if(o.dir!=="out") return; t[o.cat||""]+=Math.abs(+o.amount||0)/span; });
   const out=t.need+t.want+t.debt+t[""];
   return{income,t,out,save:income-out};
 }
+const GRIP=`<svg viewBox="0 0 10 16" width="10" height="16"><g fill="currentColor"><circle cx="2.5" cy="3" r="1.3"/><circle cx="7.5" cy="3" r="1.3"/><circle cx="2.5" cy="8" r="1.3"/><circle cx="7.5" cy="8" r="1.3"/><circle cx="2.5" cy="13" r="1.3"/><circle cx="7.5" cy="13" r="1.3"/></g></svg>`;
+const listOf=kind=>kind==="in"?state.inflow:state.outflow;
+function endCell(it,open){
+  if(!it.end&&!open) return `<span class="endc"><button class="endbtn" title="Add an end date">No end date</button></span>`;
+  return `<span class="endc"><input class="en" type="date" value="${esc(it.end)}" min="${esc(it.start||"")}" aria-label="Last payment">
+    ${it.end?`<button class="endx" title="Remove end date" aria-label="Remove end date">&times;</button>`:""}</span>`;
+}
 function rows(kind){
-  const list=kind==="in"?state.inflow:state.outflow;
+  const list=listOf(kind);
   const el=$(kind==="in"?"inList":"outList");
-  if(!list.length){ el.innerHTML=`<p class="empty">Nothing here yet.</p>`; return; }
-  el.innerHTML=list.map(it=>`
-    <div class="erow" data-id="${it.id}" data-kind="${kind}">
-      <input class="nm" value="${esc(it.name)}" placeholder="${kind==="in"?"Paycheque":"Rent"}" aria-label="Name">
+  if(!list.length){ el.innerHTML=`<p class="empty">Nothing here yet.</p>`; paintPay(kind); paintSortHeads(kind); return; }
+  el.innerHTML=list.map((it,i)=>`
+    <div class="erow pay" data-id="${it.id}" data-kind="${kind}">
+      <button class="grip" title="Drag to reorder" aria-label="Move ${esc(it.name||"item")} — use arrow keys">${GRIP}</button>
+      <span class="nmc"><input class="nm" value="${esc(it.name)}" placeholder="${kind==="in"?"Paycheque":"Rent"}" aria-label="Name">
+        <small class="pv" data-pv="${it.id}"></small></span>
       <input class="amt" type="number" step="0.01" value="${esc(it.amount)}" aria-label="Amount">
       <select class="fq" aria-label="How often">${FREQS.map(([v,l])=>`<option value="${v}"${v===it.freq?" selected":""}>${l}</option>`).join("")}</select>
       <select class="cat" data-c="${esc(it.cat||"")}" aria-label="Category">${CATS.map(([v,l])=>`<option value="${v}"${v===(it.cat||"")?" selected":""}>${l}</option>`).join("")}</select>
       <input class="st" type="date" value="${esc(it.start)}" aria-label="First payment">
+      ${endCell(it)}
       <button class="kill" title="Remove" aria-label="Remove">&times;</button>
     </div>`).join("");
+  paintPay(kind); paintSortHeads(kind);
 }
+/* The preview line under each name, and the totals footer. Text only, so typing never loses focus. */
+function itemPreview(it){
+  const start=state.start, m=monthly(it,start);
+  if(!it.amount||!it.start) return "";
+  if(ended(it,start)) return `Ended ${dLabel(parseD(it.end))} — not counted`;
+  let txt=`≈ <b>${money(Math.round(m))}</b>/mo · ${money(Math.round(m*12))}/yr`;
+  if(it.end){
+    const n=occurrences(it,parseD(start),parseD(it.end)).length;
+    txt=`≈ <b>${money(Math.round(m))}</b>/mo · ${n} payment${n===1?"":"s"} left · <b>${money2(n*(+it.amount||0))}</b> in total`;
+  }
+  return txt;
+}
+function paintPay(kind){
+  const list=listOf(kind);
+  list.forEach(it=>{ const el=document.querySelector(`[data-pv="${it.id}"]`); if(!el) return;
+    el.classList.toggle("ended",ended(it)); el.innerHTML=itemPreview(it); });
+  const foot=$(kind==="in"?"inFoot":"outFoot"); if(!foot) return;
+  const live=list.filter(it=>+it.amount&&!ended(it));
+  if(!list.length){ foot.innerHTML=""; return; }
+  const per=live.reduce((a,it)=>a+monthly(it),0);
+  const from=parseD(state.start), d30=new Date(from); d30.setDate(d30.getDate()+30);
+  const next30=live.reduce((a,it)=>a+occurrences(it,from,d30).length*(+it.amount||0),0);
+  const ends=list.filter(it=>it.end&&!ended(it)).length;
+  const offs=(state.oneoffs||[]).filter(o=>o.dir===(kind==="in"?"in":"out"));
+  const offM=offs.reduce((a,o)=>a+Math.abs(+o.amount||0),0)/spanMonths();
+  const offNote=offs.length?` · plus ${money(Math.round(offM))}/mo of one-offs on the Forecast`:"";
+  foot.innerHTML=`<span class="tl">Total<small>${live.length} ${kind==="in"?"source":"payment"}${live.length===1?"":"s"}${ends?` · ${ends} with an end date`:""}${offNote}</small></span>
+    <span>per month<b>${money2(per)}</b></span>
+    <span>per year<b>${money(Math.round(per*12))}</b></span>
+    <span>next 30 days<b>${money2(next30)}</b></span>`;
+}
+
+/* ---- sorting: click a column; the order it produces is saved, and you can drag from there ---- */
+const sortState={in:null,out:null};
+const SORTERS={
+  name:it=>(it.name||"").toLowerCase(),
+  amount:it=>monthly(it),
+  freq:it=>({weekly:1,biweekly:2,monthly:3,quarterly:4,yearly:5}[it.freq]||9),
+  cat:it=>({need:1,want:2,debt:3,"":4}[it.cat||""]),
+  start:it=>it.start||"9999",
+  end:it=>it.end||"9999"
+};
+function sortList(kind,key){
+  const cur=sortState[kind];
+  const dir = cur&&cur.key===key ? (cur.dir==="asc"?"desc":"asc") : (key==="amount"?"desc":"asc");
+  sortState[kind]={key,dir};
+  const f=SORTERS[key], k=dir==="asc"?1:-1;
+  listOf(kind).sort((a,b)=>{ const x=f(a),y=f(b); return (x<y?-1:x>y?1:0)*k; });
+  rows(kind); save();
+  flag("Sorted — drag the handles to fine-tune",2200);
+}
+function paintSortHeads(kind){
+  document.querySelectorAll(`.sorth[data-kind="${kind}"]`).forEach(b=>{
+    const st=sortState[kind], on=!!st&&st.key===b.dataset.sort;
+    b.classList.toggle("on",on); b.classList.toggle("asc",on&&st.dir==="asc");
+    b.setAttribute("aria-sort",on?(st.dir==="asc"?"ascending":"descending"):"none");
+    b.title = b.dataset.sort==="amount" ? "Sort by monthly cost" : "Sort";
+  });
+}
+
+/* ---- drag to reorder: pointer events, so it works with a mouse, a finger or a pen ---- */
+let drag=null;
+function moveItem(kind,from,to){
+  const list=listOf(kind); if(to<0||to>=list.length||from===to) return;
+  const [it]=list.splice(from,1); list.splice(to,0,it);
+  sortState[kind]=null;
+}
+document.addEventListener("pointerdown",e=>{
+  const g=e.target.closest(".erow.pay .grip"); if(!g||e.button>0) return;
+  const row=g.closest(".erow"); e.preventDefault();
+  const box=row.getBoundingClientRect();
+  drag={row,kind:row.dataset.kind,list:row.parentNode,startY:e.clientY,offset:e.clientY-box.top,pid:e.pointerId,moved:false};
+  try{ g.setPointerCapture(e.pointerId); }catch(err){}
+});
+document.addEventListener("pointermove",e=>{
+  if(!drag||e.pointerId!==drag.pid) return;
+  const dy=e.clientY-drag.startY;
+  if(!drag.moved){ if(Math.abs(dy)<4) return;
+    drag.moved=true; drag.row.classList.add("dragging"); document.body.classList.add("dragging-row"); }
+  // swap with a neighbour once the pointer passes its midpoint
+  const sibs=[...drag.list.querySelectorAll(".erow.pay")];
+  const i=sibs.indexOf(drag.row);
+  const prev=sibs[i-1], next=sibs[i+1];
+  const before=drag.row.getBoundingClientRect().top;
+  if(prev){ const r=prev.getBoundingClientRect(); if(e.clientY<r.top+r.height/2) drag.list.insertBefore(drag.row,prev); }
+  if(next){ const r=next.getBoundingClientRect(); if(e.clientY>r.top+r.height/2) drag.list.insertBefore(next,drag.row); }
+  const after=drag.row.getBoundingClientRect().top;
+  drag.startY+=after-before;                       // keep the row under the finger after a swap
+  drag.row.style.transform=`translateY(${e.clientY-drag.startY}px)`;
+  // nudge the page when dragging near the edges
+  if(e.clientY<80) window.scrollBy(0,-12); else if(e.clientY>innerHeight-60) window.scrollBy(0,12);
+});
+function endDrag(e){
+  if(!drag||(e&&e.pointerId!==drag.pid)) return;
+  const d=drag; drag=null;
+  d.row.style.transform=""; d.row.classList.remove("dragging"); document.body.classList.remove("dragging-row");
+  if(!d.moved) return;
+  const order=[...d.list.querySelectorAll(".erow.pay")].map(r=>r.dataset.id);
+  const list=listOf(d.kind), byid=new Map(list.map(x=>[x.id,x]));
+  const next=order.map(i=>byid.get(i)).filter(Boolean);
+  if(next.length===list.length){ list.splice(0,list.length,...next); }
+  sortState[d.kind]=null; rows(d.kind); save();
+  const r=document.querySelector(`.erow[data-id="${d.row.dataset.id}"]`); if(r) r.classList.add("moved");
+  flag("Order saved",1400);
+}
+document.addEventListener("pointerup",endDrag);
+document.addEventListener("pointercancel",endDrag);
+/* keyboard: focus a handle, then arrow up/down */
+document.addEventListener("keydown",e=>{
+  const g=e.target.closest&&e.target.closest(".erow.pay .grip"); if(!g) return;
+  if(e.key!=="ArrowUp"&&e.key!=="ArrowDown") return;
+  e.preventDefault();
+  const row=g.closest(".erow"), kind=row.dataset.kind, list=listOf(kind);
+  const i=list.findIndex(x=>x.id===row.dataset.id), j=i+(e.key==="ArrowUp"?-1:1);
+  if(j<0||j>=list.length) return;
+  moveItem(kind,i,j); rows(kind); save();
+  const ng=document.querySelector(`.erow[data-id="${row.dataset.id}"] .grip`); if(ng) ng.focus();
+});
 function renderBudget(){
   const {income,t,out,save}=budgetTotals(), sp=doc.split;
   const pct=v=>income>0?(v/income*100):0;
@@ -1455,8 +1656,7 @@ function renderBudget(){
     : `<span style="color:var(--amber)">= ${sum}% — targets should total 100</span>`;
 
   rows("in"); rows("out");
-  $("inTot").textContent=money(Math.round(income))+" / mo";
-  $("outTot").textContent=money(Math.round(out))+" / mo";
+  paintHeadTotals();
 
   const unc=[];
   state.outflow.forEach(it=>{ if(!it.cat) unc.push(it.name||"(unnamed)"); });
@@ -1488,7 +1688,7 @@ function budgetSlices(mode,sc){
   const {income,t,out,save}=budgetTotals(sc), span=spanMonths(), list=[];
   if(mode==="item"){
     const lines=[];
-    sc.outflow.forEach(it=>lines.push({label:it.name||"(unnamed)",cat:it.cat||"",val:monthly(it),
+    sc.outflow.forEach(it=>lines.push({label:it.name||"(unnamed)",cat:it.cat||"",val:monthly(it,sc.start),
       sub:(FREQS.find(f=>f[0]===it.freq)||["",""])[1]}));
     (sc.oneoffs||[]).filter(o=>o.dir==="out").forEach(o=>lines.push({label:o.name||"(unnamed)",cat:o.cat||"",
       val:Math.abs(+o.amount||0)/span,sub:"one-off, spread"}));
@@ -1712,8 +1912,8 @@ function renderWhatIf(){
   const key=it=>(it.name||"").trim().toLowerCase();
   const mapOf=sc=>{
     const m=new Map();
-    sc.outflow.forEach(it=>m.set(key(it),{it,m:monthly(it),dir:"out"}));
-    sc.inflow.forEach(it=>m.set("in:"+key(it),{it,m:-monthly(it),dir:"in"}));
+    sc.outflow.forEach(it=>m.set(key(it),{it,m:monthly(it,sc.start),dir:"out"}));
+    sc.inflow.forEach(it=>m.set("in:"+key(it),{it,m:-monthly(it,sc.start),dir:"in"}));
     return m;
   };
   const A=mapOf(base), B=mapOf(state);
@@ -2205,8 +2405,8 @@ function paintAccount(){
 function fingerprint(d){
   if(!d||!Array.isArray(d.scenarios)) return "";
   const slim=sc=>({n:sc.name,b:+sc.balance||0,s:sc.start,
-    i:(sc.inflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||""]),
-    o:(sc.outflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||""]),
+    i:(sc.inflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||"",x.end||""]),
+    o:(sc.outflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||"",x.end||""]),
     f:(sc.oneoffs||[]).map(x=>[x.name||"",+x.amount||0,x.date,x.dir,x.cat||""])});
   return JSON.stringify({sc:d.scenarios.map(slim),
     dt:(d.debts||[]).map(x=>[x.name||"",+x.balance||0,+x.apr||0,+x.minimum||0]),
@@ -2362,10 +2562,14 @@ async function wipeEverything(){
 /* ============================================================
    16. EVENTS
    ============================================================ */
+function paintHeadTotals(){
+  const rec=kind=>listOf(kind).reduce((a,it)=>a+monthly(it),0);
+  $("inTot").textContent=money(Math.round(rec("in")))+" / mo";
+  $("outTot").textContent=money(Math.round(rec("out")))+" / mo";
+}
 function budgetLight(){
-  const{income,out}=budgetTotals();
-  $("inTot").textContent=money(Math.round(income))+" / mo";
-  $("outTot").textContent=money(Math.round(out))+" / mo";
+  paintHeadTotals();
+  safely(()=>{ paintPay("in"); paintPay("out"); });
   save();
 }
 document.addEventListener("input",e=>{
@@ -2376,6 +2580,7 @@ document.addEventListener("input",e=>{
     if(e.target.classList.contains("nm")) it.name=e.target.value;
     if(e.target.classList.contains("amt")) it.amount=e.target.value;
     if(e.target.classList.contains("st")) it.start=e.target.value;
+    if(e.target.classList.contains("en")) it.end=e.target.value;
     budgetLight(); return;
   }
   if(row&&row.dataset.debt){
@@ -2402,6 +2607,14 @@ document.addEventListener("input",e=>{
     renderBudget(); save();
   }
 });
+/* an emptied end-date box turns back into "No end date" once you leave it */
+document.addEventListener("focusout",e=>{
+  if(!e.target.matches||!e.target.matches(".erow input.en")) return;
+  const row=e.target.closest(".erow");
+  setTimeout(()=>{ const it=listOf(row.dataset.kind).find(x=>x.id===row.dataset.id);
+    if(it&&!it.end&&document.activeElement!==e.target) renderBudget();
+    else if(it&&it.end&&e.target.value&&!row.querySelector(".endx")) renderBudget(); },120);
+});
 document.addEventListener("change",e=>{
   if(e.target.id==="cmpToggle"){ doc.compare=e.target.checked; renderWhatIf(); save(); return; }
   if(e.target.id==="baseSel"){ doc.baseId=e.target.value; renderWhatIf(); save(); return; }
@@ -2411,6 +2624,8 @@ document.addEventListener("change",e=>{
     const list=row.dataset.kind==="in"?state.inflow:state.outflow;
     const it=list.find(x=>x.id===row.dataset.id); if(!it) return;
     if(e.target.classList.contains("fq")){ it.freq=e.target.value; renderBudget(); save(); }
+    if(e.target.classList.contains("en")&&it.end&&it.start&&it.end<it.start){
+      it.end=it.start; e.target.value=it.start; flag("End date can't be before the first payment",2400); budgetLight(); }
     if(e.target.classList.contains("cat")){ it.cat=e.target.value; e.target.dataset.c=it.cat; renderBudget(); save(); }
   }
 });
@@ -2458,6 +2673,17 @@ document.addEventListener("click",e=>{
   const sl=e.target.closest("[data-slice]");
   if(sl){ sliceMode=sl.dataset.slice; safely(renderDonut); return; }
 
+  const sh=e.target.closest(".sorth");
+  if(sh){ sortList(sh.dataset.kind,sh.dataset.sort); return; }
+  const eb=e.target.closest(".endbtn");
+  if(eb){ const row=eb.closest(".erow"), it=listOf(row.dataset.kind).find(x=>x.id===row.dataset.id); if(!it) return;
+    eb.parentNode.outerHTML=endCell(it,true);
+    const inp=document.querySelector(`.erow[data-id="${it.id}"] input.en`);
+    if(inp){ inp.focus(); try{ inp.showPicker(); }catch(err){} }
+    return; }
+  const ex=e.target.closest(".endx");
+  if(ex){ const row=ex.closest(".erow"), it=listOf(row.dataset.kind).find(x=>x.id===row.dataset.id); if(!it) return;
+    it.end=""; renderBudget(); save(); flag("End date removed",1400); return; }
   const kill=e.target.closest(".kill");
   if(kill){
     const row=kill.closest(".erow"); if(!row) return;
@@ -2475,7 +2701,7 @@ document.addEventListener("click",e=>{
   }
   if(add==="in"||add==="out"){
     (add==="in"?state.inflow:state.outflow).push({id:id(),name:"",amount:0,freq:"monthly",
-      start:state.start,cat:add==="in"?"":"need"});
+      start:state.start,end:"",cat:add==="in"?"":"need"});
     renderBudget(); save();
     const last=$(add==="in"?"inList":"outList").querySelector(".erow:last-of-type .nm"); if(last) last.focus();
     return;
