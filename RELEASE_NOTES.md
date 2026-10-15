@@ -9,6 +9,32 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## Android app 1.0 — 15 October 2026
+
+**Waterline is now an Android app.**
+
+The app opens [wtrline.com](https://wtrline.com) full-screen, with no browser bar, under its own
+icon on your home screen. It runs the live site, so every website update reaches the app
+straight away. There's nothing to reinstall.
+
+- **Signing in works as on the web.** That includes Google, because the app runs on Chrome rather
+  than a WebView, and Google blocks sign-in inside WebViews.
+- **wtrline.com links open in the app,** including sign-in emails and links people share with you.
+- **Icon and splash** come from the Waterline mark: an adaptive icon that fits round, squircle and
+  square launchers, with a navy splash screen.
+- **Small:** 468 KB, Android 5.0 and up, targeting Android 15.
+- **Download** it from the repository's
+  [Releases](https://github.com/jskrnh/waterline/releases) page. Every signed build is published
+  there as `waterline-1.N.apk`.
+
+### How it's built
+
+- `android/` contains the app, built by GitHub Actions. You don't need Android Studio.
+- `/.well-known/assetlinks.json` on the site proves the app and the site belong together.
+  Google's verifier confirms the link for package `com.wtrline.app`.
+
+---
+
 ## 2.5 — 15 October 2026
 
 **Overview opens with your money, not your targets, and the tables finally fit a phone.**
