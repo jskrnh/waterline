@@ -10,6 +10,7 @@
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light dark">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Waterline">
 <meta property="og:url" content="https://wtrline.com/">
@@ -55,6 +56,9 @@
   --shadow:0 1px 3px rgba(0,0,0,.05);
   color-scheme:light;
 }
+/* Picking Light means light: "only" stops phone browsers (Chrome's auto-dark, Samsung Internet)
+   from repainting the page dark on their own. */
+:root[data-theme="light"]{color-scheme:only light}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#000000; --paper:#141416; --panel:#141416;
@@ -373,6 +377,53 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 .card.money .addrow{color:var(--tone)}
 .card.money .addrow:hover{background:color-mix(in srgb,var(--tone) 10%,var(--panel))}
 .card.money .endbtn{background:var(--panel)}
+
+/* chart window: zoom, pick a day, overview strip */
+.chartcard svg.chart{cursor:zoom-in}
+.chartfoot .zoomhint{margin-left:auto;color:var(--accent)}
+.sheet.cwsheet{max-width:1000px;padding:20px 22px 16px;max-height:92vh;overflow:auto;overscroll-behavior:contain}
+.cwhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.cwhead h2{margin:0;font-size:22px}
+.cwx{margin-left:auto;width:34px;height:34px;border-radius:var(--pill);border:1px solid var(--line);background:none;
+  color:var(--ink-soft);font-size:20px;line-height:1;cursor:pointer;font-family:var(--font)}
+.cwx:hover{color:var(--ink);border-color:var(--ink-faint)}
+.cwbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.cwbar .chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.cwzoom{margin-left:auto;display:flex;gap:6px}
+.cwzoom .calnav{font-size:18px}
+svg.cwchart{display:block;width:100%;touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none}
+svg.cwmini{display:block;width:100%;height:56px;margin-top:6px;touch-action:none;cursor:grab;user-select:none;
+  border:1px solid var(--hair);border-radius:10px;background:var(--paper)}
+svg.cwmini:active{cursor:grabbing}
+.cwdetail{margin-top:14px}
+.cwsum{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px;color:var(--ink-faint);letter-spacing:0;padding:0 2px 12px;
+  border-bottom:1px solid var(--hair)}
+.cwsum b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.cwsum b.neg{color:var(--signal)}
+.cwday{padding-top:12px}
+.cwdh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cwdh h4{font-size:17px;letter-spacing:-.016em;margin-right:auto}
+.cwdh .bal{font-size:13px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.cwdh .bal b{color:var(--ink);font-size:16px;font-weight:600;margin-left:4px}
+.cwdh .bal b.neg{color:var(--signal)}
+.cwstep{display:flex;gap:6px}
+.cwstep button{border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);border-radius:var(--pill);
+  font-family:var(--font);font-size:12.5px;padding:5px 11px;cursor:pointer;white-space:nowrap}
+.cwstep button:hover{color:var(--ink);border-color:var(--ink-faint)}
+.cwstep button:disabled{opacity:.4;cursor:default}
+.cwday .dlist{padding:0}
+.cwday .net{font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+.cwday .net.pos{color:var(--gain)} .cwday .net.neg{color:var(--signal)}
+.cwempty{font-size:14px;color:var(--ink-faint);padding:10px 0 2px}
+.cwhint{margin-top:12px;text-align:center}
+.cwhint .touch{display:none}
+@media (hover:none){ .cwhint .touch{display:inline} .cwhint .mouse{display:none} }
+@media(max-width:760px){
+  .veil.cwveil{align-items:flex-end;padding:0}
+  .sheet.cwsheet{max-width:none;width:100%;border-radius:20px 20px 0 0;padding:14px 14px 18px;max-height:94vh}
+  .cwhead h2{font-size:19px}
+  .chartfoot .zoomhint{margin-left:0;flex-basis:100%}
+}
 
 /* sample preview banner */
 .sandbar{position:sticky;top:calc(53px + env(safe-area-inset-top,0px));z-index:880;
@@ -1059,6 +1110,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
             <i><span class="sw" style="background:var(--accent)"></span> balance</i>
             <i><span class="sw" style="background:color-mix(in srgb,var(--accent) 22%,transparent)"></span> below zero</i>
             <i><span class="sw" style="background:var(--signal)"></span> lowest point</i>
+            <i class="zoomhint">Tap the chart to zoom and explore</i>
           </div>
           <div class="cmpstrip" id="cmpStrip">
             <span class="leg"><span class="dashkey"></span> <span id="cmpBaseName">Baseline</span> lowest <b id="cmpBaseVal">—</b></span>
@@ -1308,6 +1360,29 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   </div>
 </div>
 
+<div class="veil cwveil" id="cwVeil">
+  <div class="sheet cwsheet" role="dialog" aria-modal="true" aria-labelledby="cwTitle">
+    <div class="cwhead">
+      <h2 id="cwTitle">Balance forecast</h2>
+      <button class="cwx" id="cwClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="cwbar">
+      <span class="chiprow" id="cwRanges">
+        <button class="chip" data-cw="30">1M</button><button class="chip" data-cw="90">3M</button>
+        <button class="chip" data-cw="180">6M</button><button class="chip" data-cw="all">All</button>
+      </span>
+      <span class="cwzoom">
+        <button class="calnav" id="cwOut" aria-label="Zoom out">&minus;</button>
+        <button class="calnav" id="cwIn" aria-label="Zoom in">+</button>
+      </span>
+    </div>
+    <svg class="chart cwchart" id="cwChart" role="img" aria-label="Zoomable balance forecast"></svg>
+    <svg class="cwmini" id="cwMini" role="img" aria-label="The whole forecast; the highlighted part is what's shown above"></svg>
+    <div class="cwdetail" id="cwDetail"></div>
+    <p class="tiny cwhint"><span class="touch">Pinch to zoom · drag across the chart to pick a day · drag the strip to move</span><span class="mouse">Scroll to zoom · click or drag to pick a day · drag the strip to move · ← → step through days</span></p>
+  </div>
+</div>
+
 <script type="module">
 /* ============================================================
    1. CONFIG — lives in config.js so an index.html update
@@ -1537,92 +1612,341 @@ function stepPath(s,X,Y,t1){
   for(let i=1;i<s.length;i++) d+=` L ${X(s[i].date.getTime())} ${Y(s[i-1].bal)} L ${X(s[i].date.getTime())} ${Y(s[i].bal)}`;
   return d+` L ${X(t1)} ${Y(s[s.length-1].bal)}`;
 }
-function drawChart(target,p,gp){
-  const svg=$(target), s=p&&p.series;
+/* The balance just after time t (carried forward through quiet days). */
+function balanceAt(series,t){
+  let bal=series[0].bal;
+  for(const d of series){ if(d.date.getTime()<=t) bal=d.bal; else break; }
+  return bal;
+}
+/* Only the part of a series inside [t0,t1], with the balance carried in at t0. */
+function windowSeries(series,t0,t1){
+  const out=[{date:new Date(t0),bal:balanceAt(series,t0),items:[],delta:0}];
+  series.forEach(d=>{ const t=d.date.getTime(); if(t>t0&&t<=t1) out.push(d); });
+  return out;
+}
+/* opt (for the zoom window): {t0, t1, h, sel} — a visible range in ms, a height, a selected time. */
+function drawChart(target,p,gp,opt){
+  const svg=$(target);
   if(!svg) return;
-  if(!s||s.length<2){ svg.innerHTML=""; return; }
+  if(!p||!p.series||p.series.length<2){ svg.innerHTML=""; return; }
+  const t0=opt?opt.t0:p.from.getTime(), t1=opt?opt.t1:p.to.getTime();
+  const s=opt?windowSeries(p.series,t0,t1):p.series;
+  const gs=gp&&gp.series.length>1?(opt?windowSeries(gp.series,t0,t1):gp.series):null;
   /* Draw at the size the chart is actually shown, so text keeps its shape on every screen. */
   const W=Math.max(280,Math.round(svg.getBoundingClientRect().width||svg.parentNode.clientWidth||960));
   const narrow=W<560;
-  const H=narrow?Math.round(Math.min(320,Math.max(230,W*0.78))):Math.round(Math.min(340,Math.max(260,W*0.31)));
+  const H=opt&&opt.h?opt.h:(narrow?Math.round(Math.min(320,Math.max(230,W*0.78))):Math.round(Math.min(340,Math.max(260,W*0.31))));
   svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("preserveAspectRatio","xMidYMid meet");
   svg.style.height=H+"px";
-  const k=1, FS=narrow?11:12, FB=narrow?13:14;
+  const FS=narrow?11:12, FB=narrow?13:14;
   const PR=narrow?10:16, PT=narrow?24:20, PB=24;
-  const t0=p.from.getTime(), t1=p.to.getTime();
-  const vals0=s.map(d=>d.bal).concat(gp?gp.series.map(d=>d.bal):[]);
-  const widest=Math.max(...[Math.min(0,...vals0),Math.max(0,...vals0)].map(v=>money(Math.round(v*1.12)).length));
-  const PL=Math.round(widest*FS*0.6)+14;
-  const faint=cssVar("--ink-faint"), inkc=cssVar("--ink"), hair=cssVar("--hair"),
-        acc=cssVar("--accent"), sig=cssVar("--signal");
-  const vals=vals0;
+  const vals=s.map(d=>d.bal).concat(gs?gs.map(d=>d.bal):[]);
   let lo=Math.min(0,...vals), hi=Math.max(0,...vals);
   const pad=(hi-lo)*.12||100; lo-=pad; hi+=pad;
+  const widest=Math.max(money(Math.round(lo)).length,money(Math.round(hi)).length);
+  const PL=Math.round(widest*FS*0.6)+14;
+  const faint=cssVar("--ink-faint"), inkc=cssVar("--ink"), hair=cssVar("--hair"),
+        acc=cssVar("--accent"), sig=cssVar("--signal"), panel=cssVar("--panel");
   const X=t=>PL+((t-t0)/(t1-t0))*(W-PL-PR);
   const Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
+  svg._geo={PL,PR,W,H,PT,PB,t0,t1};                 // for turning a tap into a date
   const zeroY=Y(0);
   const dPath=stepPath(s,X,Y,t1);
   const fill=dPath+` L ${X(t1)} ${zeroY} L ${X(t0)} ${zeroY} Z`;
-  const ghost=gp&&gp.series.length>1
-    ? `<path d="${stepPath(gp.series,X,Y,t1)}" fill="none" stroke="${faint}" stroke-width="1.8" stroke-dasharray="5 4" stroke-linejoin="round"/>
-       <circle cx="${X(gp.low.date.getTime())}" cy="${Y(gp.low.bal)}" r="4" fill="none" stroke="${faint}" stroke-width="1.8"/>`:"";
-  /* month lines every month; labels thinned out so they never collide */
-  const monthPx=(W-PL-PR)/((t1-t0)/(30.44*864e5));
-  const every=Math.max(1,Math.ceil((FS*2.6+8)/monthPx));
-  let grid="", cur=new Date(p.from.getFullYear(),p.from.getMonth()+1,1), mi=0;
-  while(cur<p.to){
-    const x=X(cur.getTime());
-    grid+=`<line x1="${x}" y1="${PT}" x2="${x}" y2="${H-PB}" stroke="${hair}" stroke-width="1"/>`;
-    if(mi%every===0&&x<W-PR-FS*1.6){
-      const lab=cur.getMonth()===0&&every<3?cur.toLocaleDateString("en-CA",{month:"short"})+" ’"+String(cur.getFullYear()).slice(2):cur.toLocaleDateString("en-CA",{month:"short"});
-      grid+=`<text x="${x}" y="${H-8}" text-anchor="middle" font-size="${FS}" fill="${faint}">${lab}</text>`;
+  const gLowIn=gp&&gp.low.date.getTime()>=t0&&gp.low.date.getTime()<=t1;
+  const ghost=gs
+    ? `<path d="${stepPath(gs,X,Y,t1)}" fill="none" stroke="${faint}" stroke-width="1.8" stroke-dasharray="5 4" stroke-linejoin="round"/>
+       ${gLowIn?`<circle cx="${X(gp.low.date.getTime())}" cy="${Y(gp.low.bal)}" r="4" fill="none" stroke="${faint}" stroke-width="1.8"/>`:""}`:"";
+  /* ticks: months for long ranges, days or weeks when zoomed in; labels thinned so they never collide */
+  const spanDays=(t1-t0)/864e5, plotW=W-PL-PR;
+  let grid="";
+  if(spanDays>62){
+    const every=Math.max(1,Math.ceil((FS*2.6+8)/(plotW/(spanDays/30.44))));
+    const st=new Date(t0); let cur=new Date(st.getFullYear(),st.getMonth()+1,1), mi=0;
+    while(cur.getTime()<t1){
+      const x=X(cur.getTime());
+      grid+=`<line x1="${x}" y1="${PT}" x2="${x}" y2="${H-PB}" stroke="${hair}" stroke-width="1"/>`;
+      if(mi%every===0&&x<W-PR-FS*1.6&&x>PL+FS*1.6){
+        const lab=cur.toLocaleDateString("en-CA",{month:"short"})+(cur.getMonth()===0&&every<3?" ’"+String(cur.getFullYear()).slice(2):"");
+        grid+=`<text x="${x}" y="${H-8}" text-anchor="middle" font-size="${FS}" fill="${faint}">${lab}</text>`;
+      }
+      cur=new Date(cur.getFullYear(),cur.getMonth()+1,1); mi++;
     }
-    cur=new Date(cur.getFullYear(),cur.getMonth()+1,1); mi++;
+  } else {
+    const need=FS*3.6+10, perDay=plotW/spanDays;
+    const step=[1,2,7,14,28].find(n=>n*perDay>=need)||28;
+    const st=new Date(t0); let cur=new Date(st.getFullYear(),st.getMonth(),st.getDate()+1);
+    if(step>=7){ while(cur.getDay()!==1) cur.setDate(cur.getDate()+1); }   // weeks start on Monday
+    let k=0;
+    while(cur.getTime()<t1){
+      const x=X(cur.getTime());
+      if(k%step===0){
+        grid+=`<line x1="${x}" y1="${PT}" x2="${x}" y2="${H-PB}" stroke="${hair}" stroke-width="1"/>`;
+        if(x<W-PR-FS*2&&x>PL+FS*2) grid+=`<text x="${x}" y="${H-8}" text-anchor="middle" font-size="${FS}" fill="${faint}">${dLabel(cur)}</text>`;
+      }
+      cur.setDate(cur.getDate()+1); k++;
+    }
   }
   let yl=""; [hi,(hi+lo)/2,lo].forEach(v=>{
     yl+=`<text x="${PL-9}" y="${Y(v)+4}" text-anchor="end" font-size="${FS}" fill="${faint}">${money(Math.round(v))}</text>`; });
-  const lx=X(p.low.date.getTime()), ly=Y(p.low.bal), flip=lx>W-(narrow?96:150);
-  /* Label the low point in whichever corner around the dot the balance line crosses least. */
-  const amtTxt=money(Math.round(p.low.bal)), dateTxt=dLabel(p.low.date);
-  const bw=Math.max(amtTxt.length*FB*0.6,dateTxt.length*FS*0.58)+6, bh=FB+FS+8;
-  const pts=[]; for(let i=1;i<s.length;i++){            // the step path, sampled every few pixels
-    const xa=X(s[i-1].date.getTime()), xb=X(s[i].date.getTime()), ya=Y(s[i-1].bal), yb=Y(s[i].bal);
-    for(let x=xa;x<=xb;x+=3) pts.push([x,ya]);
-    for(let y=Math.min(ya,yb);y<=Math.max(ya,yb);y+=3) pts.push([xb,y]); }
-  const cands=[];
-  [ly-10-bh, ly+10, zeroY+5, zeroY-bh-5, ly-bh/2].forEach(y0=>{
-    for(let i=0;i<=14;i++) [1,-1].forEach(dx=>{
-      const x0=dx>0?lx+9+i*16:lx-9-bw-i*16;
-      const inside=x0>=PL&&x0+bw<=W-PR&&y0>=PT-2&&y0+bh<=H-PB+2;
-      if(!inside) return;
-      const hits=pts.filter(([x,y])=>x>=x0-3&&x<=x0+bw+3&&y>=y0-3&&y<=y0+bh+3).length
-        +((zeroY>y0-2&&zeroY<y0+bh+2)?8:0);                 // don't sit on the zero line either
-      const cx=x0+(dx>0?0:bw), cy=y0+bh/2;
-      cands.push({dx,x0,y0,score:hits*10+Math.hypot(cx-lx,cy-ly)/12});
+  /* lowest point (when it's in view) */
+  let lowSvg="";
+  const lowT=p.low.date.getTime();
+  if(lowT>=t0&&lowT<=t1){
+    const lx=X(lowT), ly=Y(p.low.bal);
+    const amtTxt=money(Math.round(p.low.bal)), dateTxt=dLabel(p.low.date);
+    const bw=Math.max(amtTxt.length*FB*0.6,dateTxt.length*FS*0.58)+6, bh=FB+FS+8;
+    const pts=[]; for(let i=1;i<s.length;i++){            // the step path, sampled every few pixels
+      const xa=X(s[i-1].date.getTime()), xb=X(s[i].date.getTime()), ya=Y(s[i-1].bal), yb=Y(s[i].bal);
+      for(let x=xa;x<=xb;x+=3) pts.push([x,ya]);
+      for(let y=Math.min(ya,yb);y<=Math.max(ya,yb);y+=3) pts.push([xb,y]); }
+    const cands=[];
+    [ly-10-bh, ly+10, zeroY+5, zeroY-bh-5, ly-bh/2].forEach(y0=>{
+      for(let i=0;i<=14;i++) [1,-1].forEach(dx=>{
+        const x0=dx>0?lx+9+i*16:lx-9-bw-i*16;
+        if(!(x0>=PL&&x0+bw<=W-PR&&y0>=PT-2&&y0+bh<=H-PB+2)) return;
+        const hits=pts.filter(([x,y])=>x>=x0-3&&x<=x0+bw+3&&y>=y0-3&&y<=y0+bh+3).length
+          +((zeroY>y0-2&&zeroY<y0+bh+2)?8:0);               // don't sit on the zero line either
+        const cx=x0+(dx>0?0:bw), cy=y0+bh/2;
+        cands.push({dx,x0,y0,score:hits*10+Math.hypot(cx-lx,cy-ly)/12});
+      });
     });
-  });
-  cands.sort((a,b)=>a.score-b.score);
-  const best=cands[0]||{dx:lx>W/2?-1:1,x0:lx>W/2?lx-9-bw:lx+9,y0:Math.max(PT,ly-10-bh)};
-  const flipL=best.dx<0, lxT=flipL?best.x0+bw:best.x0;
-  const yAmt=best.y0+FB, yDate=best.y0+FB+FS+4;
-  const far=Math.hypot(lxT-lx,(best.y0+bh/2)-ly)>26;
-  const leader=far?`<line x1="${lx}" y1="${ly}" x2="${flipL?lxT+3:lxT-3}" y2="${best.y0+bh/2}" stroke="${sig}" stroke-width="1" opacity=".7"/>`:"";   // put the low-point label above the dot when there's room
+    cands.sort((a,b)=>a.score-b.score);
+    const best=cands[0]||{dx:lx>W/2?-1:1,x0:lx>W/2?lx-9-bw:lx+9,y0:Math.max(PT,ly-10-bh)};
+    const flipL=best.dx<0, lxT=flipL?best.x0+bw:best.x0;
+    const far=Math.hypot(lxT-lx,(best.y0+bh/2)-ly)>26;
+    lowSvg=`<line x1="${lx}" y1="${PT}" x2="${lx}" y2="${H-PB}" stroke="${sig}" stroke-width="1" stroke-dasharray="3 3"/>
+      <circle cx="${lx}" cy="${ly}" r="5" fill="${sig}"/>
+      ${far?`<line x1="${lx}" y1="${ly}" x2="${flipL?lxT+3:lxT-3}" y2="${best.y0+bh/2}" stroke="${sig}" stroke-width="1" opacity=".7"/>`:""}
+      <g paint-order="stroke" stroke="${panel}" stroke-width="4" stroke-linejoin="round">
+      <text x="${lxT}" y="${best.y0+FB}" text-anchor="${flipL?"end":"start"}" font-size="${FB}" font-weight="600" fill="${sig}">${amtTxt}</text>
+      <text x="${lxT}" y="${best.y0+FB+FS+4}" text-anchor="${flipL?"end":"start"}" font-size="${FS}" fill="${sig}">${dateTxt}</text></g>`;
+  }
+  /* the selected day (zoom window only) */
+  let selSvg="";
+  if(opt&&opt.sel!=null&&opt.sel>=t0&&opt.sel<=t1){
+    const sx=X(opt.sel), sy=Y(balanceAt(p.series,opt.sel));
+    selSvg=`<line x1="${sx}" y1="${PT-6}" x2="${sx}" y2="${H-PB}" stroke="${inkc}" stroke-width="1.2"/>
+      <circle cx="${sx}" cy="${sy}" r="7" fill="${panel}" stroke="${inkc}" stroke-width="2.4"/>`;
+  }
   svg.innerHTML=`<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
     <clipPath id="bz-${target}"><rect x="0" y="${zeroY}" width="${W}" height="${Math.max(0,H-zeroY)}"/></clipPath>
+    <clipPath id="pa-${target}"><rect x="${PL}" y="0" width="${W-PL-PR}" height="${H}"/></clipPath>
     ${grid}
-    <path d="${fill}" fill="${acc}" opacity=".16" clip-path="url(#bz-${target})"/>
+    <g clip-path="url(#pa-${target})"><path d="${fill}" fill="${acc}" opacity=".16" clip-path="url(#bz-${target})"/></g>
     <line x1="${PL}" y1="${zeroY}" x2="${W-PR}" y2="${zeroY}" stroke="${inkc}" stroke-width="1.4"/>
     <text x="${W-PR}" y="${zeroY-7}" text-anchor="end" font-size="${FS}" fill="${inkc}">zero</text>
-    ${ghost}
-    <path d="${dPath}" fill="none" stroke="${acc}" stroke-width="2.4" stroke-linejoin="round"/>
+    <g clip-path="url(#pa-${target})">${ghost}
+    <path d="${dPath}" fill="none" stroke="${acc}" stroke-width="${opt?2.2:2.4}" stroke-linejoin="round"/></g>
     ${yl}
-    <line x1="${lx}" y1="${PT}" x2="${lx}" y2="${H-PB}" stroke="${sig}" stroke-width="1" stroke-dasharray="3 3"/>
-    <circle cx="${lx}" cy="${ly}" r="5" fill="${sig}"/>
-    ${leader}<g paint-order="stroke" stroke="${cssVar("--panel")}" stroke-width="4" stroke-linejoin="round">
-    <text x="${lxT}" y="${yAmt}" text-anchor="${flipL?"end":"start"}" font-size="${FB}" font-weight="600" fill="${sig}">${amtTxt}</text>
-    <text x="${lxT}" y="${yDate}" text-anchor="${flipL?"end":"start"}" font-size="${FS}" fill="${sig}">${dateTxt}</text></g>
+    ${lowSvg}
+    ${selSvg}
   </g>`;
 }
+
+/* ============================================================
+   6b. CHART WINDOW — tap the forecast chart to open it: zoom, pick a day, see the overview
+   ============================================================ */
+const DAY=864e5;
+const CW={open:false,p:null,gp:null,dm:null,min:0,max:0,t0:0,t1:0,sel:null};
+function cwOpen(src){
+  const p=project(); if(!p||!p.series||p.series.length<2) return;
+  CW.p=p; CW.gp=baseline(); CW.dm=dayMap(p);
+  CW.min=p.from.getTime(); CW.max=p.to.getTime(); CW.t0=CW.min; CW.t1=CW.max;
+  CW.sel=p.low.date.getTime(); CW.open=true;
+  $("cwTitle").textContent=src==="chart2"?`Balance forecast · ${state.name}`:"Balance forecast";
+  $("cwVeil").dataset.open="1"; document.body.style.overflow="hidden";
+  cwDraw(); setTimeout(()=>$("cwClose").focus({preventScroll:true}),30);
+}
+function cwClose(){ CW.open=false; $("cwVeil").dataset.open="0"; document.body.style.overflow=""; }
+function cwHeight(){
+  const w=$("cwChart").getBoundingClientRect().width;
+  return w<560?Math.round(Math.min(330,Math.max(230,innerHeight*0.4))):Math.round(Math.min(400,Math.max(280,innerHeight*0.42)));
+}
+let cwRaf=0;
+function cwDraw(){
+  if(!CW.open) return;
+  cancelAnimationFrame(cwRaf);
+  cwRaf=requestAnimationFrame(()=>{
+    safely(()=>drawChart("cwChart",CW.p,CW.gp,{t0:CW.t0,t1:CW.t1,h:cwHeight(),sel:CW.sel}));
+    safely(cwMini); safely(cwDetail); safely(cwChips);
+  });
+}
+function cwClamp(t0,span){
+  span=Math.max(7*DAY,Math.min(CW.max-CW.min,span));
+  t0=Math.max(CW.min,Math.min(CW.max-span,t0));
+  return [t0,t0+span];
+}
+function cwZoom(f,center){
+  const c=center!=null?center:(CW.sel!=null&&CW.sel>=CW.t0&&CW.sel<=CW.t1?CW.sel:(CW.t0+CW.t1)/2);
+  const r=(c-CW.t0)/(CW.t1-CW.t0), span=(CW.t1-CW.t0)*f;
+  [CW.t0,CW.t1]=cwClamp(c-span*r,span); cwDraw();
+}
+function cwTimeAt(clientX){
+  const svg=$("cwChart"), g=svg._geo; if(!g) return CW.t0;
+  const r=svg.getBoundingClientRect(), x=(clientX-r.left)*(g.W/r.width);
+  const f=Math.min(1,Math.max(0,(x-g.PL)/(g.W-g.PL-g.PR)));
+  return g.t0+f*(g.t1-g.t0);
+}
+/* snap a tap to the nearest day where money moves, if one is within a finger's width */
+function cwSnap(t){
+  const g=$("cwChart")._geo, d=new Date(t); d.setHours(0,0,0,0);
+  const perDay=g?(g.W-g.PL-g.PR)/((g.t1-g.t0)/DAY):10, reach=Math.ceil(14/perDay);
+  for(let i=0;i<=reach;i++) for(const sgn of i?[1,-1]:[1]){
+    const c=new Date(d); c.setDate(c.getDate()+i*sgn);
+    const e=CW.dm.get(iso(c)); if(e&&e.items.length) return c.getTime();
+  }
+  return Math.min(CW.max,Math.max(CW.min,d.getTime()));
+}
+function cwSelect(t,keepInView){
+  CW.sel=t;
+  if(keepInView&&(t<CW.t0||t>CW.t1)){ const span=CW.t1-CW.t0; [CW.t0,CW.t1]=cwClamp(t-span/2,span); }
+  cwDraw();
+}
+function cwStepPay(dir){            // previous / next day on which money moves
+  const d=new Date(CW.sel);
+  for(let i=1;i<=400;i++){ d.setDate(d.getDate()+dir);
+    if(d.getTime()<CW.min||d.getTime()>CW.max) return;
+    const e=CW.dm.get(iso(d)); if(e&&e.items.length){ cwSelect(d.getTime(),true); return; } }
+}
+function cwMini(){
+  const svg=$("cwMini"), s=CW.p.series;
+  const W=Math.max(200,Math.round(svg.getBoundingClientRect().width)), H=56, P=4;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const vals=s.map(d=>d.bal); let lo=Math.min(0,...vals), hi=Math.max(0,...vals); const pad=(hi-lo)*.1||50; lo-=pad; hi+=pad;
+  const X=t=>P+(t-CW.min)/(CW.max-CW.min)*(W-2*P), Y=v=>P+(1-(v-lo)/(hi-lo))*(H-2*P);
+  const x0=X(CW.t0), x1=X(CW.t1), acc=cssVar("--accent"), bg=cssVar("--paper"), sig=cssVar("--signal");
+  svg._geo={W,P};
+  const lowX=X(CW.p.low.date.getTime()), lowY=Y(CW.p.low.bal);
+  svg.innerHTML=`<line x1="${P}" x2="${W-P}" y1="${Y(0)}" y2="${Y(0)}" stroke="${cssVar("--line")}" stroke-width="1"/>
+    <path d="${stepPath(s,X,Y,CW.max)}" fill="none" stroke="${acc}" stroke-width="1.4" opacity=".9"/>
+    <circle cx="${lowX}" cy="${lowY}" r="2.6" fill="${sig}"/>
+    <rect x="0" y="0" width="${Math.max(0,x0)}" height="${H}" fill="${bg}" opacity=".72"/>
+    <rect x="${x1}" y="0" width="${Math.max(0,W-x1)}" height="${H}" fill="${bg}" opacity=".72"/>
+    <rect x="${x0}" y="1" width="${Math.max(6,x1-x0)}" height="${H-2}" rx="6" fill="none" stroke="${acc}" stroke-width="2"/>
+    <rect x="${x0-3}" y="${H/2-9}" width="6" height="18" rx="3" fill="${acc}"/>
+    <rect x="${x1-3}" y="${H/2-9}" width="6" height="18" rx="3" fill="${acc}"/>`;
+}
+function cwChips(){
+  const span=(CW.t1-CW.t0)/DAY, all=(CW.max-CW.min)/DAY;
+  document.querySelectorAll("[data-cw]").forEach(b=>{
+    const v=b.dataset.cw==="all"?all:+b.dataset.cw;
+    b.classList.toggle("on",Math.abs(span-Math.min(v,all))<1.5);
+    b.hidden=b.dataset.cw!=="all"&&+b.dataset.cw>=all;
+  });
+  $("cwIn").disabled=span<=7.5; $("cwOut").disabled=span>=all-0.5;
+}
+function cwDetail(){
+  const ws=windowSeries(CW.p.series,CW.t0,CW.t1);
+  let low=ws[0]; ws.forEach(d=>{ if(d.bal<low.bal) low=d; });
+  const endBal=balanceAt(CW.p.series,CW.t1);
+  const short=t=>new Date(t).toLocaleDateString("en-CA",{month:"short",day:"numeric",year:new Date(t).getFullYear()!==new Date(CW.min).getFullYear()?"numeric":undefined});
+  const day=new Date(CW.sel), e=CW.dm.get(iso(day))||{bal:balanceAt(CW.p.series,CW.sel),delta:0,items:[]};
+  const freqL=f=>(FREQS.find(x=>x[0]===f)||["",""])[1];
+  const items=[...e.items].sort((a,b)=>(b.amt>0)-(a.amt>0)||Math.abs(b.amt)-Math.abs(a.amt));
+  const hasPrev=(()=>{ const d=new Date(day); for(let i=0;i<400;i++){ d.setDate(d.getDate()-1); if(d.getTime()<CW.min) return false; const x=CW.dm.get(iso(d)); if(x&&x.items.length) return true; } return false; })();
+  const hasNext=(()=>{ const d=new Date(day); for(let i=0;i<400;i++){ d.setDate(d.getDate()+1); if(d.getTime()>CW.max) return false; const x=CW.dm.get(iso(d)); if(x&&x.items.length) return true; } return false; })();
+  $("cwDetail").innerHTML=`
+    <div class="cwsum">
+      <span>Showing <b>${short(CW.t0)} – ${short(CW.t1)}</b></span>
+      <span>Lowest <b class="${low.bal<0?"neg":""}">${money2(low.bal)}</b> on ${dLabel(low.date)}</span>
+      <span>Ends at <b class="${endBal<0?"neg":""}">${money2(endBal)}</b></span>
+    </div>
+    <div class="cwday">
+      <div class="cwdh">
+        <h4>${day.toLocaleDateString("en-CA",{weekday:"long",month:"long",day:"numeric",year:"numeric"})}</h4>
+        <span class="cwstep"><button id="cwPrev" ${hasPrev?"":"disabled"} aria-label="Previous payment day">&lsaquo; Previous</button><button id="cwNext" ${hasNext?"":"disabled"} aria-label="Next payment day">Next &rsaquo;</button></span>
+      </div>
+      <div class="cwdh" style="margin-top:4px">
+        ${e.delta?`<span class="net ${e.delta>0?"pos":"neg"}">${e.delta>0?"+":""}${money2(e.delta)} that day</span>`:`<span class="net" style="color:var(--ink-faint)">No payments that day</span>`}
+        <span class="bal" style="margin-left:auto">balance after <b class="${e.bal<0?"neg":""}">${money2(e.bal)}</b></span>
+      </div>
+      ${items.length?`<ul class="dlist">${items.map(i=>{
+        const c=i.amt>0?"gain":(i.cat||"ink-faint");
+        const what=i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
+          :`${freqL(i.freq).toLowerCase()} ${i.amt>0?"income":"bill"}${i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:""}`;
+        return `<li style="grid-template-columns:9px minmax(0,1fr) auto"><i style="background:var(--${c})"></i>
+          <span class="nm">${esc(i.name)}<small>${esc(what)}</small></span>
+          <span class="mv ${i.amt>0?"pos":"neg"}">${i.amt>0?"+":"−"}${money2(Math.abs(i.amt))}</span></li>`;}).join("")}</ul>`
+        :`<p class="cwempty">Nothing lands on this day. Use Previous / Next to jump between payment days.</p>`}
+    </div>`;
+}
+/* pointers on the chart: one finger or the mouse picks a day; two fingers pinch to zoom */
+const cwPtr=new Map(); let cwPinch=null;
+const cwSvg=$("cwChart");
+cwSvg.addEventListener("pointerdown",e=>{
+  try{ cwSvg.setPointerCapture(e.pointerId); }catch(err){}
+  cwPtr.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(cwPtr.size===1) cwSelect(cwSnap(cwTimeAt(e.clientX)));
+  else if(cwPtr.size===2){
+    const [a,b]=[...cwPtr.values()];
+    cwPinch={d:Math.max(20,Math.abs(a.x-b.x)),t0:CW.t0,t1:CW.t1,c:cwTimeAt((a.x+b.x)/2)};
+  }
+});
+cwSvg.addEventListener("pointermove",e=>{
+  if(!cwPtr.has(e.pointerId)) return;
+  cwPtr.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(cwPtr.size>=2&&cwPinch){
+    const [a,b]=[...cwPtr.values()], d=Math.max(20,Math.abs(a.x-b.x));
+    const span=(cwPinch.t1-cwPinch.t0)*cwPinch.d/d;
+    // keep the moment that started under the fingers under them: pinch zooms, moving both fingers pans
+    const g=cwSvg._geo, r=cwSvg.getBoundingClientRect(), mx=((a.x+b.x)/2-r.left)*(g.W/r.width);
+    const fx=Math.min(1,Math.max(0,(mx-g.PL)/(g.W-g.PL-g.PR)));
+    [CW.t0,CW.t1]=cwClamp(cwPinch.c-fx*span,span); cwDraw();
+  } else if(cwPtr.size===1) cwSelect(cwSnap(cwTimeAt(e.clientX)));
+});
+const cwUp=e=>{ cwPtr.delete(e.pointerId); if(cwPtr.size<2) cwPinch=null; };
+cwSvg.addEventListener("pointerup",cwUp); cwSvg.addEventListener("pointercancel",cwUp);
+cwSvg.addEventListener("wheel",e=>{
+  e.preventDefault();
+  if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){           // sideways scroll pans
+    const span=CW.t1-CW.t0, g=cwSvg._geo, px=g?(g.W-g.PL-g.PR):600;
+    [CW.t0,CW.t1]=cwClamp(CW.t0+e.deltaX/px*span,span); cwDraw(); return;
+  }
+  cwZoom(Math.exp(e.deltaY*0.0018),cwTimeAt(e.clientX));
+},{passive:false});
+/* the overview strip: drag the window, or tap to jump there */
+let cwMiniDrag=null;
+const cwMiniEl=$("cwMini");
+const cwMiniT=clientX=>{ const r=cwMiniEl.getBoundingClientRect(), g=cwMiniEl._geo||{W:r.width,P:4};
+  const x=(clientX-r.left)*(g.W/r.width); return CW.min+Math.min(1,Math.max(0,(x-g.P)/(g.W-2*g.P)))*(CW.max-CW.min); };
+cwMiniEl.addEventListener("pointerdown",e=>{
+  try{ cwMiniEl.setPointerCapture(e.pointerId); }catch(err){}
+  const t=cwMiniT(e.clientX), span=CW.t1-CW.t0;
+  if(t<CW.t0||t>CW.t1) [CW.t0,CW.t1]=cwClamp(t-span/2,span);
+  cwMiniDrag={off:t-CW.t0}; cwDraw();
+});
+cwMiniEl.addEventListener("pointermove",e=>{
+  if(!cwMiniDrag) return;
+  const span=CW.t1-CW.t0; [CW.t0,CW.t1]=cwClamp(cwMiniT(e.clientX)-cwMiniDrag.off,span); cwDraw();
+});
+const cwMiniUp=()=>{ cwMiniDrag=null; };
+cwMiniEl.addEventListener("pointerup",cwMiniUp); cwMiniEl.addEventListener("pointercancel",cwMiniUp);
+/* buttons and keys */
+$("cwVeil").addEventListener("click",e=>{
+  if(e.target.id==="cwVeil"||e.target.closest("#cwClose")){ cwClose(); return; }
+  if(e.target.closest("#cwIn")){ cwZoom(1/1.6); return; }
+  if(e.target.closest("#cwOut")){ cwZoom(1.6); return; }
+  if(e.target.closest("#cwPrev")){ cwStepPay(-1); return; }
+  if(e.target.closest("#cwNext")){ cwStepPay(1); return; }
+  const r=e.target.closest("[data-cw]");
+  if(r){ if(r.dataset.cw==="all"){ CW.t0=CW.min; CW.t1=CW.max; }
+    else{ const span=+r.dataset.cw*DAY, c=CW.sel!=null?CW.sel:CW.min; [CW.t0,CW.t1]=cwClamp(c-span/3,span); }
+    cwDraw(); }
+});
+document.addEventListener("keydown",e=>{
+  if(!CW.open) return;
+  if(e.key==="Escape"){ cwClose(); return; }
+  if(e.key==="ArrowLeft"||e.key==="ArrowRight"){
+    e.preventDefault(); const dir=e.key==="ArrowLeft"?-1:1;
+    if(e.shiftKey){ cwStepPay(dir); return; }
+    const d=new Date(CW.sel); d.setDate(d.getDate()+dir);
+    if(d.getTime()>=CW.min&&d.getTime()<=CW.max) cwSelect(d.getTime(),true); return; }
+  if(e.key==="+"||e.key==="="){ cwZoom(1/1.6); return; }
+  if(e.key==="-"||e.key==="_"){ cwZoom(1.6); return; }
+});
+/* tapping the inline charts opens the window */
+["chart","chart2"].forEach(id=>{ const el=$(id); if(el) el.addEventListener("click",()=>cwOpen(id)); });
 
 /* ============================================================
    7. BUDGET  (the driver)
@@ -3240,6 +3564,7 @@ if("ResizeObserver" in window){
     if(id==="chart2"&&route==="whatif")  safely(()=>drawChart("chart2",project(),baseline()));
   }); });
   ["chart","chart2"].forEach(i=>{ const el=$(i); if(el) ro.observe(el); });
+  const cwro=new ResizeObserver(()=>{ if(CW.open) cwDraw(); }); cwro.observe($("cwChart"));
 }
 let rsz=null;
 window.addEventListener("resize",()=>{ clearTimeout(rsz);

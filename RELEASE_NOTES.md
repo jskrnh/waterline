@@ -9,6 +9,40 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.0 — 15 October 2026
+
+**The forecast chart is now something you can explore, and Light mode stays light on phones.**
+
+### New
+
+**Tap the chart to open it in its own window.** This works on the Forecast and What-if pages. The
+window opens on your lowest point, and you can:
+
+- **Zoom** by pinching on a phone, scrolling on a computer, using **−** and **+**, or picking a
+  quick range: **1M · 3M · 6M · All**. Zoom right in and the axis switches from months to days or
+  weeks.
+- **Pick any day** by tapping, clicking or dragging across the chart. A card shows the date, the
+  balance after it, the net change, and every payment that lands that day with its category.
+  **Previous** and **Next** jump between days when money moves. On a computer, ← → step a day at a
+  time, and Shift + ← → jumps between payment days.
+- **See the whole picture** in the overview strip under the chart, which shows the full forecast
+  with the part you're looking at highlighted. Drag the highlight to move along, or tap anywhere on
+  the strip to jump there.
+- **Read the range at a glance:** a summary line gives the dates shown, the lowest balance in them,
+  and what the balance ends at.
+
+On a phone the window slides up from the bottom. A tap that lands near a payment snaps to it, so
+spikes are easy to hit with a finger. Esc, × or tapping outside the window closes it.
+
+### Fixed
+
+- **Light mode didn't work on phones that darken websites.** Chrome's "auto dark" setting and
+  Samsung Internet's dark mode were repainting the page dark, and even inverting the logo,
+  whatever you chose in Waterline. Choosing Light now tells the browser not to darken the page.
+  System still follows your phone, and Dark is unchanged.
+
+---
+
 ## 2.9 — 15 October 2026
 
 **No more "Two plans, one account". Your devices now stay in step on their own.**
