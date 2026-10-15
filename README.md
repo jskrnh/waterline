@@ -1,6 +1,5 @@
 
-**Waterline**
-wtrline.com
+[**Waterline**](wtrline.com)
 
 Find the day you go under. A cash-flow forecaster, budget planner and debt payoff tool that runs entirely in your browser and never asks for a bank login.
 ---
