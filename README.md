@@ -372,3 +372,18 @@ column headings sort.
 The Overview order is now: Starting point → Money in → Money out → donut → tiles → target split →
 summary. The Money in and Money out cards carry light green and red tints. On phones each payment
 collapses to one summary line and opens into the editor when tapped.
+
+## Android app
+
+`android/` is a Trusted Web Activity: a small Android app that opens https://wtrline.com full-screen
+in Chrome. It runs the live site, so every push to the website updates the app as well. Google
+sign-in works because the page runs in Chrome rather than a WebView.
+
+- **Build:** `.github/workflows/android.yml` builds on every push that touches `android/`, or when
+  run by hand from the Actions tab. Signed builds are published to **Releases** as `waterline-1.N.apk`.
+- **Signing:** set the repository secrets `ANDROID_KEYSTORE_B64` and `ANDROID_KEYSTORE_PASSWORD`.
+  Keep a copy of the keystore somewhere safe: Android only accepts an update signed with the same
+  key.
+- **Full-screen:** `/.well-known/assetlinks.json` lists the key's SHA-256 fingerprint. If it is
+  missing or wrong, the app still works but shows Chrome's address bar. If you ever publish
+  through Google Play with Play App Signing, add Play's fingerprint to that file too.

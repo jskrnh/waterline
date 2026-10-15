@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.wtrline.app",
+      "sha256_cert_fingerprints": [
+        "49:F7:15:1A:56:96:55:3E:34:16:71:CC:F1:79:D5:DA:65:89:21:E4:83:6C:5E:AB:87:9F:F9:91:69:49:9F:B6"
+      ]
+    }
+  }
+]
