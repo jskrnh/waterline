@@ -374,12 +374,47 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 .card.money .addrow:hover{background:color-mix(in srgb,var(--tone) 10%,var(--panel))}
 .card.money .endbtn{background:var(--panel)}
 
+/* sample preview banner */
+.sandbar{position:sticky;top:calc(53px + env(safe-area-inset-top,0px));z-index:880;
+  background:var(--amber-wash);border-bottom:1px solid color-mix(in srgb,var(--amber) 40%,transparent)}
+.sandin{display:flex;align-items:center;gap:12px;padding-block:10px;font-size:14px;color:var(--ink);letter-spacing:-.005em}
+.sandin svg{color:var(--amber);flex:none}
+.sandin span{flex:1;min-width:0}
+.sandin .btn{flex:none}
+.sandin .short{display:none}
+@media(max-width:760px){ .sandin{font-size:13px;gap:10px} .sandin svg{display:none} .sandin .long{display:none} .sandin .short{display:inline} }
+
+/* backups sheet */
+.bksheet{max-width:560px;max-height:88vh;overflow:auto}
+.bkhead{display:flex;align-items:baseline;gap:12px}
+.bkhead .linkbtn{margin-left:auto}
+.bkacts{display:flex;gap:9px;flex-wrap:wrap}
+.bklist{margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.bklist:empty{display:none}
+.bkrow{display:flex;align-items:center;gap:10px;padding:11px 14px;border-top:1px solid var(--hair)}
+.bkrow:first-child{border-top:0}
+.bkrow .bi{flex:1;min-width:0}
+.bkrow .bi b{display:block;font-size:14.5px;font-weight:500;letter-spacing:-.008em}
+.bkrow .bi small{display:block;font-size:12px;color:var(--ink-faint);letter-spacing:0;margin-top:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkrow .tag{font-size:10.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-faint);
+  border:1px solid var(--line);border-radius:var(--pill);padding:1px 7px;margin-left:6px;vertical-align:1px}
+.bkrow .bb{display:flex;gap:2px;flex:none}
+.bkrow .bb button{border:0;background:none;font-family:var(--font);font-size:13px;color:var(--accent);cursor:pointer;
+  padding:5px 8px;border-radius:8px}
+.bkrow .bb button:hover{background:var(--accent-wash)}
+.bkrow .bb button.rm{color:var(--ink-faint)} .bkrow .bb button.rm:hover{color:var(--signal);background:var(--signal-wash)}
+.bkempty{padding:16px 14px;font-size:14px;color:var(--ink-faint)}
+.bkfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--hair)}
+@media(max-width:520px){ .bkrow{flex-wrap:wrap} .bkrow .bb{width:100%;justify-content:flex-end} }
+
 /* starting balance: a quiet pill once it's set */
 .seedpill{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:7px 8px 7px 13px;
   border:1px solid var(--line);border-radius:var(--pill);background:var(--panel);color:var(--ink-soft);
   font-family:var(--font);font-size:14px;letter-spacing:-.006em;cursor:pointer;max-width:100%}
 .seedpill:hover{border-color:var(--ink-faint);color:var(--ink)}
 .seedpill svg{color:var(--accent);flex:none}
+.seedpill>span:not(.ed){min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .seedpill b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .seedpill b.neg{color:var(--signal)}
 .seedpill .pd{color:var(--ink-faint)}
@@ -793,9 +828,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
           <a class="aitem" href="#/report" role="menuitem">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M5 2.5h6.5L15 6v11.5H5z M11.5 2.5V6H15 M7.5 10h5M7.5 13h5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
             <span>Report<small>Export a two-page PDF</small></span></a>
+          <button class="aitem" id="openBackups" role="menuitem">
+            <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M3.5 6.5h13v9.5h-13zM2.8 3.8h14.4v2.7H2.8zM8 9.5h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+            <span>Backups<small id="bkMenuSub">Save, download or restore your plan</small></span></button>
           <a class="aitem" href="#/welcome" role="menuitem">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 9v5M10 6.2v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            <span>What this is</span></a>
+            <span>About</span></a>
           <a class="aitem" href="/privacy.html" role="menuitem">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M10 2.5 16 5v4.5c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
             <span>Privacy</span></a>
@@ -817,6 +855,14 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   </div>
 </nav>
 
+<div class="sandbar" id="sandbar" hidden>
+  <div class="wide sandin">
+    <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10.2 8.8 12.5 13.5 7.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span><b>You're previewing sample numbers.</b><span class="long"> Nothing you change here is saved, and your own plan is untouched.</span><span class="short"> Your plan is safe.</span></span>
+    <button class="btn fill sm" id="exitSample">Back to my plan</button>
+  </div>
+</div>
+
 <main>
 
 <!-- ======================= WELCOME ======================= -->
@@ -826,10 +872,15 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <h1>Find the day you go under.</h1>
       <p class="lede">Your monthly average hides the one date that matters. Waterline puts every
         payment on the day it actually lands, and shows you the lowest point before it arrives.</p>
-      <div class="cta">
+      <div class="cta" id="ctaNew">
         <button class="btn fill" id="demoStart">Try it with sample numbers</button>
         <button class="btn ghost" id="blankStart">Start from scratch</button>
       </div>
+      <div class="cta" id="ctaHave" hidden>
+        <a class="btn fill" href="#/overview">Go to my overview</a>
+        <button class="btn ghost" id="previewSample">Preview sample numbers</button>
+      </div>
+      <p class="tiny" id="ctaSafe" hidden style="margin-top:14px">Previewing never touches your own plan.</p>
     </div>
 
     <div class="demoframe">
@@ -871,6 +922,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <p>Waterline never asks for bank logins or account numbers. You type what you know.
         Sign in only if you want your plan on more than one device.</p>
       <button class="btn fill" id="demoStart2">Get started</button>
+      <a class="btn fill" id="goMine2" href="#/overview" hidden>Back to my overview</a>
     </div>
   </div>
 </section>
@@ -1205,7 +1257,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 <div class="wide">
   <div class="foot">
     <p>Waterline projects forward from what you enter. It never asks for bank logins or account
-      numbers. <a href="/privacy.html">Privacy</a> &middot; <a href="#/welcome">What this is</a></p>
+      numbers. <a href="/privacy.html">Privacy</a> &middot; <a href="#/welcome">About</a></p>
     <span class="right">
       <span class="saved" id="savedNote"></span>
     </span>
@@ -1255,6 +1307,26 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
     <div class="acts">
       <button class="btn fill sm" id="keepCloud">Keep my account's plan</button>
       <button class="btn ghost sm" id="keepLocal">Keep this device's plan</button>
+    </div>
+  </div>
+</div>
+
+<div class="veil" id="bkVeil">
+  <div class="sheet bksheet" role="dialog" aria-modal="true" aria-labelledby="bkTitle">
+    <div class="bkhead"><h2 id="bkTitle">Backups</h2><button class="linkbtn" id="bkClose">Close</button></div>
+    <p>Waterline saves a copy of your plan before anything replaces it, and once a day while you use
+      it. These copies stay on this device — download a file to keep one anywhere.</p>
+    <div class="bkacts">
+      <button class="btn fill sm" id="bkNow">Back up now</button>
+      <button class="btn ghost sm" id="bkDownload">Download backup file</button>
+      <button class="btn ghost sm" id="bkUpload">Restore from file…</button>
+      <input type="file" id="bkFile" accept=".json,application/json" hidden>
+    </div>
+    <div class="msg" id="bkMsg"></div>
+    <div class="bklist" id="bkList"></div>
+    <div class="bkfoot">
+      <button class="linkbtn danger" id="bkFresh">Start a new blank plan</button>
+      <span class="tiny">Your current plan is backed up first.</span>
     </div>
   </div>
 </div>
@@ -2419,7 +2491,7 @@ function render(){
   if(route==="whatif")   safely(renderWhatIf);
   if(route==="debt")     safely(renderDebt);
   if(route==="report")   safely(renderReport);
-  if(route==="welcome")  safely(()=>drawDemo(true));
+  if(route==="welcome")  { safely(paintWelcome); safely(()=>drawDemo(true)); }
   save();
 }
 
@@ -2430,11 +2502,13 @@ let saveTimer=null, savePaused=false;
 function flag(t,ms=1600){ const n=$("savedNote"); n.textContent=t;
   if(ms) setTimeout(()=>{ if(n.textContent===t) n.textContent=""; },ms); }
 function save(){
-  if(savePaused) return;
+  if(savePaused||sandbox) return;           // the sample preview is never saved
   clearTimeout(saveTimer);
   saveTimer=setTimeout(async()=>{
+    if(sandbox) return;
     doc.savedAt=new Date().toISOString();
     local.set(KEY,JSON.stringify(doc));
+    dailyBackup();
     if(sb&&user){
       const{error}=await sb.from("plans").upsert({user_id:user.id,data:doc,updated_at:new Date().toISOString()});
       flag(error?"Saved on this device only":"Saved to your account");
@@ -2454,6 +2528,118 @@ async function pushCloud(d){
   catch(e){ console.error("Waterline:",e); }
 }
 function loadLocal(){ try{ const raw=local.get(KEY); return raw?JSON.parse(raw):null; }catch(e){ return null; } }
+
+/* ============================================================
+   14b. BACKUPS and the sample preview
+   Nothing the user entered is ever replaced without a copy being kept first.
+   ============================================================ */
+const BKEY="waterline:backups", BMAX=20;
+const worthKeeping=d=>!!d&&Array.isArray(d.scenarios)&&
+  (hasEntries(d)||(d.debts||[]).length>0||d.scenarios.some(sc=>(+sc.balance||0)!==0));
+const realDoc=()=>sandbox?sandbox.real:doc;
+function loadBackups(){ try{ const r=JSON.parse(local.get(BKEY)||"[]"); return Array.isArray(r)?r:[]; }catch(e){ return []; } }
+function storeBackups(list){
+  list.sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  while(list.length>BMAX){                 // over the cap: drop the oldest automatic copy first
+    let i=-1; for(let j=list.length-1;j>=0;j--) if(list[j].auto){ i=j; break; }
+    list.splice(i>=0?i:list.length-1,1);
+  }
+  try{ local.set(BKEY,JSON.stringify(list)); return true; }catch(e){ return false; }
+}
+function backup(label,opts){
+  opts=opts||{}; const from=opts.from||realDoc(), auto=opts.auto!==false;
+  if(!worthKeeping(from)) return null;
+  const list=loadBackups(), fp=fingerprint(from);
+  if(auto&&list.length&&list[0].fp===fp) return list[0];      // unchanged since the newest copy
+  const entry={id:id(),at:new Date().toISOString(),label,auto,fp,plan:JSON.parse(JSON.stringify(from))};
+  list.unshift(entry); storeBackups(list); paintBackupCount();
+  return entry;
+}
+function dailyBackup(){
+  const list=loadBackups(), newest=list[0];
+  if(!newest||Date.now()-Date.parse(newest.at)>864e5) backup("Daily backup");
+}
+const stamp=t=>{ const d=new Date(t); return isNaN(d)?"":
+  d.toLocaleDateString("en-CA",{month:"short",day:"numeric",year:d.getFullYear()!==new Date().getFullYear()?"numeric":undefined})+
+  ", "+d.toLocaleTimeString("en-CA",{hour:"numeric",minute:"2-digit"}); };
+function paintBackupCount(){
+  const el=$("bkMenuSub"); if(!el) return;
+  const list=loadBackups();
+  el.textContent=list.length?`${list.length} saved · newest ${stamp(list[0].at)}`:"Save, download or restore your plan";
+}
+function downloadPlan(plan,when){
+  const body={app:"Waterline",site:"https://wtrline.com",format:1,exportedAt:new Date().toISOString(),plan};
+  const blob=new Blob([JSON.stringify(body,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`waterline-backup-${iso(when?new Date(when):new Date())}.json`;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },800);
+}
+function restorePlan(raw,what){
+  let incoming=null;
+  try{ incoming=normalise(JSON.parse(JSON.stringify(raw))); }catch(e){}
+  if(!incoming||!Array.isArray(incoming.scenarios)||!incoming.scenarios.length){
+    bkMsg("That doesn't look like a Waterline backup.",true); return false; }
+  if(sandbox) exitSample(true);
+  backup("Before restoring");
+  const theme=doc.theme;
+  doc=incoming; doc.seen=true; doc.seedSet=true; doc.theme=theme;
+  setActive(doc.activeId); calMonth=null; ledgerRows=40; selDay=null;
+  applyTheme(); fillSeed(); render();
+  flag(`Restored ${what}`,2600); bkMsg(`Restored ${what}. Your previous plan was backed up first.`);
+  renderBackups();
+  return true;
+}
+function bkMsg(t,err){ const m=$("bkMsg"); m.textContent=t||""; m.className="msg"+(err?" err":""); }
+function renderBackups(){
+  const list=loadBackups();
+  $("bkList").innerHTML = list.length ? list.map(b=>{
+    let blurb=""; try{ blurb=planBlurb(normalise(JSON.parse(JSON.stringify(b.plan)))); }catch(e){}
+    return `<div class="bkrow" data-bk="${b.id}"><span class="bi"><b>${esc(b.label)}${b.auto?'<span class="tag">auto</span>':""}</b>
+      <small>${esc(stamp(b.at))}${blurb?" · "+esc(blurb):""}</small></span>
+      <span class="bb"><button data-bkrestore="${b.id}">Restore</button><button data-bkdl="${b.id}">Download</button>
+      <button class="rm" data-bkdel="${b.id}" aria-label="Delete this backup">&times;</button></span></div>`;
+  }).join("") : `<div class="bkempty">No backups yet. They appear here automatically once you've entered a plan.</div>`;
+  paintBackupCount();
+}
+function openBackups(){ bkMsg(""); renderBackups(); $("bkVeil").dataset.open="1"; $("bkNow").focus(); }
+function closeBackups(){ $("bkVeil").dataset.open="0"; }
+
+/* ---- sample preview: shown in memory only, never saved, real plan held aside ---- */
+let sandbox=null;
+function previewSample(){
+  if(!sandbox){
+    clearTimeout(saveTimer);
+    sandbox={real:doc};
+    const s=seedDoc(); s.seen=true; s.theme=doc.theme; doc=s;
+    setActive(doc.activeId); calMonth=null; ledgerRows=40; selDay=null; fillSeed();
+    $("sandbar").hidden=false;
+  }
+  if(location.hash==="#/overview") go(); else location.hash="#/overview";
+}
+function exitSample(quiet){
+  if(!sandbox) return;
+  const theme=doc.theme;
+  doc=sandbox.real; doc.theme=theme; sandbox=null;
+  $("sandbar").hidden=true;
+  setActive(doc.activeId); calMonth=null; ledgerRows=40; selDay=null; applyTheme(); fillSeed();
+  if(!quiet){ render(); flag("Back to your plan",1800); }
+}
+/* "Start from scratch" with a plan in hand: ask, and keep a copy */
+function freshPlan(){
+  const real=realDoc();
+  if(worthKeeping(real)&&!confirm("Start a new blank plan?\n\nYour current plan is saved to Backups first, so you can restore it any time.")) return;
+  if(sandbox) exitSample(true);
+  backup("Before starting a blank plan");
+  closeBackups(); startWith(emptyDoc());
+  flag("Blank plan started — your old one is in Backups",3000);
+}
+function paintWelcome(){
+  const have=worthKeeping(realDoc());
+  $("ctaNew").hidden=have; $("ctaHave").hidden=!have; $("ctaSafe").hidden=!have;
+  $("demoStart2").hidden=have; $("goMine2").hidden=!have;
+}
 
 /* ============================================================
    15. AUTH
@@ -2531,12 +2717,18 @@ async function onSignedIn(){
   const uid=user?user.id:null;
   if(!uid||reconciledFor===uid) return;
   reconciledFor=uid;
+  if(sandbox) exitSample(true);
   savePaused=true; clearTimeout(saveTimer);
   const cloudRes=await loadCloud(), localRaw=loadLocal();
   const cloud=cloudRes?normalise(cloudRes.doc):null, localDoc=localRaw?normalise(localRaw):null;
   if(!cloud){ if(hasEntries(localDoc)) doc=localDoc; }
   else if(!hasEntries(localDoc)||fingerprint(localDoc)===fingerprint(cloud)) doc=cloud;
-  else doc=(await askMerge(localDoc,cloud,cloudRes.at))==="local"?localDoc:cloud;
+  else{
+    if(sandbox) exitSample(true);
+    const pick=await askMerge(localDoc,cloud,cloudRes.at);
+    if(pick==="local"){ backup("Account copy, replaced at sign-in",{from:cloud}); doc=localDoc; }
+    else{ backup("Device copy, replaced at sign-in",{from:localDoc}); doc=cloud; }
+  }
   doc.savedAt=new Date().toISOString();
   setActive(doc.activeId); applyTheme(); fillSeed(); render();
   local.set(KEY,JSON.stringify(doc));
@@ -2632,11 +2824,15 @@ $("deleteBtn").addEventListener("click",async()=>{
 });
 async function wipeEverything(){
   const signedIn=!!(sb&&user);
-  if(!confirm(signedIn
-    ? "Delete every scenario, budget and debt from this device and from your account? This cannot be undone."
-    : "Delete everything stored on this device? This cannot be undone.")) return;
+  const n=loadBackups().length;
+  if(!confirm((signedIn
+    ? "Delete every scenario, budget and debt from this device and from your account"
+    : "Delete everything stored on this device")
+    +(n?`, including the ${n} backup${n===1?"":"s"} kept here`:"")
+    +"?\n\nThis cannot be undone. To keep a copy, choose Cancel and use Backups → Download backup file first.")) return;
+  if(sandbox) exitSample(true);
   savePaused=true; clearTimeout(saveTimer);
-  local.del(KEY);
+  local.del(KEY); local.del(BKEY); paintBackupCount();
   if(signedIn){
     const{error}=await sb.from("plans").delete().eq("user_id",user.id);
     if(error){ savePaused=false; flag("Could not clear your account copy",4000); console.error(error); return; }
@@ -2699,6 +2895,19 @@ document.addEventListener("input",e=>{
   }
 });
 /* an emptied end-date box turns back into "No end date" once you leave it */
+$("bkFile").addEventListener("change",()=>{
+  const f=$("bkFile").files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    let raw=null; try{ raw=JSON.parse(r.result); }catch(e){ bkMsg("That file isn't a Waterline backup (it isn't valid JSON).",true); return; }
+    const plan=raw&&raw.plan?raw.plan:raw;
+    if(!plan||!Array.isArray(plan.scenarios)&&!Array.isArray(plan.inflow)){ bkMsg("That file isn't a Waterline backup.",true); return; }
+    if(confirm(`Replace your current plan with "${f.name}"?\n\nYour current plan is backed up first.`)) restorePlan(plan,`"${f.name}"`);
+  };
+  r.onerror=()=>bkMsg("Couldn't read that file.",true);
+  r.readAsText(f);
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&$("bkVeil").dataset.open==="1") closeBackups(); });
 $("seedCard").addEventListener("keydown",e=>{ if(e.key==="Enter"&&e.target.matches("input")){ e.preventDefault(); $("seedDone").click(); } });
 document.addEventListener("focusout",e=>{
   if(!e.target.matches||!e.target.matches(".erow input.en")) return;
@@ -2859,10 +3068,36 @@ document.addEventListener("click",e=>{
   if(e.target.id==="offCancel"){ closeOneoff(); return; }
   if(e.target.id==="offSave"){ commitOneoff(); return; }
   if(e.target.id==="demoReplay"){ drawDemo(true); return; }
-  if(e.target.id==="demoStart"||e.target.id==="demoStart2"){ startWith(seedDoc()); return; }
-  if(e.target.id==="blankStart"){ startWith(emptyDoc()); return; }
+  if(e.target.id==="demoStart"||e.target.id==="demoStart2"||e.target.id==="previewSample"){
+    if(worthKeeping(realDoc())) previewSample(); else startWith(seedDoc());
+    return; }
+  if(e.target.id==="blankStart"||e.target.id==="bkFresh"){
+    if(worthKeeping(realDoc())) freshPlan(); else startWith(emptyDoc());
+    return; }
+  if(e.target.id==="exitSample"){ exitSample(); return; }
+  if(e.target.closest("#openBackups")){ openBackups(); return; }
+  if(e.target.id==="bkClose"||e.target.id==="bkVeil"){ closeBackups(); return; }
+  if(e.target.id==="bkNow"){
+    const b=backup("Saved by you",{auto:false});
+    bkMsg(b?"Backup saved on this device.":"Nothing to back up yet — your plan is empty.",!b); renderBackups(); return; }
+  if(e.target.id==="bkDownload"){
+    if(!worthKeeping(realDoc())){ bkMsg("Nothing to download yet — your plan is empty.",true); return; }
+    downloadPlan(realDoc()); bkMsg("Backup file downloaded. Keep it somewhere safe."); return; }
+  if(e.target.id==="bkUpload"){ $("bkFile").value=""; $("bkFile").click(); return; }
+  const br=e.target.closest("[data-bkrestore]");
+  if(br){ const b=loadBackups().find(x=>x.id===br.dataset.bkrestore); if(!b) return;
+    if(confirm(`Replace your current plan with the backup from ${stamp(b.at)}?\n\nYour current plan is backed up first.`))
+      restorePlan(b.plan,`the backup from ${stamp(b.at)}`);
+    return; }
+  const bd=e.target.closest("[data-bkdl]");
+  if(bd){ const b=loadBackups().find(x=>x.id===bd.dataset.bkdl); if(b) downloadPlan(b.plan,b.at); return; }
+  const bx=e.target.closest("[data-bkdel]");
+  if(bx){ if(!confirm("Delete this backup?")) return;
+    storeBackups(loadBackups().filter(x=>x.id!==bx.dataset.bkdel)); renderBackups(); return; }
 });
 function startWith(d){
+  if(sandbox) exitSample(true);
+  if(doc&&worthKeeping(doc)) backup("Before replacing the plan");
   const theme=doc?doc.theme:"system";
   doc=d; doc.seen=true; doc.theme=theme;
   setActive(doc.activeId); applyTheme(); fillSeed();
@@ -2951,6 +3186,7 @@ doc=normalise(loadLocal());
 if(!doc){ doc=emptyDoc(); doc.seen=false; }
 setActive(doc.activeId);
 applyTheme(); fillSeed(); paintAccount(); paintAuth();
+safely(()=>{ paintBackupCount(); dailyBackup(); });
 if(!doc.seen&&!location.hash) location.hash="#/welcome";
 window.addEventListener("hashchange",go);
 go();

@@ -387,3 +387,15 @@ sign-in works because the page runs in Chrome rather than a WebView.
 - **Full-screen:** `/.well-known/assetlinks.json` lists the key's SHA-256 fingerprint. If it is
   missing or wrong, the app still works but shows Chrome's address bar. If you ever publish
   through Google Play with Play App Signing, add Play's fingerprint to that file too.
+
+## Update — October 2026: data protection and backups (2.7)
+
+- **The About page never replaces an existing plan.** When a plan exists, sample numbers open in an
+  in-memory preview (`sandbox`). `save()` refuses to write while previewing.
+- **Backups** live in localStorage under `waterline:backups` (newest first, up to 20, automatic
+  copies dropped first). Each entry is `{id, at, label, auto, fp, plan}`, and identical consecutive
+  automatic copies are skipped.
+- **Automatic copies** are taken before any replacement (blank plan, restore, sign-in merge), plus
+  a daily copy.
+- **Files:** export and import use `{app:"Waterline", format:1, exportedAt, plan}`. Import also
+  accepts a bare plan object.

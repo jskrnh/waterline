@@ -9,6 +9,48 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.7 — 15 October 2026
+
+**Your plan can no longer be overwritten by accident, and it's now backed up.**
+
+### Fixed
+
+- **The About page could replace your plan with the sample numbers.** *Get started* at the bottom
+  of the page and *Try it with sample numbers* at the top both loaded the sample plan over yours,
+  with no warning, and saved it to your account if you were signed in. Both now do something safe
+  when you already have a plan:
+  - **The page offers *Go to my overview* and *Preview sample numbers*.** The old buttons only
+    appear for a brand-new visitor with nothing to lose.
+  - **Previewing opens the sample in a separate mode that saves nothing.** A banner says you're
+    previewing and offers **Back to my plan**. Your own plan isn't touched, even if you edit the
+    sample. Reloading the page also brings your plan back.
+  - **Starting a blank plan asks first** and backs up the old one.
+
+### New
+
+**Backups.** Open them from the account menu under **Backups**.
+
+- **Automatic copies:** Waterline saves a copy before anything replaces your plan (starting a blank
+  plan, restoring, or choosing between the device and account copies at sign-in) and once a day
+  while you use it. It skips a copy that's identical to the last one.
+- **Back up now:** saves a copy whenever you like.
+- **Download backup file:** saves your whole plan as `waterline-backup-YYYY-MM-DD.json`. Keep it in
+  email, a cloud drive, or anywhere else.
+- **Restore from file:** loads a downloaded backup. Files that aren't Waterline backups are
+  rejected, and nothing is changed.
+- **Restore** any saved copy from the list, or download or delete it. Your current plan is backed
+  up before every restore, so a restore can always be undone.
+- **Storage:** backups stay on the device, up to 20. Older automatic copies make room for new ones
+  first.
+- **Delete all my data** now says how many backups it will remove, and suggests downloading one
+  first.
+
+### Changed
+
+- **"What this is" is now *About*,** in the account menu and the footer.
+
+---
+
 ## 2.6 — 15 October 2026
 
 **Your starting balance gets out of the way.**
