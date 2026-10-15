@@ -9,6 +9,41 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.2 — 15 October 2026
+
+**Everything about your account now lives in one menu, under the Waterline logo.**
+
+### New
+
+**An account menu, top right.** The Waterline logo sits in the top-right corner with your first
+name beside it. Click it to see:
+
+- **Signed in:** your name and email, then **Report**, **What this is**, **Privacy** and
+  **Sign out**.
+- **Signed out:** *Not signed in*, a **Sign in** button, and the same links.
+- **Danger zone:** **Delete all my data**, plus **Delete account** when you're signed in.
+
+The menu closes when you press Escape, click outside it, or choose an item. On a phone it shows
+just the logo and opens as a sheet under the bar.
+
+### Changed
+
+- **Delete all my data is no longer on every page.** It used to sit in the footer, one click from an
+  accident. It's now two clicks deep in the Danger zone, under a label that says what it removes,
+  and it still asks you to confirm.
+- **Report moved off the main bar** and into the account menu. The bar is back to the four pages
+  you use day to day. `#/report` still works as a direct link.
+- **Delete account** moved out of the sign-in sheet and into the same Danger zone.
+
+### Fixed
+
+- **Category dropdowns showed every option in the same colour.** When you opened one, Need, Want
+  and Debt payment all took the colour of whatever was already selected (this happens on Windows
+  and in Chrome), so the colour only changed after you picked. Each option now keeps its own
+  colour in the open list.
+
+---
+
 ## 2.1 — 15 October 2026
 
 **A report you can hand to someone, a calendar you can work in, and the sign-in prompt that

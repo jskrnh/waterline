@@ -349,3 +349,8 @@ Apple devices render in real SF and nothing is downloaded.
   straight away.
 
 See `RELEASE_NOTES.md` for the full list.
+
+## Update — October 2026: account menu (2.2)
+
+Account actions, Report, and *Delete all my data* now live in a menu under the logo in the top-right
+corner. Delete is no longer in the footer. Category dropdown options keep their own colours.

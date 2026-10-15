@@ -134,7 +134,44 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
   :root:not([data-theme="light"]) .acctbtn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
 }
 .acctbtn.ghost:hover{color:var(--ink);border-color:var(--ink-faint)}
-.whoami{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.whoami{font-size:12.5px;color:var(--ink);white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+
+/* ---- account menu ---- */
+.acct{position:relative}
+.acctrig{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 8px 0 12px;
+  border:1px solid var(--line);border-radius:var(--pill);background:transparent;color:var(--ink-soft);
+  cursor:pointer;font-family:var(--font)}
+.acctrig:hover,.acctrig[aria-expanded="true"]{border-color:var(--ink-faint);color:var(--ink)}
+.acctrig .logo{display:block;border-radius:6px;flex:none}
+.acctrig .chev{transition:transform .2s var(--ease)}
+.acctrig[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.acctmenu{position:absolute;right:0;top:calc(100% + 9px);width:286px;z-index:950;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:6px;
+  box-shadow:0 14px 44px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.06)}
+@media (prefers-reduced-motion:no-preference){
+  .acctmenu:not([hidden]){animation:menuin .16s var(--ease) both}
+  @keyframes menuin{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
+}
+.acctmenu .ahead{padding:12px 12px 14px;border-bottom:1px solid var(--hair);margin-bottom:6px}
+.acctmenu .ahead b{display:block;font-size:15px;font-weight:600;letter-spacing:-.012em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acctmenu .ahead span{display:block;font-size:12.5px;color:var(--ink-faint);letter-spacing:0;margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acctmenu .ahead .btn{margin-top:12px;width:100%}
+.aitem{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:0;background:none;
+  border-radius:10px;color:var(--ink);font-family:var(--font);font-size:14.5px;letter-spacing:-.008em;
+  text-align:left;cursor:pointer;text-decoration:none}
+.aitem:hover,.aitem:focus-visible{background:var(--paper);text-decoration:none;outline:none}
+.aitem svg{flex:none;color:var(--ink-faint)}
+.aitem small{display:block;font-size:12px;color:var(--ink-faint);letter-spacing:0;margin-top:1px}
+.adanger{margin-top:6px;padding-top:6px;border-top:1px solid var(--hair)}
+.adanger .alabel{display:block;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;text-transform:uppercase;padding:6px 12px 3px}
+.aitem.danger,.aitem.danger svg{color:var(--signal)}
+.aitem.danger:hover{background:var(--signal-wash)}
+@media(max-width:760px){
+  .acctrig{padding:0 7px 0 7px;gap:6px}
+  .acctmenu{position:fixed;right:12px;left:auto;top:calc(56px + env(safe-area-inset-top,0px));width:min(300px,calc(100vw - 24px))}
+}
 
 /* ---- pages ---- */
 .page{display:none}
@@ -259,6 +296,10 @@ svg.chart{display:block;width:100%;height:auto}
 select.cat{font-weight:500}
 select.cat[data-c="need"]{color:var(--need)} select.cat[data-c="want"]{color:var(--want)}
 select.cat[data-c="debt"]{color:var(--debt)} select.cat[data-c=""]{color:var(--ink-faint)}
+/* Each option keeps its own colour in the open list, instead of inheriting the selected one. */
+select.cat option{background:var(--panel);font-weight:500}
+select.cat option[value="need"]{color:var(--need)} select.cat option[value="want"]{color:var(--want)}
+select.cat option[value="debt"]{color:var(--debt)} select.cat option[value=""]{color:var(--ink-faint)}
 .kill{border:0;background:none;color:var(--ink-faint);cursor:pointer;font-size:19px;line-height:1;
   padding:5px;border-radius:9px}
 .kill:hover{color:var(--signal);background:var(--signal-wash)}
@@ -595,13 +636,51 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <li><a href="#/forecast" data-r="forecast">Forecast</a></li>
       <li><a href="#/whatif" data-r="whatif">What-if</a></li>
       <li><a href="#/debt" data-r="debt">Debt</a></li>
-      <li><a href="#/report" data-r="report">Report</a></li>
     </ul>
     <span class="nav-right">
-      <span class="whoami" id="whoami"></span>
       <button class="themebtn" id="themeBtn" title="Theme" aria-label="Switch theme"></button>
-      <button class="acctbtn" id="signInBtn">Sign in</button>
-      <button class="acctbtn ghost" id="signOutBtn" hidden>Sign out</button>
+      <div class="acct" id="acct">
+        <button class="acctrig" id="acctBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="acctMenu">
+          <span class="whoami" id="whoami">Account</span>
+          <svg class="logo" viewBox="0 0 64 64" width="26" height="26" aria-hidden="true">
+          <defs><clipPath id="wlBelow"><rect x="0" y="34" width="64" height="30"/></clipPath></defs>
+          <rect width="64" height="64" rx="13" fill="#0B2233"/>
+          <path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26 L58 34 L6 34 Z" fill="#0F5C6B" clip-path="url(#wlBelow)"/>
+          <line x1="6" y1="34" x2="58" y2="34" stroke="#E9EDEF" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26" fill="none" stroke="#7FD4E3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="34" cy="50" r="5" fill="#B3202C" stroke="#0B2233" stroke-width="2"/>
+        </svg>
+          <svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="acctmenu" id="acctMenu" role="menu" hidden>
+          <div class="ahead">
+            <b id="acctName">Not signed in</b>
+            <span id="acctSub">Your plan is saved on this device only.</span>
+            <button class="btn fill sm" id="signInBtn" role="menuitem">Sign in</button>
+          </div>
+          <a class="aitem" href="#/report" role="menuitem">
+            <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M5 2.5h6.5L15 6v11.5H5z M11.5 2.5V6H15 M7.5 10h5M7.5 13h5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            <span>Report<small>Export a two-page PDF</small></span></a>
+          <a class="aitem" href="#/welcome" role="menuitem">
+            <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 9v5M10 6.2v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <span>What this is</span></a>
+          <a class="aitem" href="/privacy.html" role="menuitem">
+            <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M10 2.5 16 5v4.5c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            <span>Privacy</span></a>
+          <button class="aitem" id="signOutBtn" role="menuitem" hidden>
+            <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M8 3.5H4.5v13H8M12 6.5 15.5 10 12 13.5M15.5 10H8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Sign out</span></button>
+          <div class="adanger">
+            <span class="alabel">Danger zone</span>
+            <button class="aitem danger" id="resetBtn" role="menuitem">
+              <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M4 5.5h12M8 5.5V3.5h4v2M5.5 5.5l.8 11h7.4l.8-11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Delete all my data<small id="resetSub">Every plan, budget and debt</small></span></button>
+            <button class="aitem danger" id="deleteBtn" role="menuitem" hidden>
+              <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="10" cy="7" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3.8 16.5c.8-3 3.3-4.6 6.2-4.6M12.5 12.5l4 4M16.5 12.5l-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <span>Delete account<small>Removes your saved plan and signs out</small></span></button>
+          </div>
+        </div>
+      </div>
     </span>
   </div>
 </nav>
@@ -984,7 +1063,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       numbers. <a href="/privacy.html">Privacy</a> &middot; <a href="#/welcome">What this is</a></p>
     <span class="right">
       <span class="saved" id="savedNote"></span>
-      <button class="chip danger" id="resetBtn">Delete all my data</button>
     </span>
   </div>
 </div>
@@ -1009,7 +1087,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <button class="linkbtn" id="modeToggle">Use a password instead</button>
       <button class="linkbtn" id="signupToggle" hidden>Create an account</button>
       <button class="linkbtn" id="forgotBtn" hidden>Forgot password</button>
-      <button class="linkbtn danger" id="deleteBtn" hidden>Delete account</button>
     </div>
     <div class="msg" id="authMsg"></div>
   </div>
@@ -2091,12 +2168,20 @@ function paintAccount(){
   const g=$("googleBtn"), o=document.querySelector(".or");
   if(g) g.hidden=!sb; if(o) o.style.display=sb?"":"none";
   const inBtn=$("signInBtn"), outBtn=$("signOutBtn"), delBtn=$("deleteBtn"), who=$("whoami");
+  const nm=$("acctName"), sub=$("acctSub");
   if(user){
-    who.textContent=`Hi ${displayName(user)}`;
+    const full=(user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name))||displayName(user);
+    who.textContent=displayName(user);
+    nm.textContent=full; sub.textContent=user.email||"Signed in";
     inBtn.hidden=true; outBtn.hidden=false; delBtn.hidden=false;
+    $("resetSub").textContent="From this device and your account";
   }else{
-    who.textContent = sb?"":(configFound?"accounts unavailable":"");
+    who.textContent="Account";
+    nm.textContent="Not signed in";
+    sub.textContent = sb ? "Your plan is saved on this device only."
+      : (configFound ? "Accounts are unavailable right now." : "Your plan is saved on this device only.");
     inBtn.hidden=!sb; outBtn.hidden=true; delBtn.hidden=true;
+    $("resetSub").textContent="Every plan, budget and debt on this device";
   }
 }
 /* What actually matters when deciding whether two plans differ. Theme, the seen
@@ -2171,7 +2256,19 @@ function paintAuth(){
   }
   $("authMsg").textContent=""; $("authMsg").className="msg";
 }
-$("signInBtn").addEventListener("click",openAuth);
+$("signInBtn").addEventListener("click",()=>{ closeMenu(); openAuth(); });
+
+/* account menu */
+function openMenu(){ $("acctMenu").hidden=false; $("acctBtn").setAttribute("aria-expanded","true"); }
+function closeMenu(){ $("acctMenu").hidden=true; $("acctBtn").setAttribute("aria-expanded","false"); }
+$("acctBtn").addEventListener("click",e=>{ e.stopPropagation(); $("acctMenu").hidden?openMenu():closeMenu(); });
+document.addEventListener("click",e=>{
+  if($("acctMenu").hidden) return;
+  if(!e.target.closest("#acct")) closeMenu();
+  else if(e.target.closest(".aitem")) closeMenu();
+},true);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("acctMenu").hidden){ closeMenu(); $("acctBtn").focus(); } });
+window.addEventListener("hashchange",closeMenu);
 $("closeAuth").addEventListener("click",closeAuth);
 veil.addEventListener("click",e=>{ if(e.target===veil) closeAuth(); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&veil.dataset.open==="1") closeAuth(); });
@@ -2404,7 +2501,7 @@ document.addEventListener("click",e=>{
   if(e.target.id==="calNext"||e.target.closest("#calNext")){
     calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1); renderForecast(); return; }
   if(e.target.id==="moreBtn"){ ledgerRows+=40; ledger(project()); return; }
-  if(e.target.id==="resetBtn"){ wipeEverything(); return; }
+  if(e.target.closest("#resetBtn")){ wipeEverything(); return; }
   if(e.target.id==="useSuggest"){ const sg=suggestMonths();
     if(sg){ doc.payoffMonths=sg.months; renderDebtFigures(); save(); } return; }
   if(e.target.id==="useFloor"){ const f=debtFacts(), r=runPayoff(f.list,f.mins,600);
