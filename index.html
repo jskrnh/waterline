@@ -1287,27 +1287,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   </div>
 </div>
 
-<div class="veil" id="mergeVeil">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mergeTitle">
-    <h2 id="mergeTitle">Two plans, one account</h2>
-    <p>This device and your account each hold a plan, and they are not the same.
-      Pick the one to keep — the other is replaced everywhere.</p>
-    <div class="switches" style="display:block;margin:0">
-      <div class="note" style="background:var(--paper);border:1px solid var(--line);margin-bottom:10px">
-        <b style="font-size:14px">On this device</b>
-        <div class="tiny" id="mergeLocal" style="margin-top:3px"></div>
-      </div>
-      <div class="note" style="background:var(--paper);border:1px solid var(--line)">
-        <b style="font-size:14px">In your account</b>
-        <div class="tiny" id="mergeCloud" style="margin-top:3px"></div>
-      </div>
-    </div>
-    <div class="acts">
-      <button class="btn fill sm" id="keepCloud">Keep my account's plan</button>
-      <button class="btn ghost sm" id="keepLocal">Keep this device's plan</button>
-    </div>
-  </div>
-</div>
 
 <div class="veil" id="bkVeil">
   <div class="sheet bksheet" role="dialog" aria-modal="true" aria-labelledby="bkTitle">
@@ -2544,13 +2523,19 @@ function save(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(async()=>{
     if(sandbox) return;
-    doc.savedAt=new Date().toISOString();
+    const fp=fingerprint(doc);
+    const edited=fp!==fingerprint(loadLocal()&&normalise(loadLocal()));
+    if(edited||!doc.savedAt) doc.savedAt=new Date().toISOString();   // the clock only moves on a real edit
     local.set(KEY,JSON.stringify(doc));
     dailyBackup();
     if(sb&&user){
-      const{error}=await sb.from("plans").upsert({user_id:user.id,data:doc,updated_at:new Date().toISOString()});
+      const sy=readSync();
+      if(sy&&sy.uid===user.id&&sy.fp===fp) return;   // the account already has exactly this; a stale tab never overwrites it
+      const at=new Date().toISOString();
+      const{error}=await sb.from("plans").upsert({user_id:user.id,data:doc,updated_at:at});
+      if(!error) writeSync(fp,at);
       flag(error?"Saved on this device only":"Saved to your account");
-    } else flag("Saved on this device");
+    } else if(edited) flag("Saved on this device");
   },600);
 }
 async function loadCloud(){
@@ -2562,7 +2547,9 @@ async function loadCloud(){
 }
 async function pushCloud(d){
   if(!sb||!user) return;
-  try{ await sb.from("plans").upsert({user_id:user.id,data:d,updated_at:new Date().toISOString()}); }
+  try{ const at=new Date().toISOString();
+    const{error}=await sb.from("plans").upsert({user_id:user.id,data:d,updated_at:at});
+    if(!error) writeSync(fingerprint(d),at); }
   catch(e){ console.error("Waterline:",e); }
 }
 function loadLocal(){ try{ const raw=local.get(KEY); return raw?JSON.parse(raw):null; }catch(e){ return null; } }
@@ -2736,43 +2723,75 @@ function planBlurb(d,at){
     if(!isNaN(t)) bits.push(`saved ${t.toLocaleDateString("en-CA",{month:"short",day:"numeric"})}, ${t.toLocaleTimeString("en-CA",{hour:"numeric",minute:"2-digit"})}`); }
   return bits.join(" · ");
 }
-function askMerge(localDoc,cloudDoc,cloudAt){
-  return new Promise(resolve=>{
-    const v=$("mergeVeil");
-    $("mergeLocal").textContent=planBlurb(localDoc,localDoc.savedAt||null);
-    $("mergeCloud").textContent=planBlurb(cloudDoc,cloudAt);
-    const done=pick=>{ v.dataset.open="0";
-      $("keepLocal").onclick=null; $("keepCloud").onclick=null; resolve(pick); };
-    $("keepLocal").onclick=()=>done("local");
-    $("keepCloud").onclick=()=>done("cloud");
-    v.dataset.open="1"; $("keepCloud").focus();
-  });
+/* ---- quiet sync ----
+   The device remembers the fingerprint of the plan it last exchanged with the account.
+   - this device unchanged since then  -> the account's copy is simply newer: load it
+   - the account unchanged since then  -> this device has newer edits: send them
+   - both edited                        -> the newer edit wins; the other goes to Backups
+   No question is ever asked. */
+const SKEY="waterline:sync";
+function readSync(){ try{ return JSON.parse(local.get(SKEY)||"null"); }catch(e){ return null; } }
+function writeSync(fp,at){ if(user) local.set(SKEY,JSON.stringify({uid:user.id,fp,at})); }
+function adopt(d,note){
+  if(sandbox) exitSample(true);
+  const theme=doc?doc.theme:"system";
+  doc=d; doc.theme=theme; doc.seen=true;
+  setActive(doc.activeId); calMonth=null; selDay=null; applyTheme(); fillSeed();
+  local.set(KEY,JSON.stringify(doc));
+  savePaused=true; render(); savePaused=false;
+  if(note) flag(note,3200);
 }
-/* Supabase re-emits SIGNED_IN whenever the tab regains focus. Reconcile once per
-   user per page load, and write the winner to both sides so they can't disagree again. */
+let syncing=false, lastSyncCheck=0;
+async function syncWithAccount(){
+  if(!sb||!user||syncing) return;
+  syncing=true; lastSyncCheck=Date.now();
+  try{
+    clearTimeout(saveTimer);
+    const res=await loadCloud();
+    const real=sandbox?sandbox.real:doc;
+    const lfp=fingerprint(real), sy=readSync(), mine=sy&&sy.uid===user.id;
+    if(!res){                                         // nothing in the account yet
+      if(worthKeeping(real)){ await pushCloud(real); writeSync(lfp,new Date().toISOString()); }
+      return;
+    }
+    const cloud=normalise(res.doc), cfp=fingerprint(cloud);
+    if(cfp===lfp){ writeSync(cfp,res.at); return; }   // already the same
+    const localEdited = !worthKeeping(real) ? false : !(mine&&sy.fp===lfp);
+    const cloudEdited = !(mine&&sy.fp===cfp);
+    if(!localEdited){                                 // this device is just behind
+      adopt(cloud, worthKeeping(real)?"Updated with changes from your other device":"");
+      writeSync(cfp,res.at); return;
+    }
+    if(!cloudEdited){                                 // the account is just behind
+      await pushCloud(real); writeSync(lfp,new Date().toISOString()); return;
+    }
+    // both edited since the last sync: newest edit wins, the other copy is kept in Backups
+    const localAt=Date.parse(real.savedAt||0)||0, cloudAt=Date.parse(res.at||0)||0;
+    if(cloudAt>=localAt){
+      backup("This device's copy, replaced by a newer one from your account",{from:real});
+      adopt(cloud,"Loaded your newer plan from your account. This device's copy is in Backups.");
+      writeSync(cfp,res.at);
+    } else {
+      backup("Account copy, replaced by newer edits on this device",{from:cloud});
+      await pushCloud(real); writeSync(lfp,new Date().toISOString());
+      flag("Your newer edits on this device were saved. The older account copy is in Backups.",3600);
+    }
+  } catch(e){ console.error("Waterline:",e); }
+  finally{ syncing=false; }
+}
 let reconciledFor=null;
 async function onSignedIn(){
   const uid=user?user.id:null;
   if(!uid||reconciledFor===uid) return;
   reconciledFor=uid;
-  if(sandbox) exitSample(true);
-  savePaused=true; clearTimeout(saveTimer);
-  const cloudRes=await loadCloud(), localRaw=loadLocal();
-  const cloud=cloudRes?normalise(cloudRes.doc):null, localDoc=localRaw?normalise(localRaw):null;
-  if(!cloud){ if(hasEntries(localDoc)) doc=localDoc; }
-  else if(!hasEntries(localDoc)||fingerprint(localDoc)===fingerprint(cloud)) doc=cloud;
-  else{
-    if(sandbox) exitSample(true);
-    const pick=await askMerge(localDoc,cloud,cloudRes.at);
-    if(pick==="local"){ backup("Account copy, replaced at sign-in",{from:cloud}); doc=localDoc; }
-    else{ backup("Device copy, replaced at sign-in",{from:localDoc}); doc=cloud; }
-  }
-  doc.savedAt=new Date().toISOString();
-  setActive(doc.activeId); applyTheme(); fillSeed(); render();
-  local.set(KEY,JSON.stringify(doc));
-  await pushCloud(doc);
-  savePaused=false;
+  await syncWithAccount();
+  render();
 }
+/* coming back to the tab picks up edits made on other devices */
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden&&user&&Date.now()-lastSyncCheck>10000) syncWithAccount();
+});
+window.addEventListener("focus",()=>{ if(user&&Date.now()-lastSyncCheck>10000) syncWithAccount(); });
 let authMode="link", isSignup=false;
 function paintAuth(){
   const pass=$("authPass"), primary=$("primaryAuth"), toggle=$("modeToggle"),
@@ -2847,7 +2866,7 @@ $("primaryAuth").addEventListener("click",async()=>{
 });
 $("signOutBtn").addEventListener("click",async()=>{
   if(sb) await sb.auth.signOut();
-  user=null; reconciledFor=null; paintAccount(); flag("Signed out");
+  user=null; reconciledFor=null; local.del(SKEY); paintAccount(); flag("Signed out");
 });
 $("deleteBtn").addEventListener("click",async()=>{
   if(!sb||!user) return;

@@ -9,6 +9,31 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.9 — 15 October 2026
+
+**No more "Two plans, one account". Your devices now stay in step on their own.**
+
+### Fixed
+
+- **The "Two plans, one account" question kept coming back.** Whenever you reopened a tab, it
+  treated any difference between the device and your account as a conflict, even when the device's
+  copy was simply older. Each device now remembers what it last exchanged with your account, so it
+  can tell an *out-of-date* copy from a *changed* one:
+
+  | What happened | What Waterline does |
+  |---|---|
+  | You edited on another device | This one quietly loads the newer plan |
+  | You edited here | Your edits are saved to your account |
+  | You edited both places since they last met | The newer edit wins; the other copy goes to **Backups** |
+
+  The question is gone entirely. Nothing is lost without a copy.
+- **An old tab could overwrite newer work.** Reopening a stale tab and just looking around could
+  push its old plan back over your account, because every redraw counted as a save. Now only real
+  edits are sent, so a stale tab can't overwrite your account.
+- **Coming back to a tab** now picks up changes made on your other devices, without a reload.
+
+---
+
 ## 2.8 — 15 October 2026
 
 **The balance chart now draws properly on a phone.**
