@@ -30,7 +30,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "8.9"
+          gradle-version: "8.13"
 
       - name: Decode signing key
         id: key
@@ -56,7 +56,7 @@ jobs:
           VERSION_NAME: "1.${{ github.run_number }}"
         run: |
           set -o pipefail
-          if ! gradle assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log; then
+          if ! gradle assembleRelease bundleRelease --no-daemon --stacktrace 2>&1 | tee build.log; then
             # surface the cause as one annotation, so it is readable without opening the log
             msg=$(awk '/What went wrong/{f=1} f{print} /Try:/{exit}' build.log | head -25)
             [ -z "$msg" ] && msg=$(grep -iE "error|exception" build.log | head -20)
@@ -72,6 +72,10 @@ jobs:
           OUT="waterline-1.${{ github.run_number }}.apk"
           cp "$APK" "$OUT"
           echo "file=$OUT" >> "$GITHUB_OUTPUT"
+          # Google Play takes an Android App Bundle rather than an APK
+          AAB="waterline-1.${{ github.run_number }}.aab"
+          cp android/app/build/outputs/bundle/release/app-release.aab "$AAB"
+          echo "aab=$AAB" >> "$GITHUB_OUTPUT"
           CERT=$("$BT/apksigner" verify --print-certs "$OUT" | grep -m1 "SHA-256 digest" | awk '{print $NF}')
           BADGE=$("$BT/aapt2" dump badging "$OUT" | grep -E "^package:|^sdkVersion|^targetSdkVersion|^application-label:" | tr '\n' ' ')
           SIZE=$(du -k "$OUT" | cut -f1)
@@ -79,8 +83,10 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: waterline-apk
-          path: ${{ steps.apk.outputs.file }}
+          name: waterline-android
+          path: |
+            ${{ steps.apk.outputs.file }}
+            ${{ steps.apk.outputs.aab }}
 
       - name: Publish release
         if: steps.key.outputs.signed == 'true'
@@ -89,8 +95,12 @@ jobs:
           tag_name: android-v1.${{ github.run_number }}
           name: Waterline for Android 1.${{ github.run_number }}
           make_latest: true
-          files: ${{ steps.apk.outputs.file }}
+          files: |
+            ${{ steps.apk.outputs.file }}
+            ${{ steps.apk.outputs.aab }}
           body: |
             **Waterline for Android** — opens [wtrline.com](https://wtrline.com) full-screen, so it always runs the latest version of the site.
+
+            `.apk` — install directly on a phone. `.aab` — upload to Google Play Console.
 
             **Install:** open this page on your phone, tap the `.apk` below, and allow your browser to install apps when Android asks. Chrome needs to be installed (it is on almost every Android phone).

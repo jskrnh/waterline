@@ -9,12 +9,12 @@ def hasReleaseKey = ks != null && new File(ks).exists()
 
 android {
     namespace 'com.wtrline.app'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.wtrline.app"
         minSdk 21
-        targetSdk 35
+        targetSdk 36   // Google Play requires API 36 for new apps from 31 Aug 2026
         versionCode((System.getenv("VERSION_CODE") ?: "1").toInteger())
         versionName(System.getenv("VERSION_NAME") ?: "1.0")
     }
