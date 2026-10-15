@@ -1,12 +1,4 @@
-
-[**Waterline**](www.wtrline.com)
-
-Find the day you go under. A cash-flow forecaster, budget planner and debt payoff tool that runs entirely in your browser and never asks for a bank login.
----
-
 # Waterline — deployment guide
-
-
 
 A cash-flow forecaster that finds the day a balance goes below zero. Single HTML file, no build step, no server to run.
 
@@ -278,3 +270,67 @@ the minimums when the budget is empty.
   collapsed the inputs. Moved to a class, with stacked labelled fields under 700px.
 - Editing a debt rebuilt the whole page and stole focus mid-keystroke. Rows and derived
   figures are now rendered separately; typing updates every total without touching the inputs.
+
+---
+
+## Update — October 2026: five pages, Apple-flavoured
+
+Routes are now `#/welcome`, `#/budget`, `#/forecast`, `#/whatif`, `#/debt`.
+
+### Budget is the driver
+
+Recurring income and bills are entered on **Budget**, not Forecast. Forecast reads from
+whatever Budget holds and plays it forward. Forecast keeps only what is genuinely about
+dates: the chart, the calendar, the ledger, and one-offs.
+
+### Savings is computed, not categorised
+
+Categories are **need**, **want**, **debt payment**. There is no savings category, because
+savings is not something you pay — it is what survives:
+
+```
+savings = income − needs − wants − debt payments − uncategorised
+```
+
+The Budget page shows four tiles. Needs, Wants and Savings carry targets; Debt payments does
+not, because it is a consequence rather than a goal. Items saved under the old `save`
+category migrate to `debt` on load.
+
+Target presets, in order: **70 / 20 / 10** (the default), 50 / 30 / 20, 60 / 20 / 20,
+65 / 15 / 20.
+
+### Calendar
+
+Forecast opens on a month grid. Each day shows its net movement and the running balance
+carried through quiet days, with dots marking what landed — grey for recurring, teal for a
+one-off. Days below zero are tinted; the lowest point is filled solid. **Click any day** to
+open the one-off editor with that date filled in. Month navigation is clamped to the
+forecast window. A List toggle switches back to the table.
+
+### What-if
+
+Scenarios moved off Forecast onto their own page: duplicate, rename, delete, and choose a
+baseline to compare against. The **What changed** table diffs the active plan against the
+baseline line by line, matching items by name and showing the monthly difference. The
+comparison overlay still appears on the Forecast chart when compare is on.
+
+### Theme
+
+The button in the nav cycles **system → light → dark** and the choice is saved with the plan.
+System means no `data-theme` attribute, so `prefers-color-scheme` decides.
+
+### Design
+
+Apple's type and surface discipline over Waterline's palette: a 52px translucent nav with
+12.5px links, headings at weight 600 with tracking that tightens as size grows
+(-0.026em at hero, -0.022em at section, -0.01em on body), Apple's three greys
+(#1d1d1f / #6e6e73 / #86868b) on white and #f5f5f7, and pill buttons at 17px.
+The accent stays Waterline teal rather than Apple blue. The font is the system stack, so
+Apple devices render in real SF and nothing is downloaded.
+
+### Fixes in this pass
+
+- Chart y-axis labels were clipped on a phone once the type scaled up; the left gutter now
+  scales with it.
+- Dark-mode hairlines were nearly invisible against black, which made the calendar grid
+  disappear. Lifted from `#1f1f21` to `#28282c`.
