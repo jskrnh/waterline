@@ -587,7 +587,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .vlead{flex:1 1 100%}
   .vstat{flex:1 1 30%;min-width:92px}
   .vstat b{font-size:20px}
-  svg.chart{height:240px}
   .rowhead{display:none}
   .erow{grid-template-columns:minmax(0,1fr) 76px;
     grid-template-areas:"nm kill" "amt amt" "fq st" "cat cat";gap:8px;padding:14px 16px;
@@ -1054,7 +1053,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
           <button class="chip" data-h="365">12 months</button>
         </div>
         <div class="chartcard">
-          <svg class="chart" id="chart" viewBox="0 0 960 300" preserveAspectRatio="none" role="img"
+          <svg class="chart" id="chart" viewBox="0 0 960 300" role="img"
                aria-label="Projected balance over time"></svg>
           <div class="chartfoot">
             <i><span class="sw" style="background:var(--accent)"></span> balance</i>
@@ -1075,7 +1074,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
           <span class="chiprow">
             <button class="chip on" data-view="cal">Calendar</button>
             <button class="chip" data-view="list">List</button>
-            <button class="chip" id="toggleAdd" style="color:var(--accent);border-color:var(--accent)">Add a one-off</button>
           </span>
         </div>
 
@@ -1159,7 +1157,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <div class="grid g2" id="whatifStats"></div>
 
       <div class="chartcard">
-        <svg class="chart" id="chart2" viewBox="0 0 960 300" preserveAspectRatio="none" role="img"
+        <svg class="chart" id="chart2" viewBox="0 0 960 300" role="img"
              aria-label="Scenario comparison"></svg>
         <div class="chartfoot">
           <i><span class="sw" style="background:var(--accent)"></span> this plan</i>
@@ -1564,13 +1562,21 @@ function drawChart(target,p,gp){
   const svg=$(target), s=p&&p.series;
   if(!svg) return;
   if(!s||s.length<2){ svg.innerHTML=""; return; }
-  const px=svg.clientWidth||960, k=Math.min(2.1,Math.max(1,960/Math.max(320,px)));
-  const FS=Math.round(11.5*k), FB=Math.round(14*k);
-  const W=960,H=300,PL=Math.round(58*Math.min(1.95,k)),PR=16,PT=20,PB=Math.round(26*Math.min(1.5,k));
+  /* Draw at the size the chart is actually shown, so text keeps its shape on every screen. */
+  const W=Math.max(280,Math.round(svg.getBoundingClientRect().width||svg.parentNode.clientWidth||960));
+  const narrow=W<560;
+  const H=narrow?Math.round(Math.min(320,Math.max(230,W*0.78))):Math.round(Math.min(340,Math.max(260,W*0.31)));
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.setAttribute("preserveAspectRatio","xMidYMid meet");
+  svg.style.height=H+"px";
+  const k=1, FS=narrow?11:12, FB=narrow?13:14;
+  const PR=narrow?10:16, PT=narrow?24:20, PB=24;
+  const t0=p.from.getTime(), t1=p.to.getTime();
+  const vals0=s.map(d=>d.bal).concat(gp?gp.series.map(d=>d.bal):[]);
+  const widest=Math.max(...[Math.min(0,...vals0),Math.max(0,...vals0)].map(v=>money(Math.round(v*1.12)).length));
+  const PL=Math.round(widest*FS*0.6)+14;
   const faint=cssVar("--ink-faint"), inkc=cssVar("--ink"), hair=cssVar("--hair"),
         acc=cssVar("--accent"), sig=cssVar("--signal");
-  const t0=p.from.getTime(), t1=p.to.getTime();
-  const vals=s.map(d=>d.bal).concat(gp?gp.series.map(d=>d.bal):[]);
+  const vals=vals0;
   let lo=Math.min(0,...vals), hi=Math.max(0,...vals);
   const pad=(hi-lo)*.12||100; lo-=pad; hi+=pad;
   const X=t=>PL+((t-t0)/(t1-t0))*(W-PL-PR);
@@ -1581,16 +1587,47 @@ function drawChart(target,p,gp){
   const ghost=gp&&gp.series.length>1
     ? `<path d="${stepPath(gp.series,X,Y,t1)}" fill="none" stroke="${faint}" stroke-width="1.8" stroke-dasharray="5 4" stroke-linejoin="round"/>
        <circle cx="${X(gp.low.date.getTime())}" cy="${Y(gp.low.bal)}" r="4" fill="none" stroke="${faint}" stroke-width="1.8"/>`:"";
-  let grid="", cur=new Date(p.from.getFullYear(),p.from.getMonth()+1,1);
+  /* month lines every month; labels thinned out so they never collide */
+  const monthPx=(W-PL-PR)/((t1-t0)/(30.44*864e5));
+  const every=Math.max(1,Math.ceil((FS*2.6+8)/monthPx));
+  let grid="", cur=new Date(p.from.getFullYear(),p.from.getMonth()+1,1), mi=0;
   while(cur<p.to){
     const x=X(cur.getTime());
-    grid+=`<line x1="${x}" y1="${PT}" x2="${x}" y2="${H-PB}" stroke="${hair}" stroke-width="1"/>`
-       +`<text x="${x+5}" y="${H-Math.round(9*Math.min(1.5,k))}" font-size="${FS}" fill="${faint}">${cur.toLocaleDateString("en-CA",{month:"short"})}</text>`;
-    cur=new Date(cur.getFullYear(),cur.getMonth()+1,1);
+    grid+=`<line x1="${x}" y1="${PT}" x2="${x}" y2="${H-PB}" stroke="${hair}" stroke-width="1"/>`;
+    if(mi%every===0&&x<W-PR-FS*1.6){
+      const lab=cur.getMonth()===0&&every<3?cur.toLocaleDateString("en-CA",{month:"short"})+" ’"+String(cur.getFullYear()).slice(2):cur.toLocaleDateString("en-CA",{month:"short"});
+      grid+=`<text x="${x}" y="${H-8}" text-anchor="middle" font-size="${FS}" fill="${faint}">${lab}</text>`;
+    }
+    cur=new Date(cur.getFullYear(),cur.getMonth()+1,1); mi++;
   }
   let yl=""; [hi,(hi+lo)/2,lo].forEach(v=>{
     yl+=`<text x="${PL-9}" y="${Y(v)+4}" text-anchor="end" font-size="${FS}" fill="${faint}">${money(Math.round(v))}</text>`; });
-  const lx=X(p.low.date.getTime()), ly=Y(p.low.bal), flip=lx>W-190;
+  const lx=X(p.low.date.getTime()), ly=Y(p.low.bal), flip=lx>W-(narrow?96:150);
+  /* Label the low point in whichever corner around the dot the balance line crosses least. */
+  const amtTxt=money(Math.round(p.low.bal)), dateTxt=dLabel(p.low.date);
+  const bw=Math.max(amtTxt.length*FB*0.6,dateTxt.length*FS*0.58)+6, bh=FB+FS+8;
+  const pts=[]; for(let i=1;i<s.length;i++){            // the step path, sampled every few pixels
+    const xa=X(s[i-1].date.getTime()), xb=X(s[i].date.getTime()), ya=Y(s[i-1].bal), yb=Y(s[i].bal);
+    for(let x=xa;x<=xb;x+=3) pts.push([x,ya]);
+    for(let y=Math.min(ya,yb);y<=Math.max(ya,yb);y+=3) pts.push([xb,y]); }
+  const cands=[];
+  [ly-10-bh, ly+10, zeroY+5, zeroY-bh-5, ly-bh/2].forEach(y0=>{
+    for(let i=0;i<=14;i++) [1,-1].forEach(dx=>{
+      const x0=dx>0?lx+9+i*16:lx-9-bw-i*16;
+      const inside=x0>=PL&&x0+bw<=W-PR&&y0>=PT-2&&y0+bh<=H-PB+2;
+      if(!inside) return;
+      const hits=pts.filter(([x,y])=>x>=x0-3&&x<=x0+bw+3&&y>=y0-3&&y<=y0+bh+3).length
+        +((zeroY>y0-2&&zeroY<y0+bh+2)?8:0);                 // don't sit on the zero line either
+      const cx=x0+(dx>0?0:bw), cy=y0+bh/2;
+      cands.push({dx,x0,y0,score:hits*10+Math.hypot(cx-lx,cy-ly)/12});
+    });
+  });
+  cands.sort((a,b)=>a.score-b.score);
+  const best=cands[0]||{dx:lx>W/2?-1:1,x0:lx>W/2?lx-9-bw:lx+9,y0:Math.max(PT,ly-10-bh)};
+  const flipL=best.dx<0, lxT=flipL?best.x0+bw:best.x0;
+  const yAmt=best.y0+FB, yDate=best.y0+FB+FS+4;
+  const far=Math.hypot(lxT-lx,(best.y0+bh/2)-ly)>26;
+  const leader=far?`<line x1="${lx}" y1="${ly}" x2="${flipL?lxT+3:lxT-3}" y2="${best.y0+bh/2}" stroke="${sig}" stroke-width="1" opacity=".7"/>`:"";   // put the low-point label above the dot when there's room
   svg.innerHTML=`<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
     <clipPath id="bz-${target}"><rect x="0" y="${zeroY}" width="${W}" height="${Math.max(0,H-zeroY)}"/></clipPath>
     ${grid}
@@ -1602,8 +1639,9 @@ function drawChart(target,p,gp){
     ${yl}
     <line x1="${lx}" y1="${PT}" x2="${lx}" y2="${H-PB}" stroke="${sig}" stroke-width="1" stroke-dasharray="3 3"/>
     <circle cx="${lx}" cy="${ly}" r="5" fill="${sig}"/>
-    <text x="${flip?lx-11:lx+11}" y="${ly-Math.round(12*k)}" text-anchor="${flip?"end":"start"}" font-size="${FB}" font-weight="600" fill="${sig}">${money2(p.low.bal)}</text>
-    <text x="${flip?lx-11:lx+11}" y="${ly+Math.round(4*k)+2}" text-anchor="${flip?"end":"start"}" font-size="${FS}" fill="${sig}">${dLabel(p.low.date)}</text>
+    ${leader}<g paint-order="stroke" stroke="${cssVar("--panel")}" stroke-width="4" stroke-linejoin="round">
+    <text x="${lxT}" y="${yAmt}" text-anchor="${flipL?"end":"start"}" font-size="${FB}" font-weight="600" fill="${sig}">${amtTxt}</text>
+    <text x="${lxT}" y="${yDate}" text-anchor="${flipL?"end":"start"}" font-size="${FS}" fill="${sig}">${dateTxt}</text></g>
   </g>`;
 }
 
@@ -3064,7 +3102,6 @@ document.addEventListener("click",e=>{
   if(pre){ const[a,b,c]=pre.split(",").map(Number);
     doc.split={need:a,want:b,save:c}; renderBudget(); save(); return; }
 
-  if(e.target.id==="toggleAdd"){ openOneoff(); return; }
   if(e.target.id==="offCancel"){ closeOneoff(); return; }
   if(e.target.id==="offSave"){ commitOneoff(); return; }
   if(e.target.id==="demoReplay"){ drawDemo(true); return; }
@@ -3174,6 +3211,16 @@ function openSeed(){
 }
 if("serviceWorker" in navigator && location.protocol==="https:"){
   window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
+}
+if("ResizeObserver" in window){
+  const seen=new WeakMap();
+  const ro=new ResizeObserver(entries=>{ entries.forEach(en=>{
+    const w=Math.round(en.contentRect.width), id=en.target.id;
+    if(!w||seen.get(en.target)===w) return; seen.set(en.target,w);
+    if(id==="chart"&&route==="forecast") safely(()=>drawChart("chart",project(),baseline()));
+    if(id==="chart2"&&route==="whatif")  safely(()=>drawChart("chart2",project(),baseline()));
+  }); });
+  ["chart","chart2"].forEach(i=>{ const el=$(i); if(el) ro.observe(el); });
 }
 let rsz=null;
 window.addEventListener("resize",()=>{ clearTimeout(rsz);

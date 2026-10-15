@@ -9,6 +9,33 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.8 — 15 October 2026
+
+**The balance chart now draws properly on a phone.**
+
+### Fixed
+
+- **The chart was squashed on phones.** It was drawn on a fixed 960 × 300 canvas and then stretched
+  to fit. On a phone that squeezed it about three times harder sideways than up and down, so the
+  numbers and month names came out tall and narrow, and the months crowded together. The chart is
+  now drawn at the size it's actually shown on every screen:
+  - **Text keeps its real shape** at every width.
+  - **Month labels thin out** when space is tight (every second month on a phone, all twelve on a
+    laptop), and January shows its year (*Jan ’27*).
+  - **The height suits the screen:** taller on a phone, wider and shorter on a laptop.
+  - **The money labels on the left size themselves** to the largest figure, so nothing gets cut off.
+- **The chart redraws itself when its width changes** — rotating the phone, resizing the window or
+  opening a sidebar — with no reload.
+- **The lowest-point label no longer sits on top of the balance line.** It looks for the clearest
+  space around the dot. If it has to move away, a thin line connects it to the point.
+
+### Changed
+
+- **The *Add a one-off* button is gone from the Forecast.** Tap any day on the calendar to add an
+  expense or income on that date instead.
+
+---
+
 ## 2.7 — 15 October 2026
 
 **Your plan can no longer be overwritten by accident, and it's now backed up.**
