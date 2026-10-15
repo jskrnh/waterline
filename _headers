@@ -1,0 +1,28 @@
+# Cloudflare Pages reads this file from the site root.
+#
+# HTML, the service worker and the config must revalidate on every request, so a
+# deploy appears immediately instead of waiting for the edge cache to expire.
+# Without this, the bare "/" path can serve the previous build for 10-20 minutes
+# after a push, while "/index.html" already serves the new one.
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/config.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/manifest.webmanifest
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Icons and the share card change rarely — a day of caching is fine.
+/*.png
+  Cache-Control: public, max-age=86400
+
+/icon.svg
+  Cache-Control: public, max-age=86400

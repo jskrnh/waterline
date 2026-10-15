@@ -1,7 +1,7 @@
 /* Waterline service worker — shell caching only.
    Network-first so a deploy is picked up immediately;
    the cache is a fallback for offline use. */
-const CACHE = "waterline-v1";
+const CACHE = "waterline-v2";
 const SHELL = ["/", "/index.html", "/icon.svg", "/icon-192.png", "/manifest.webmanifest"];
 
 self.addEventListener("install", e => {
@@ -20,6 +20,8 @@ self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
   // never cache API traffic (Supabase auth and data must always be live)
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
+  // config.js must always come from the network so a key change takes effect at once
+  if (url.pathname.endsWith("/config.js")) return;
   e.respondWith(
     fetch(e.request)
       .then(res => {
