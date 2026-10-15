@@ -366,3 +366,9 @@ Recurring items take an optional end date (`end`, empty = none). Each row previe
 yearly cost, or the payments left and total remaining once it ends. Each table has a totals footer
 (per month, per year, next 30 days). Rows reorder by dragging the handle or with ↑/↓, and the
 column headings sort.
+
+## Update — October 2026: layout and phone tables (2.5)
+
+The Overview order is now: Starting point → Money in → Money out → donut → tiles → target split →
+summary. The Money in and Money out cards carry light green and red tints. On phones each payment
+collapses to one summary line and opens into the editor when tapped.

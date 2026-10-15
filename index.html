@@ -359,6 +359,24 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
   font-size:15px;line-height:1;cursor:pointer;padding:4px 5px;border-radius:6px}
 .endx:hover{color:var(--signal);background:var(--signal-wash)}
 
+/* money in / money out: a light tint so the two tables read apart at a glance */
+.card.money{--tone:var(--gain);overflow:hidden;border-top:3px solid var(--tone);
+  background:color-mix(in srgb,var(--tone) 3%,var(--panel))}
+.card.money.out{--tone:var(--signal)}
+.card.money>header{background:color-mix(in srgb,var(--tone) 9%,var(--panel));border-bottom-color:color-mix(in srgb,var(--tone) 18%,var(--hair))}
+.card.money>header h3{color:color-mix(in srgb,var(--tone) 70%,var(--ink))}
+.card.money>header .fig{color:var(--tone);font-size:15px}
+.card.money .rowhead{background:color-mix(in srgb,var(--tone) 5%,var(--panel))}
+.card.money .erow{border-bottom-color:color-mix(in srgb,var(--tone) 10%,var(--hair))}
+.card.money .erow input,.card.money .erow select{background:var(--panel);border-color:color-mix(in srgb,var(--tone) 12%,var(--hair))}
+.card.money .rowfoot{background:color-mix(in srgb,var(--tone) 8%,var(--panel));border-top-color:color-mix(in srgb,var(--tone) 18%,var(--hair))}
+.card.money .addrow{color:var(--tone)}
+.card.money .addrow:hover{background:color-mix(in srgb,var(--tone) 10%,var(--panel))}
+.card.money .endbtn{background:var(--panel)}
+
+/* compact summary line: phones only */
+.sum{display:none}
+
 /* totals */
 .rowfoot{display:flex;flex-wrap:wrap;gap:8px 26px;align-items:baseline;padding:14px 22px;
   background:var(--paper);border-top:1px solid var(--hair);font-size:13px;color:var(--ink-faint);letter-spacing:0}
@@ -528,14 +546,34 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .rowhead.pay{display:flex;gap:14px;padding:10px 16px;overflow-x:auto;scrollbar-width:none}
   .rowhead.pay>span{display:none}
   .rowhead.pay::before{content:"Sort";font-size:12px;color:var(--ink-faint)}
-  .erow.pay{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 34px;padding:14px 12px 14px 8px;
-    grid-template-areas:"grip nm nm kill" ". amt fq fq" ". st en en" ". cat cat cat"}
-  .erow.pay .grip{grid-area:grip;align-self:start;height:36px}
-  .erow.pay .nmc{grid-area:nm} .erow.pay .endc{grid-area:en}
-  .erow.pay .kill{align-self:start}
-  .rowfoot{padding:14px 16px;gap:10px 18px}
-  .rowfoot .tl{flex:1 1 100%}
-  .rowfoot span{text-align:left}
+  /* one tidy line per payment; tap it to edit */
+  .erow.pay{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr) 34px;padding:6px 12px 6px 6px;gap:8px;
+    grid-template-areas:"grip sum sum sum"}
+  .erow.pay>:not(.grip):not(.sum){display:none}
+  .erow.pay .grip{grid-area:grip;height:40px}
+  .erow.pay .sum{grid-area:sum;display:flex;align-items:center;gap:10px;min-width:0;width:100%;border:0;background:none;
+    padding:6px 0;font-family:var(--font);color:var(--ink);text-align:left;cursor:pointer}
+  .sum .cdot{width:8px;height:8px;border-radius:var(--pill);flex:none}
+  .sum .sn{flex:1;min-width:0;display:flex;flex-direction:column}
+  .sum .sn b{font-size:15.5px;font-weight:500;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sum small{font-size:12px;color:var(--ink-faint);letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sum .sa{display:flex;flex-direction:column;align-items:flex-end;flex:none}
+  .sum .sa b{font-size:15.5px;font-weight:600;letter-spacing:-.012em;font-variant-numeric:tabular-nums}
+  .sum .schev{flex:none;color:var(--ink-faint);transition:transform .2s var(--ease)}
+  .erow.pay.open{grid-template-areas:"grip sum sum kill" ". nm nm nm" ". amt fq fq" ". st en en" ". cat cat cat";
+    padding-bottom:14px;background:var(--panel)}
+  .erow.pay.open>:not(.grip):not(.sum){display:revert}
+  .erow.pay.open .nmc{display:flex;grid-area:nm}
+  .erow.pay.open .endc{display:block;grid-area:en}
+  .erow.pay.open .kill{display:block;grid-area:kill;align-self:center}
+  .erow.pay.open .schev{transform:rotate(180deg)}
+  .card.money .erow.pay.open{background:var(--panel)}
+  .card.money>header{padding:14px 16px;flex-wrap:nowrap}
+  .card.money>header .sub{display:none}
+  .rowfoot{padding:12px 16px;gap:8px 12px}
+  .rowfoot .tl{flex:1 1 100%;font-size:13px}
+  .rowfoot span{text-align:left;flex:1 1 0;font-size:11.5px}
+  .rowfoot span b{font-size:15px}
   .rowhead.drow{display:none}
   .erow.drow{grid-template-columns:1fr 1fr;grid-template-areas:"nm nm" "bal rate" "min cost" "del del";gap:9px}
   .erow.drow>span:first-child{grid-area:nm}
@@ -830,6 +868,53 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
     </div>
 
     <div class="stack">
+      <div id="uncatFlag"></div>
+
+      <div class="card">
+        <header><h3>Starting point</h3><span class="sub">where the forecast begins</span></header>
+        <div class="body grid g2">
+          <div>
+            <label class="tiny" for="seedBal" style="display:block;margin-bottom:6px">Balance today</label>
+            <input id="seedBal" type="number" step="0.01"
+              style="width:100%;font-family:var(--font);font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--ink);font-variant-numeric:tabular-nums">
+          </div>
+          <div>
+            <label class="tiny" for="seedDate" style="display:block;margin-bottom:6px">Starting from</label>
+            <input id="seedDate" type="date"
+              style="width:100%;font-family:var(--font);font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--ink)">
+          </div>
+        </div>
+      </div>
+
+      <div class="card money in">
+        <header><h3>Money in</h3><span class="sub">regular, repeating income</span><span class="fig" id="inTot"></span></header>
+        <div class="rowhead pay" data-for="in"><span></span><button class="sorth" data-sort="name" data-kind="in">Source<i></i></button><button class="sorth r" data-sort="amount" data-kind="in">Amount<i></i></button><button class="sorth" data-sort="freq" data-kind="in">How often<i></i></button><button class="sorth" data-sort="cat" data-kind="in">Category<i></i></button><button class="sorth" data-sort="start" data-kind="in">First payment<i></i></button><button class="sorth" data-sort="end" data-kind="in">Ends<i></i></button><span></span></div>
+        <div id="inList" class="paylist"></div>
+        <div class="rowfoot" id="inFoot"></div>
+        <button class="addrow" data-add="in">Add recurring income</button>
+      </div>
+
+      <div class="card money out">
+        <header><h3>Money out</h3><span class="sub">regular, repeating bills — one-offs live on the Forecast</span><span class="fig" id="outTot"></span></header>
+        <div class="rowhead pay" data-for="out"><span></span><button class="sorth" data-sort="name" data-kind="out">Bill<i></i></button><button class="sorth r" data-sort="amount" data-kind="out">Amount<i></i></button><button class="sorth" data-sort="freq" data-kind="out">How often<i></i></button><button class="sorth" data-sort="cat" data-kind="out">Category<i></i></button><button class="sorth" data-sort="start" data-kind="out">First payment<i></i></button><button class="sorth" data-sort="end" data-kind="out">Ends<i></i></button><span></span></div>
+        <div id="outList" class="paylist"></div>
+        <div class="rowfoot" id="outFoot"></div>
+        <button class="addrow" data-add="out">Add recurring bill</button>
+      </div>
+
+      <div class="card">
+        <header><h3>Where the money goes</h3><span class="sub">monthly equivalent</span>
+          <span class="fig" id="budgetTot"></span>
+          <span class="chiprow">
+            <button class="chip on" data-slice="cat">By category</button>
+            <button class="chip" data-slice="item">By item</button>
+          </span></header>
+        <div class="donutwrap">
+          <div class="donutbox" id="donutBox"></div>
+          <div class="legend" id="donutLegend"></div>
+        </div>
+      </div>
+
       <div class="grid g4" id="buckets"></div>
 
       <div class="card">
@@ -851,53 +936,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
             70 / 20 / 10 is the realistic starting point when rent takes a large share of your pay.
             50 / 30 / 20 is the textbook version. Debt payments are tracked separately — they come
             straight out of what you would otherwise save.</p>
-        </div>
-      </div>
-
-      <div id="uncatFlag"></div>
-
-      <div class="card">
-        <header><h3>Starting point</h3><span class="sub">where the forecast begins</span></header>
-        <div class="body grid g2">
-          <div>
-            <label class="tiny" for="seedBal" style="display:block;margin-bottom:6px">Balance today</label>
-            <input id="seedBal" type="number" step="0.01"
-              style="width:100%;font-family:var(--font);font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--ink);font-variant-numeric:tabular-nums">
-          </div>
-          <div>
-            <label class="tiny" for="seedDate" style="display:block;margin-bottom:6px">Starting from</label>
-            <input id="seedDate" type="date"
-              style="width:100%;font-family:var(--font);font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--ink)">
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <header><h3>Money in</h3><span class="sub">regular, repeating income</span><span class="fig" id="inTot"></span></header>
-        <div class="rowhead pay" data-for="in"><span></span><button class="sorth" data-sort="name" data-kind="in">Source<i></i></button><button class="sorth r" data-sort="amount" data-kind="in">Amount<i></i></button><button class="sorth" data-sort="freq" data-kind="in">How often<i></i></button><button class="sorth" data-sort="cat" data-kind="in">Category<i></i></button><button class="sorth" data-sort="start" data-kind="in">First payment<i></i></button><button class="sorth" data-sort="end" data-kind="in">Ends<i></i></button><span></span></div>
-        <div id="inList" class="paylist"></div>
-        <div class="rowfoot" id="inFoot"></div>
-        <button class="addrow" data-add="in">Add recurring income</button>
-      </div>
-
-      <div class="card">
-        <header><h3>Money out</h3><span class="sub">regular, repeating bills — one-offs live on the Forecast</span><span class="fig" id="outTot"></span></header>
-        <div class="rowhead pay" data-for="out"><span></span><button class="sorth" data-sort="name" data-kind="out">Bill<i></i></button><button class="sorth r" data-sort="amount" data-kind="out">Amount<i></i></button><button class="sorth" data-sort="freq" data-kind="out">How often<i></i></button><button class="sorth" data-sort="cat" data-kind="out">Category<i></i></button><button class="sorth" data-sort="start" data-kind="out">First payment<i></i></button><button class="sorth" data-sort="end" data-kind="out">Ends<i></i></button><span></span></div>
-        <div id="outList" class="paylist"></div>
-        <div class="rowfoot" id="outFoot"></div>
-        <button class="addrow" data-add="out">Add recurring bill</button>
-      </div>
-
-      <div class="card">
-        <header><h3>Where the money goes</h3><span class="sub">monthly equivalent</span>
-          <span class="fig" id="budgetTot"></span>
-          <span class="chiprow">
-            <button class="chip on" data-slice="cat">By category</button>
-            <button class="chip" data-slice="item">By item</button>
-          </span></header>
-        <div class="donutwrap">
-          <div class="donutbox" id="donutBox"></div>
-          <div class="legend" id="donutLegend"></div>
         </div>
       </div>
 
@@ -1491,8 +1529,9 @@ function rows(kind){
   const el=$(kind==="in"?"inList":"outList");
   if(!list.length){ el.innerHTML=`<p class="empty">Nothing here yet.</p>`; paintPay(kind); paintSortHeads(kind); return; }
   el.innerHTML=list.map((it,i)=>`
-    <div class="erow pay" data-id="${it.id}" data-kind="${kind}">
+    <div class="erow pay${it.id===openRow?" open":""}" data-id="${it.id}" data-kind="${kind}">
       <button class="grip" title="Drag to reorder" aria-label="Move ${esc(it.name||"item")} — use arrow keys">${GRIP}</button>
+      <button class="sum" data-sum="${it.id}" aria-expanded="${it.id===openRow}"></button>
       <span class="nmc"><input class="nm" value="${esc(it.name)}" placeholder="${kind==="in"?"Paycheque":"Rent"}" aria-label="Name">
         <small class="pv" data-pv="${it.id}"></small></span>
       <input class="amt" type="number" step="0.01" value="${esc(it.amount)}" aria-label="Amount">
@@ -1516,8 +1555,25 @@ function itemPreview(it){
   }
   return txt;
 }
+let openRow=null;
+const FQS={weekly:"/wk",biweekly:"/2 wk",monthly:"/mo",quarterly:"/qtr",yearly:"/yr"};
+function sumHTML(it,kind){
+  const from=parseD(state.start), far=new Date(from); far.setDate(far.getDate()+400);
+  const nx=it.start&&+it.amount?occurrences(it,from,far)[0]:null;
+  const fl=((FREQS.find(f=>f[0]===it.freq)||["",""])[1]);
+  const bits=[fl];
+  if(ended(it)) bits.push("ended");
+  else if(nx) bits.push("next "+dLabel(nx));
+  if(it.end&&!ended(it)) bits.push("ends "+parseD(it.end).toLocaleDateString("en-CA",{month:"short",year:"numeric"}));
+  const dot=kind==="in"?"var(--gain)":`var(--${it.cat||"ink-faint"})`;
+  return `<i class="cdot" style="background:${dot}"></i>
+    <span class="sn"><b>${esc(it.name||"Untitled")}</b><small>${esc(bits.join(" · "))}</small></span>
+    <span class="sa"><b>${kind==="in"?"+":""}${money2(+it.amount||0)}</b><small>${FQS[it.freq]||""}</small></span>
+    <svg class="schev" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
 function paintPay(kind){
   const list=listOf(kind);
+  list.forEach(it=>{ const sm=document.querySelector(`[data-sum="${it.id}"]`); if(sm) sm.innerHTML=sumHTML(it,kind); });
   list.forEach(it=>{ const el=document.querySelector(`[data-pv="${it.id}"]`); if(!el) return;
     el.classList.toggle("ended",ended(it)); el.innerHTML=itemPreview(it); });
   const foot=$(kind==="in"?"inFoot":"outFoot"); if(!foot) return;
@@ -2673,6 +2729,11 @@ document.addEventListener("click",e=>{
   const sl=e.target.closest("[data-slice]");
   if(sl){ sliceMode=sl.dataset.slice; safely(renderDonut); return; }
 
+  const sm=e.target.closest(".sum");
+  if(sm){ const row=sm.closest(".erow"), id=row.dataset.id, opening=!row.classList.contains("open");
+    document.querySelectorAll(".erow.pay.open").forEach(r=>{ r.classList.remove("open"); r.querySelector(".sum").setAttribute("aria-expanded","false"); });
+    if(opening){ row.classList.add("open"); sm.setAttribute("aria-expanded","true"); }
+    openRow=opening?id:null; return; }
   const sh=e.target.closest(".sorth");
   if(sh){ sortList(sh.dataset.kind,sh.dataset.sort); return; }
   const eb=e.target.closest(".endbtn");
@@ -2700,7 +2761,8 @@ document.addEventListener("click",e=>{
     return;
   }
   if(add==="in"||add==="out"){
-    (add==="in"?state.inflow:state.outflow).push({id:id(),name:"",amount:0,freq:"monthly",
+    const nid=id(); openRow=nid;
+    (add==="in"?state.inflow:state.outflow).push({id:nid,name:"",amount:0,freq:"monthly",
       start:state.start,end:"",cat:add==="in"?"":"need"});
     renderBudget(); save();
     const last=$(add==="in"?"inList":"outList").querySelector(".erow:last-of-type .nm"); if(last) last.focus();

@@ -9,6 +9,39 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.5 — 15 October 2026
+
+**Overview opens with your money, not your targets, and the tables finally fit a phone.**
+
+### Changed
+
+**New order on Overview.** The page now runs:
+
+1. Starting point
+2. Money in
+3. Money out
+4. Where the money goes
+5. The Needs / Wants / Debt payments / Savings tiles
+6. Your target split
+7. The month in one line
+
+What you enter comes first. How it measures up against your targets comes after.
+
+**Money in and Money out are colour-coded.** Money in has a light green tint and Money out a light
+red one, each with a matching top edge, header, totals bar and *Add* link. You can tell which table
+you're in without reading the title. The tints adapt to dark mode.
+
+**Compact tables on phones.** Each payment is now a single line showing the category dot, name,
+frequency, next payment date (and end date, if set), and the amount with its period (`/mo`, `/wk`,
+`/2 wk`). Tap a line to open its editor and tap again to close it; only one is open at a time. A
+new payment opens straight away so you can fill it in. Remove (×) only appears on an open row, so
+you can't delete a payment by brushing past it. Drag handles still work on the collapsed lines,
+and the totals bar fits on one row.
+
+Desktop is unchanged apart from the colours.
+
+---
+
 ## 2.4 — 15 October 2026
 
 **Payments can end, every one shows what it really costs, and you can put them in any order.**
