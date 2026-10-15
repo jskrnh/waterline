@@ -126,7 +126,14 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
   padding:6px 13px;border-radius:var(--pill);border:0;cursor:pointer;white-space:nowrap}
 :root[data-theme="dark"] .acctbtn{color:#06202b}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .acctbtn{color:#06202b}}
-.acctbtn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
+/* .ghost must win against the dark-mode .acctbtn colour rules above, which are
+   more specific than a bare .acctbtn.ghost and were painting Sign out near-black. */
+.acctbtn.ghost,
+:root[data-theme="dark"] .acctbtn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .acctbtn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
+}
+.acctbtn.ghost:hover{color:var(--ink);border-color:var(--ink-faint)}
 .whoami{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
 
 /* ---- pages ---- */
@@ -303,7 +310,7 @@ td.mv{color:var(--ink-soft)} td.bal{font-weight:600;white-space:nowrap} td.dt{wh
 .dow{display:grid;grid-template-columns:repeat(7,1fr);background:var(--paper);border-bottom:1px solid var(--hair)}
 .dow span{padding:8px 4px;text-align:center;font-size:11.5px;color:var(--ink-faint);letter-spacing:.02em}
 .cal{display:grid;grid-template-columns:repeat(7,1fr)}
-.cell{min-height:92px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);
+.cell{min-height:92px;border:0;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);
   padding:7px 8px;cursor:pointer;background:var(--panel);text-align:left;font-family:var(--font);
   display:flex;flex-direction:column;gap:3px;align-items:stretch}
 .cell:nth-child(7n){border-right:0}
@@ -435,6 +442,146 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .foot .right{margin-left:0;width:100%;justify-content:space-between}
   .hero{padding:18px 0 32px}
 }
+/* ---- donut (budget breakdown) ---- */
+.donutwrap{display:grid;grid-template-columns:260px minmax(0,1fr);gap:30px;align-items:center;padding:24px 22px}
+.donutbox{position:relative;width:260px;height:260px}
+.donutbox svg{display:block;width:100%;height:100%}
+.donutbox .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;pointer-events:none;padding:0 42px}
+.donutbox .mid b{font-size:25px;font-weight:600;letter-spacing:-.024em;line-height:1.1;font-variant-numeric:tabular-nums}
+.donutbox .mid span{font-size:12px;color:var(--ink-faint);letter-spacing:0;margin-top:3px;line-height:1.3}
+.donutbox path{cursor:pointer;transition:opacity .18s var(--ease)}
+.donutbox path:hover{opacity:.82}
+.legend{display:flex;flex-direction:column;gap:1px}
+.legend .lrow{display:grid;grid-template-columns:13px minmax(0,1fr) auto 62px;gap:11px;align-items:center;
+  padding:8px 10px;border-radius:10px;cursor:default;font-size:14.5px;letter-spacing:-.005em}
+.legend .lrow:hover{background:var(--paper)}
+.legend .lrow i{width:9px;height:9px;border-radius:var(--pill);display:block}
+.legend .lrow .nm{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.legend .lrow .nm small{color:var(--ink-faint);font-size:12.5px;margin-left:6px}
+.legend .lrow .amt{font-weight:500;font-variant-numeric:tabular-nums}
+.legend .lrow .shr{text-align:right;color:var(--ink-faint);font-size:13px;font-variant-numeric:tabular-nums}
+.legend .lrow.dim{opacity:.4}
+.legend .lrow.tot{border-top:1px solid var(--hair);border-radius:0;margin-top:5px;padding-top:12px;color:var(--ink-soft)}
+@media(max-width:760px){
+  .donutwrap{grid-template-columns:1fr;gap:18px;justify-items:center;padding:20px 14px}
+  .donutbox{width:232px;height:232px}
+  .legend{width:100%}
+  .legend .lrow{grid-template-columns:13px minmax(0,1fr) auto 54px;gap:9px;font-size:14px}
+}
+
+/* ---- calendar day detail ---- */
+.cell.sel{box-shadow:inset 0 0 0 2px var(--accent)}
+.cell.low.sel{box-shadow:inset 0 0 0 2px var(--ink)}
+.daypanel{border-top:1px solid var(--hair);background:var(--paper)}
+.daypanel .dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:16px 22px 12px}
+.daypanel .dhead h4{font-size:17px;letter-spacing:-.016em}
+.daypanel .dhead .net{font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+.daypanel .dhead .net.pos{color:var(--gain)} .daypanel .dhead .net.neg{color:var(--signal)}
+.daypanel .dhead .bal{margin-left:auto;font-size:13px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.daypanel .dhead .bal b{color:var(--ink);font-weight:600}
+.daypanel .dhead .x{margin-left:8px;background:none;border:0;color:var(--ink-faint);font-size:19px;
+  line-height:1;cursor:pointer;font-family:var(--font);padding:0 2px}
+.daypanel .dhead .x:hover{color:var(--ink)}
+.dlist{list-style:none;padding:0 22px}
+.dlist li{display:grid;grid-template-columns:9px minmax(0,1fr) auto auto;gap:12px;align-items:center;
+  padding:11px 0;border-top:1px solid var(--hair);font-size:15px;letter-spacing:-.006em}
+.dlist li i{width:9px;height:9px;border-radius:var(--pill);display:block}
+.dlist li .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dlist li .nm small{display:block;font-size:12px;color:var(--ink-faint);letter-spacing:0;margin-top:1px}
+.dlist li .mv{font-weight:500;font-variant-numeric:tabular-nums}
+.dlist li .mv.pos{color:var(--gain)} .dlist li .mv.neg{color:var(--ink)}
+.dlist li .acts{display:flex;gap:4px}
+.dlist li .acts button{background:none;border:0;cursor:pointer;font-family:var(--font);font-size:12.5px;
+  color:var(--ink-faint);padding:4px 7px;border-radius:7px;letter-spacing:0}
+.dlist li .acts button:hover{background:var(--panel);color:var(--ink)}
+.dlist li .acts button.rm:hover{color:var(--signal)}
+.dlist .none{display:block;grid-template-columns:none;color:var(--ink-faint);font-size:14.5px;padding:14px 0}
+.dayadd{display:flex;gap:9px;flex-wrap:wrap;padding:14px 22px 18px}
+.dayslot:not(:empty){padding:0 22px 18px}
+@media(max-width:620px){
+  .dlist li{grid-template-columns:9px minmax(0,1fr) auto;row-gap:6px}
+  .dlist li .acts{grid-column:2/4;justify-content:flex-end}
+}
+
+/* ---- report (two printed pages) ---- */
+.reportbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+.reportbar .hint{font-size:13.5px;color:var(--ink-faint);letter-spacing:0}
+.paper{display:flex;flex-direction:column;gap:26px;align-items:center}
+.sheetpage{width:210mm;min-height:297mm;background:#fff;color:#1d1d1f;padding:15mm 16mm;
+  box-shadow:0 8px 34px rgba(0,0,0,.17);border-radius:3px;position:relative;
+  font-size:10.2pt;line-height:1.42;letter-spacing:-.006em;display:flex;flex-direction:column}
+.sheetpage *{color:inherit}
+.sheetpage h2{font-size:19pt;font-weight:600;letter-spacing:-.022em;color:#1d1d1f}
+.sheetpage h3{font-size:11.4pt;font-weight:600;letter-spacing:-.01em;color:#1d1d1f;
+  margin:0 0 7px;padding-bottom:5px;border-bottom:1px solid #d2d2d7}
+.sheetpage .rhead{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid #1d1d1f;
+  padding-bottom:9px;margin-bottom:16px}
+.sheetpage .rhead .bk{font-size:13pt;font-weight:600;letter-spacing:-.02em}
+.sheetpage .rhead .ti{font-size:10pt;color:#6e6e73}
+.sheetpage .rhead .pg{margin-left:auto;font-size:9pt;color:#86868b}
+.sheetpage .rfoot{margin-top:auto;padding-top:10px;border-top:1px solid #d2d2d7;
+  font-size:7.8pt;color:#86868b;line-height:1.4}
+.sheetpage section{margin-bottom:13px}
+.sheetpage p{margin-bottom:7px}
+.rverdict{border-left:3px solid #0a7184;background:#f5f5f7;padding:11px 14px;margin-bottom:14px}
+.rverdict b{font-size:12pt;font-weight:600;letter-spacing:-.016em;display:block;margin-bottom:3px}
+.rverdict.under{border-left-color:#bf2231}
+.rverdict span{font-size:9.6pt;color:#424245}
+.rstats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+.rstats div{border:1px solid #d2d2d7;border-radius:7px;padding:9px 10px}
+.rstats h4{font-size:7.8pt;font-weight:400;color:#6e6e73;letter-spacing:.01em;text-transform:uppercase;margin-bottom:3px}
+.rstats b{font-size:13.4pt;font-weight:600;letter-spacing:-.022em;font-variant-numeric:tabular-nums;display:block}
+.rstats small{font-size:7.8pt;color:#86868b;letter-spacing:0}
+.rstats .neg b{color:#bf2231} .rstats .pos b{color:#1a7a4f}
+.sheetpage table{width:100%;border-collapse:collapse;font-size:9.4pt}
+.sheetpage th{text-align:left;font-weight:500;color:#6e6e73;font-size:8pt;letter-spacing:.01em;
+  text-transform:uppercase;padding:0 0 5px;border-bottom:1px solid #d2d2d7}
+.sheetpage td{padding:4.5px 0;border-bottom:1px solid #e8e8ed;font-variant-numeric:tabular-nums}
+.sheetpage th.r,.sheetpage td.r{text-align:right}
+.sheetpage td .dot{display:inline-block;width:6px;height:6px;border-radius:980px;margin-right:6px;vertical-align:middle}
+.sheetpage .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.sheetpage .mini{font-size:8.6pt;color:#6e6e73;letter-spacing:0;margin-top:4px}
+.rsplit{display:flex;gap:14px;align-items:center}
+.rsplit .bars{flex:1;min-width:0}
+.rbar{display:grid;grid-template-columns:70px 1fr 74px;gap:9px;align-items:center;margin-bottom:6px;font-size:9pt}
+.rbar .track{height:9px;background:#e8e8ed;border-radius:980px;position:relative;overflow:hidden}
+.rbar .track i{position:absolute;inset:0 auto 0 0;border-radius:980px}
+.rbar .v{text-align:right;font-variant-numeric:tabular-nums}
+.rbar .v em{font-style:normal;color:#86868b;font-size:8pt}
+.sheetpage.measure{position:absolute;left:-10000px;top:0;width:184mm;min-height:0;padding:0;
+  box-shadow:none;display:block;visibility:hidden;pointer-events:none}
+.sheetpage.measure .rfoot{margin-top:14px}
+@media screen and (max-width:1000px){
+  .sheetpage:not(.measure){width:100%;min-height:0;padding:22px 20px;font-size:14px;line-height:1.45}
+  .sheetpage:not(.measure) h2{font-size:24px} .sheetpage:not(.measure) h3{font-size:16px}
+  .sheetpage:not(.measure) table{font-size:13px}
+  .sheetpage:not(.measure) .rstats{grid-template-columns:repeat(2,1fr)}
+  .sheetpage:not(.measure) .two{grid-template-columns:1fr}
+  .sheetpage:not(.measure) .rsplit{flex-direction:column;align-items:stretch}
+  .sheetpage:not(.measure) .rsplit>div:first-child{margin:0 auto 6px}
+  .sheetpage:not(.measure) .rsplit .bars{padding-left:0!important}
+  .sheetpage:not(.measure) table{font-size:12px}
+  .sheetpage:not(.measure) .rhead{flex-wrap:wrap}
+  .sheetpage:not(.measure) section{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .sheetpage:not(.measure) td,.sheetpage:not(.measure) th{padding-right:8px;white-space:nowrap}
+  .sheetpage:not(.measure) .rhead .bk{font-size:18px} .sheetpage:not(.measure) .rhead .ti{font-size:13px}
+}
+
+@page{size:A4;margin:13mm}
+@media print{
+  html,body{background:#fff!important}
+  nav.top,.foot,.veil,.reportbar,#page-report .pagehead,.noprint,#rptMeasure{display:none!important}
+  main{padding:0!important}
+  .wide{max-width:none;padding:0}
+  .paper{display:block}
+  .sheetpage{width:auto;min-height:0;padding:0;box-shadow:none;border-radius:0;
+    break-after:page;page-break-after:always;display:block}
+  .sheetpage:last-child{break-after:auto;page-break-after:auto}
+  .sheetpage .rfoot{margin-top:14px}
+  .sheetpage section,.sheetpage table,.rstats,.rverdict{break-inside:avoid;page-break-inside:avoid}
+}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -448,6 +595,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <li><a href="#/forecast" data-r="forecast">Forecast</a></li>
       <li><a href="#/whatif" data-r="whatif">What-if</a></li>
       <li><a href="#/debt" data-r="debt">Debt</a></li>
+      <li><a href="#/report" data-r="report">Report</a></li>
     </ul>
     <span class="nav-right">
       <span class="whoami" id="whoami"></span>
@@ -583,10 +731,15 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       </div>
 
       <div class="card">
-        <header><h3>Every line, by category</h3><span class="sub">monthly equivalent</span><span class="fig" id="budgetTot"></span></header>
-        <div class="scroller">
-          <table><thead><tr><th>Item</th><th>Category</th><th>How often</th><th class="r">Per month</th><th class="r">Share of income</th></tr></thead>
-            <tbody id="budgetBody"></tbody></table>
+        <header><h3>Where the money goes</h3><span class="sub">monthly equivalent</span>
+          <span class="fig" id="budgetTot"></span>
+          <span class="chiprow">
+            <button class="chip on" data-slice="cat">By category</button>
+            <button class="chip" data-slice="item">By item</button>
+          </span></header>
+        <div class="donutwrap">
+          <div class="donutbox" id="donutBox"></div>
+          <div class="legend" id="donutLegend"></div>
         </div>
       </div>
 
@@ -678,10 +831,14 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
           </div>
           <div class="dow"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
           <div class="cal" id="calGrid"></div>
+          <div class="daypanel" id="dayPanel" hidden>
+            <div id="dayPanelBody"></div>
+            <div class="dayslot" id="daySlot"></div>
+          </div>
           <div class="chartfoot" style="margin-top:0">
             <i><span class="sw" style="background:var(--ink-faint)"></span> recurring</i>
             <i><span class="sw" style="background:var(--accent)"></span> one-off</i>
-            <i>Click any day to add a one-off on that date</i>
+            <i>Click any day to open it</i>
           </div>
         </div>
 
@@ -799,6 +956,28 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   </div>
 </section>
 
+<!-- ======================= REPORT ======================= -->
+<section class="page" id="page-report">
+  <div class="wide">
+    <div class="pagehead">
+      <h1>Report</h1>
+      <p class="lede">Two pages that say where you stand, what the month looks like, and what the
+        debt costs. Built from everything you have entered.</p>
+    </div>
+
+    <div class="reportbar">
+      <button class="btn fill sm" id="pdfBtn">Export PDF</button>
+      <button class="chip" id="reportRefresh">Rebuild</button>
+      <span class="hint">Opens your print dialog — choose <b>Save as PDF</b> as the destination.</span>
+    </div>
+
+    <div class="paper">
+      <article class="sheetpage" id="rpt1"></article>
+      <article class="sheetpage" id="rpt2"></article>
+    </div>
+  </div>
+</section>
+
 <div class="wide">
   <div class="foot">
     <p>Waterline projects forward from what you enter. It never asks for bank logins or account
@@ -833,6 +1012,28 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <button class="linkbtn danger" id="deleteBtn" hidden>Delete account</button>
     </div>
     <div class="msg" id="authMsg"></div>
+  </div>
+</div>
+
+<div class="veil" id="mergeVeil">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mergeTitle">
+    <h2 id="mergeTitle">Two plans, one account</h2>
+    <p>This device and your account each hold a plan, and they are not the same.
+      Pick the one to keep — the other is replaced everywhere.</p>
+    <div class="switches" style="display:block;margin:0">
+      <div class="note" style="background:var(--paper);border:1px solid var(--line);margin-bottom:10px">
+        <b style="font-size:14px">On this device</b>
+        <div class="tiny" id="mergeLocal" style="margin-top:3px"></div>
+      </div>
+      <div class="note" style="background:var(--paper);border:1px solid var(--line)">
+        <b style="font-size:14px">In your account</b>
+        <div class="tiny" id="mergeCloud" style="margin-top:3px"></div>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="btn fill sm" id="keepCloud">Keep my account's plan</button>
+      <button class="btn ghost sm" id="keepLocal">Keep this device's plan</button>
+    </div>
   </div>
 </div>
 
@@ -1006,30 +1207,31 @@ function project(sc){
   sc=sc||state;
   const from=parseD(sc.start), to=new Date(from); to.setDate(to.getDate()+horizon);
   const map=new Map();
-  const push=(d,name,amt,oid)=>{
+  const push=(d,name,amt,oid,cat,freq)=>{
     const k=iso(d);
     if(!map.has(k)) map.set(k,{date:new Date(d),items:[],delta:0});
-    const e=map.get(k); e.items.push({name,amt,oid}); e.delta+=amt;
+    const e=map.get(k); e.items.push({name,amt,oid,cat:cat||"",freq}); e.delta+=amt;
   };
-  sc.inflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Income",+it.amount||0)));
-  sc.outflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Bill",-(+it.amount||0))));
+  sc.inflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Income",+it.amount||0,null,it.cat,it.freq)));
+  sc.outflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Bill",-(+it.amount||0),null,it.cat,it.freq)));
   (sc.oneoffs||[]).forEach(o=>{
     if(!o.date||!o.amount) return;
     const d=parseD(o.date); if(d<from||d>to) return;
-    push(d,o.name||"One-off",(o.dir==="in"?1:-1)*Math.abs(+o.amount||0),o.id);
+    push(d,o.name||"One-off",(o.dir==="in"?1:-1)*Math.abs(+o.amount||0),o.id,o.cat);
   });
   const days=[...map.values()].sort((a,b)=>a.date-b.date);
   let bal=+sc.balance||0;
   const series=[{date:new Date(from),bal,items:[],delta:0}];
-  let low={bal,date:new Date(from)}, under=0;
+  let low={bal,date:new Date(from)}, under=0, firstUnder=bal<0?new Date(from):null;
   days.forEach(d=>{ if(d.date<from) return; bal+=d.delta;
     series.push({date:d.date,bal,items:d.items,delta:d.delta});
+    if(bal<0&&!firstUnder) firstUnder=d.date;
     if(bal<low.bal) low={bal,date:d.date}; });
   for(let i=0;i<series.length;i++){
     if(series[i].bal<0){ const nxt=i+1<series.length?series[i+1].date:to;
       under+=Math.max(0,Math.round((nxt-series[i].date)/864e5)); }
   }
-  return{series,low,under,from,to};
+  return{series,low,under,from,to,firstUnder};
 }
 /* every calendar day, with the balance carried through quiet days */
 function dayMap(p){
@@ -1176,23 +1378,8 @@ function renderBudget(){
        ${esc(unc.slice(0,5).join(", "))}${unc.length>5?` and ${unc.length-5} more`:""}.
        Until they have a category they sit outside the split above.</div>` : "";
 
-  const lines=[];
-  state.outflow.forEach(it=>lines.push({name:it.name||"(unnamed)",cat:it.cat||"",
-    freq:(FREQS.find(f=>f[0]===it.freq)||["","—"])[1],m:monthly(it)}));
-  const span=spanMonths();
-  (state.oneoffs||[]).filter(o=>o.dir==="out").forEach(o=>lines.push({
-    name:o.name||"(unnamed)",cat:o.cat||"",freq:`One-off · ${o.date||""}`,
-    m:Math.abs(+o.amount||0)/span,once:true}));
-  lines.sort((a,b)=>b.m-a.m);
   $("budgetTot").textContent=money(Math.round(out))+" / mo out";
-  $("budgetBody").innerHTML = lines.length ? lines.map(l=>`
-    <tr><td>${esc(l.name)}${l.once?' <span class="tiny" style="font-size:12px">spread over the window</span>':""}</td>
-      <td style="color:var(--${l.cat||"ink-faint"});font-weight:500;font-size:14px">
-        <span class="catdot" style="background:var(--${l.cat||"ink-faint"})"></span>${CATLABEL[l.cat]}</td>
-      <td style="color:var(--ink-soft);font-size:14px">${esc(l.freq)}</td>
-      <td class="r">${money2(l.m)}</td>
-      <td class="r" style="color:var(--ink-soft)">${income>0?(l.m/income*100).toFixed(1)+"%":"—"}</td></tr>`).join("")
-    : `<tr><td colspan="5" class="empty">No outgoings yet. Add one above.</td></tr>`;
+  safely(renderDonut);
 
   const tone=save<0?"var(--signal)":"var(--gain)";
   $("budgetSummary").innerHTML=`
@@ -1204,6 +1391,77 @@ function renderBudget(){
       ${save<0?` The gap is being covered by something — credit, savings, or someone else. Worth naming which.`
        :(t.debt>0?` Clear the debt and that ${money(Math.round(t.debt))} a month becomes savings.`:"")}
     </p>`;
+}
+
+/* ---- the donut: one overview of where the month goes ---- */
+let sliceMode="cat";
+function budgetSlices(mode,sc){
+  sc=sc||state;
+  const {income,t,out,save}=budgetTotals(sc), span=spanMonths(), list=[];
+  if(mode==="item"){
+    const lines=[];
+    sc.outflow.forEach(it=>lines.push({label:it.name||"(unnamed)",cat:it.cat||"",val:monthly(it),
+      sub:(FREQS.find(f=>f[0]===it.freq)||["",""])[1]}));
+    (sc.oneoffs||[]).filter(o=>o.dir==="out").forEach(o=>lines.push({label:o.name||"(unnamed)",cat:o.cat||"",
+      val:Math.abs(+o.amount||0)/span,sub:"one-off, spread"}));
+    lines.sort((a,b)=>b.val-a.val);
+    const top=lines.slice(0,9), rest=lines.slice(9);
+    if(rest.length) top.push({label:"Everything else",cat:"",val:rest.reduce((s,x)=>s+x.val,0),sub:`${rest.length} items`});
+    const seen={};
+    top.forEach(l=>{ const k=l.cat||"ink-faint"; seen[k]=(seen[k]||0)+1;
+      const mix=Math.max(38,100-(seen[k]-1)*17);
+      list.push({...l,key:k,color:`color-mix(in srgb,var(--${k}) ${mix}%,var(--panel))`}); });
+  } else {
+    [["need","Needs"],["want","Wants"],["debt","Debt payments"],["","Uncategorised"]].forEach(([k,l])=>{
+      if(t[k]>0.005) list.push({label:l,cat:k,key:k||"ink-faint",val:t[k],color:`var(--${k||"ink-faint"})`}); });
+  }
+  if(save>0.005) list.push({label:"Left over",cat:"save",key:"save",val:save,color:"var(--save)",sub:"savings"});
+  return{list,income,out,save};
+}
+function arcPath(cx,cy,r,a0,a1){
+  const p=a=>[cx+r*Math.sin(a),cy-r*Math.cos(a)];
+  const [x0,y0]=p(a0),[x1,y1]=p(a1);
+  return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 ${a1-a0>Math.PI?1:0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+}
+/* Pure SVG so the report can reuse it with fixed print colours. */
+function donutSVG(list,opt){
+  opt=opt||{}; const S=200, c=S/2, ring=opt.ring||30, r=c-ring/2-2, track=opt.track||"var(--hair)";
+  const total=list.reduce((s,x)=>s+x.val,0);
+  let svg=`<svg viewBox="0 0 ${S} ${S}" role="img" aria-label="${esc(opt.label||"Budget breakdown")}">
+    <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${track}" stroke-width="${ring}"/>`;
+  if(total>0){
+    const gap=list.length>1?0.018:0;
+    let a=0;
+    list.forEach((s,i)=>{
+      const sweep=s.val/total*Math.PI*2;
+      if(list.length===1) svg+=`<circle data-i="${i}" cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${s.color}" stroke-width="${ring}"/>`;
+      else if(sweep>gap*1.5) svg+=`<path data-i="${i}" d="${arcPath(c,c,r,a+gap/2,a+sweep-gap/2)}" fill="none" stroke="${s.color}" stroke-width="${ring}"><title>${esc(s.label)}: ${money(Math.round(s.val))}</title></path>`;
+      a+=sweep;
+    });
+  }
+  return svg+`</svg>`;
+}
+function renderDonut(){
+  const {list,income,out,save}=budgetSlices(sliceMode);
+  document.querySelectorAll("[data-slice]").forEach(b=>b.classList.toggle("on",b.dataset.slice===sliceMode));
+  const base=Math.max(income,out);
+  const mid = !list.length
+    ? `<b>—</b><span>add bills to see where it goes</span>`
+    : save>=0 ? `<b>${money(Math.round(save))}</b><span>left of ${money(Math.round(income))} coming in</span>`
+              : `<b style="color:var(--signal)">${money(Math.round(-save))}</b><span>more going out than coming in</span>`;
+  $("donutBox").innerHTML=donutSVG(list)+`<div class="mid">${mid}</div>`;
+  $("donutLegend").innerHTML = list.length
+    ? list.map((s,i)=>`<div class="lrow" data-li="${i}"><i style="background:${s.color}"></i>
+        <span class="nm">${esc(s.label)}${s.sub?`<small>${esc(s.sub)}</small>`:""}</span>
+        <span class="amt">${money2(s.val)}</span>
+        <span class="shr">${income>0?(s.val/income*100).toFixed(1)+"%":(base>0?(s.val/base*100).toFixed(1)+"%":"—")}</span></div>`).join("")
+      +`<div class="lrow tot"><i></i><span class="nm">${income>0?"Share of income":"Share of spending"}</span>
+        <span class="amt">${money2(income>0?income:out)}</span><span class="shr">${income>0?"in":"out"}</span></div>`
+    : `<p class="empty" style="padding:0">Nothing to break down yet. Add a bill above.</p>`;
+}
+function hiSlice(i){
+  document.querySelectorAll("#donutBox [data-i]").forEach(p=>p.style.opacity=(i==null||p.dataset.i===String(i))?"":"0.25");
+  document.querySelectorAll("#donutLegend [data-li]").forEach(r=>r.classList.toggle("dim",i!=null&&r.dataset.li!==String(i)));
 }
 
 /* ============================================================
@@ -1235,8 +1493,11 @@ function updateVerdict(p){
     title.textContent="Nothing to forecast yet";
     body.innerHTML=`Add your income and bills on the <a href="#/budget">Budget page</a> and this fills in.`; }
   else if(p.low.bal<0){ box.classList.add("under");
-    title.textContent=`You go under on ${dLong(p.low.date)}`;
-    body.textContent=`The balance bottoms out at ${money2(p.low.bal)}. Cover ${money2(Math.abs(p.low.bal))} before then and every payment clears.`; }
+    const fu=p.firstUnder||p.low.date, same=+fu===+p.low.date;
+    title.textContent=`You go under on ${dLong(fu)}`;
+    body.textContent=same
+      ? `The balance bottoms out at ${money2(p.low.bal)}. Cover ${money2(Math.abs(p.low.bal))} before then and every payment clears.`
+      : `It keeps falling to ${money2(p.low.bal)} on ${dLong(p.low.date)}. Cover ${money2(Math.abs(p.low.bal))} by ${dLabel(fu)} and every payment clears.`; }
   else{ box.classList.remove("under");
     title.textContent="You stay above zero";
     body.textContent=`The tightest moment is ${dLong(p.low.date)} at ${money2(p.low.bal)}. That is your real buffer, not the month-end figure.`; }
@@ -1275,8 +1536,9 @@ function renderCalendar(p){
   for(let i=0;i<lead;i++) html+=`<div class="cell blank"></div>`;
   for(let day=1;day<=dim;day++){
     const d=new Date(first.getFullYear(),first.getMonth(),day), k=iso(d), e=dm.get(k);
-    if(!e){ html+=`<button class="cell" data-day="${k}"><span class="d">${day}</span></button>`; continue; }
-    const cls=[k===lowKey?"low":(e.bal<0?"below":""),k===todayKey?"today":""].filter(Boolean).join(" ");
+    const sel=k===selDay?" sel":"";
+    if(!e){ html+=`<button class="cell${sel}" data-day="${k}" disabled style="cursor:default;opacity:.55"><span class="d">${day}</span></button>`; continue; }
+    const cls=[k===lowKey?"low":(e.bal<0?"below":""),k===todayKey?"today":"",sel.trim()].filter(Boolean).join(" ");
     const dots=e.items.length
       ? `<span class="has">${e.items.slice(0,6).map(i=>`<i class="${i.oid?"one":""}"></i>`).join("")}</span>`:"";
     const delta=e.delta!==0
@@ -1287,6 +1549,36 @@ function renderCalendar(p){
   const tail=(7-((lead+dim)%7))%7;
   for(let i=0;i<tail;i++) html+=`<div class="cell blank"></div>`;
   $("calGrid").innerHTML=html;
+  renderDayPanel(dm);
+}
+/* the expanded day: every movement, plus add income / expense right there */
+let selDay=null;
+function renderDayPanel(dm){
+  const panel=$("dayPanel");
+  const e=selDay?dm.get(selDay):null;
+  if(!e){ if(selDay&&!e) selDay=null; homeOneoff(); panel.hidden=true; return; }
+  panel.hidden=false;
+  const d=parseD(selDay);
+  const items=[...e.items].sort((a,b)=>(b.amt>0)-(a.amt>0)||Math.abs(b.amt)-Math.abs(a.amt));
+  const freqL=f=>(FREQS.find(x=>x[0]===f)||["",""])[1];
+  $("dayPanelBody").innerHTML=`
+    <div class="dhead"><h4>${d.toLocaleDateString("en-CA",{weekday:"long",month:"long",day:"numeric"})}</h4>
+      ${e.delta?`<span class="net ${e.delta>0?"pos":"neg"}">${e.delta>0?"+":""}${money2(e.delta)} net</span>`:""}
+      <span class="bal">balance after <b style="${e.bal<0?"color:var(--signal)":""}">${money2(e.bal)}</b></span>
+      <button class="x" id="dayClose" aria-label="Close day">&times;</button></div>
+    <ul class="dlist">${items.length?items.map(i=>{
+      const c=i.amt>0?"gain":(i.cat||"ink-faint");
+      const what=i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
+        :`${freqL(i.freq).toLowerCase()} ${i.amt>0?"income":"bill"}${i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:""}`;
+      const acts=i.oid?`<span class="acts"><button data-editoff="${i.oid}">Edit</button><button class="rm" data-killoff="${i.oid}">Remove</button></span>`
+        :`<span class="acts"><a href="#/budget" style="font-size:12.5px;color:var(--ink-faint);padding:4px 7px">On Budget</a></span>`;
+      return `<li><i style="background:var(--${c})"></i><span class="nm">${esc(i.name)}<small>${esc(what)}</small></span>
+        <span class="mv ${i.amt>0?"pos":"neg"}">${i.amt>0?"+":"−"}${money2(Math.abs(i.amt))}</span>${acts}</li>`;
+    }).join(""):`<li class="none">Nothing lands on this day.</li>`}</ul>
+    <div class="dayadd">
+      <button class="btn ghost sm" data-dayadd="out">Add an expense</button>
+      <button class="btn ghost sm" data-dayadd="in">Add income</button>
+    </div>`;
 }
 function renderForecast(){
   const p=project(), gp=baseline();
@@ -1501,6 +1793,179 @@ function renderDebtFigures(){
 function renderDebt(){ renderDebtRows(); renderDebtFigures(); }
 
 /* ============================================================
+   10b. REPORT — two A4 pages, printed to PDF by the browser
+   ============================================================ */
+const RC={need:"#0a7184",want:"#8a5a2b",debt:"#9a3a52",save:"#1a7a4f","":"#86868b",
+  "ink-faint":"#86868b",gain:"#1a7a4f",signal:"#bf2231"};
+function reportObservations(ctx){
+  const {b,p,f,sp,run,need}=ctx, out=[], pc=v=>b.income>0?v/b.income*100:0;
+  if(p.low.bal<0) out.push(`<b>The balance first goes below zero on ${dLong(p.firstUnder||p.low.date)}</b> and bottoms at ${money2(p.low.bal)} on ${dLabel(p.low.date)}. Having ${money2(-p.low.bal)} more by ${dLabel(p.firstUnder||p.low.date)} keeps every payment clearing.`);
+  else out.push(`<b>The balance never goes below zero</b> in this window. The real buffer is ${money2(p.low.bal)} on ${dLong(p.low.date)}, not the month-end figure.`);
+  if(b.save<0) out.push(`<b>Outgoings exceed income by ${money(Math.round(-b.save))} a month.</b> Something — credit, savings, or another person — is covering that gap, and it compounds.`);
+  if(b.income>0&&pc(b.t.need)>sp.need+2) out.push(`<b>Needs take ${pc(b.t.need).toFixed(0)}% of income</b> against a ${sp.need}% target. The largest is ${esc(ctx.topNeed||"rent")} — fixed costs move the needle more than trimming wants.`);
+  if(b.income>0&&pc(b.t.want)>sp.want+2) out.push(`<b>Wants run ${(pc(b.t.want)-sp.want).toFixed(0)} points over target</b> — about ${money(Math.round(b.t.want-b.income*sp.want/100))} a month above plan.`);
+  if(f.total>0){
+    const top=[...f.list].sort((a,c)=>(+c.apr||0)-(+a.apr||0))[0];
+    out.push(`<b>Debt costs ${money(Math.round(f.monthInt))} a month in interest alone.</b> ${esc(top.name||"The top debt")} at ${(+top.apr||0).toFixed(2)}% is the one to send every spare dollar to first.`);
+    if(run&&need>f.mins+1) out.push(`<b>Paying ${money2(need)} a month</b> instead of the ${money2(f.mins)} minimums clears everything in ${run.months} months.`);
+  }
+  const unc=state.outflow.filter(x=>!x.cat).length;
+  if(unc) out.push(`<b>${unc} bill${unc>1?"s are":" is"} uncategorised</b> and sit${unc>1?"":"s"} outside the split.`);
+  return out.slice(0,5);
+}
+function renderReport(){
+  const b=budgetTotals(), p=project(), f=debtFacts(), sp=doc.split, today=new Date();
+  const pc=v=>b.income>0?v/b.income*100:0;
+  const dShort=d=>d.toLocaleDateString("en-CA",{month:"short",day:"numeric",year:"numeric"});
+  const head=n=>`<div class="rhead"><span class="bk">Waterline</span><span class="ti">Financial overview · ${esc(state.name)}</span><span class="pg">Page ${n} of 2</span></div>`;
+  const foot=`<div class="rfoot">Prepared ${dShort(today)} at wtrline.com from figures entered by the user. Projections assume every income and bill arrives as entered; they do not include interest on the bank balance, fees, or overdraft charges. A planning aid, not financial advice.</div>`;
+
+  /* ---- page 1 ---- */
+  const cat=budgetSlices("cat").list.map(s=>({...s,color:RC[s.cat]||RC[""]}));
+  const allItems=budgetSlices("item").list.filter(s=>s.cat!=="save");
+  const under=p.low.bal<0;
+  const stat=(h,v,small,cls)=>`<div class="${cls||""}"><h4>${h}</h4><b>${v}</b><small>${small}</small></div>`;
+  const bar=(label,k,val,target)=>{
+    const got=pc(val), w=Math.max(0,Math.min(100,got));
+    return `<div class="rbar"><span>${label}</span>
+      <span class="track"><i style="width:${w}%;background:${RC[k]}"></i>${target!=null?`<b style="position:absolute;top:-2px;bottom:-2px;left:${Math.min(100,target)}%;width:1.5px;background:#1d1d1f"></b>`:""}</span>
+      <span class="v">${b.income>0?got.toFixed(0)+"%":"—"} ${target!=null?`<em>/ ${target}%</em>`:""}</span></div>`;
+  };
+  const n=state.inflow.length+state.outflow.length+(state.oneoffs||[]).length;
+  const page1=o=>{ const items=allItems.slice(0,o.items); return head(1) + (n===0
+    ? `<h2>Nothing to report yet</h2><p class="mini">Add income and bills on the Budget page and this fills in.</p>${foot}`
+    : `<h2 style="margin-bottom:2px">Where you stand</h2>
+    <p class="mini" style="margin-bottom:12px">Forecast from ${dShort(p.from)} to ${dShort(p.to)} · starting balance ${money2(+state.balance||0)}</p>
+    <div class="rverdict ${under?"under":""}"><b>${under?`You go under on ${dLong(p.firstUnder||p.low.date)}`:"You stay above zero"}</b>
+      <span>${under?`The balance bottoms out at ${money2(p.low.bal)} on ${dLong(p.low.date)} and spends ${p.under} day${p.under===1?"":"s"} below zero across the window.`
+        :`The tightest day is ${dLong(p.low.date)} at ${money2(p.low.bal)}.`}</span></div>
+    <div class="rstats">
+      ${stat("Coming in",money(Math.round(b.income)),"per month")}
+      ${stat("Going out",money(Math.round(b.out)),"per month")}
+      ${stat("Left over",(b.save<0?"−":"")+money(Math.round(Math.abs(b.save))),b.income>0?`${pc(b.save).toFixed(0)}% of income`:"per month",b.save<0?"neg":"pos")}
+      ${stat("Lowest point",money(Math.round(p.low.bal)),dLabel(p.low.date),under?"neg":"")}
+    </div>
+    <section><h3>Where the money goes</h3>
+      <div class="rsplit">
+        <div style="width:43mm;height:43mm;flex:none">${donutSVG(cat,{ring:34,track:"#e8e8ed",label:"Spending by category"})}</div>
+        <div class="bars" style="padding-left:6px">
+          <table><thead><tr><th>Category</th><th class="r">Monthly</th><th class="r">Of income</th><th class="r">Target</th></tr></thead><tbody>
+          ${cat.map(s=>{const tg=s.cat==="need"?sp.need:s.cat==="want"?sp.want:s.cat==="save"?sp.save:null;
+            return `<tr><td><span class="dot" style="background:${s.color}"></span>${esc(s.label)}</td><td class="r">${money2(s.val)}</td>
+            <td class="r">${b.income>0?pc(s.val).toFixed(1)+"%":"—"}</td><td class="r">${tg!=null?tg+"%":"—"}</td></tr>`;}).join("")}
+          </tbody></table>
+        </div>
+      </div>
+    </section>
+    <section><h3>Against your ${sp.need} / ${sp.want} / ${sp.save} split</h3>
+      ${bar("Needs","need",b.t.need,sp.need)}${bar("Wants","want",b.t.want,sp.want)}${bar("Debt","debt",b.t.debt,null)}${bar("Savings","save",Math.max(0,b.save),sp.save)}
+      <p class="mini">Black marks are your targets. Debt payments carry no target — they come out of what you would otherwise save.</p>
+    </section>
+    <section><h3>Largest outgoings</h3>
+      <table><thead><tr><th>Item</th><th>Category</th><th>How often</th><th class="r">Per month</th><th class="r">Of income</th></tr></thead><tbody>
+      ${items.map(s=>`<tr><td>${esc(s.label)}</td><td><span class="dot" style="background:${RC[s.cat]||RC[""]}"></span>${CATLABEL[s.cat]||"—"}</td>
+        <td>${esc(s.sub||"")}</td><td class="r">${money2(s.val)}</td><td class="r">${b.income>0?pc(s.val).toFixed(1)+"%":"—"}</td></tr>`).join("")}
+      </tbody></table>
+    </section>
+    ${foot}`); };
+
+  /* ---- page 2 ---- */
+  const months=doc.payoffMonths;
+  const need=f.total?requiredMonthly(f.list,months):0;
+  const run=f.total?runPayoff(f.list,need,months+2):null;
+  const minOnly=f.total?runPayoff(f.list,f.mins,600):null;
+  const topNeed=(state.outflow.filter(x=>x.cat==="need").sort((a,c)=>monthly(c)-monthly(a))[0]||{}).name;
+  const obs=reportObservations({b,p,f,sp,run,need,topNeed});
+  const allDebts=[...f.list].sort((a,c)=>(+c.apr||0)-(+a.apr||0));
+  const allMoves=p.series.filter(d=>d.items.length);
+  const endDate=run?new Date(today.getFullYear(),today.getMonth()+run.months,1):null;
+  const page2=o=>{ const debts=allDebts.slice(0,o.debts), moves=allMoves.slice(0,o.moves);
+  const more=allDebts.length-debts.length;
+  const debtBlock = !f.total
+    ? `<section><h3>Debt</h3><p>No debts entered. Anything left over each month is yours to save.</p></section>`
+    : `<section><h3>Debt</h3>
+      <div class="rstats">
+        ${stat("Total owed",money(Math.round(f.total)),`${f.list.length} ${f.list.length===1?"debt":"debts"}`)}
+        ${stat("Interest / month",money(Math.round(f.monthInt)),"to stand still","neg")}
+        ${stat("Blended rate",f.blended.toFixed(2)+"%",`${money(Math.round(f.monthInt*12))} a year`)}
+        ${stat("Minimums",money(Math.round(f.mins)),"per month")}
+      </div>
+      <table><thead><tr><th>Debt, highest rate first</th><th class="r">Balance</th><th class="r">Rate</th><th class="r">Minimum</th><th class="r">Interest / mo</th></tr></thead><tbody>
+      ${debts.map(d=>`<tr><td>${esc(d.name||"—")}</td><td class="r">${money2(+d.balance||0)}</td><td class="r">${(+d.apr||0).toFixed(2)}%</td>
+        <td class="r">${money2(+d.minimum||0)}</td><td class="r">${money2((+d.balance||0)*(+d.apr||0)/1200)}</td></tr>`).join("")}
+      ${more>0?`<tr><td colspan="5" style="color:#86868b">and ${more} more, lower-rate ${more===1?"debt":"debts"} — totals above include ${more===1?"it":"them"}</td></tr>`:""}
+      </tbody></table>
+    </section>
+    <section><h3>Clearing it in ${months} months</h3>
+      <div class="two">
+        <div>
+          <p style="font-size:15pt;font-weight:600;letter-spacing:-.022em;margin-bottom:2px">${money2(need)} <span style="font-size:9.4pt;font-weight:400;color:#6e6e73">a month</span></p>
+          <p class="mini" style="margin-bottom:8px">${run?`Debt-free by ${endDate.toLocaleDateString("en-CA",{month:"long",year:"numeric"})}.`:"Not reachable at this payment."}</p>
+          <table><tbody>
+            <tr><td>Total interest</td><td class="r">${run?money2(run.interest):"—"}</td></tr>
+            <tr><td>Total paid back</td><td class="r">${run?money2(run.paid):"—"}</td></tr>
+            <tr><td>Minimums only</td><td class="r">${minOnly?`${minOnly.months} months, ${money(Math.round(minOnly.interest))} interest`:"never clears"}</td></tr>
+          </tbody></table>
+        </div>
+        <div>
+          <table><thead><tr><th>Order cleared</th><th class="r">When</th></tr></thead><tbody>
+          ${run&&run.order.length?run.order.slice(0,o.order).map(o=>`<tr><td>${esc(o.name||"—")}</td>
+            <td class="r">${new Date(today.getFullYear(),today.getMonth()+o.month,1).toLocaleDateString("en-CA",{month:"short",year:"numeric"})}</td></tr>`).join("")
+            :`<tr><td colspan="2">—</td></tr>`}
+          </tbody></table>
+        </div>
+      </div>
+    </section>`;
+  return head(2) + `
+    ${debtBlock}
+    <section><h3>Coming up</h3>
+      <table><thead><tr><th>Date</th><th>What moves</th><th class="r">Change</th><th class="r">Balance</th></tr></thead><tbody>
+      ${moves.length?moves.map(d=>{const low=+d.date===+p.low.date;
+        const what=d.items.map(i=>i.name).join(", ");
+        return `<tr style="${low?"font-weight:600;color:#bf2231":d.bal<0?"color:#bf2231":""}"><td>${dLabel(d.date)}</td>
+          <td style="max-width:84mm;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(what)}</td>
+          <td class="r">${d.delta>=0?"+":""}${money2(d.delta)}</td><td class="r">${money2(d.bal)}</td></tr>`;}).join("")
+        :`<tr><td colspan="4">Nothing lands in this window.</td></tr>`}
+      </tbody></table>
+    </section>
+    <section><h3>What stands out</h3>
+      <ul style="padding-left:15px;margin:0">${obs.slice(0,o.obs).map(x=>`<li style="margin-bottom:5px">${x}</li>`).join("")}</ul>
+    </section>
+    ${foot}`; };
+
+  /* Fit each page to one A4 sheet: render into an off-screen print-width box and
+     trim the longest lists until it fits. Whatever is trimmed is the least important. */
+  const box=reportMeasure(), LIMIT=267*96/25.4;   // A4 minus 13mm margins is 271mm; keep 4mm in hand
+  const fits=html=>{ box.innerHTML=html; return box.scrollHeight<=LIMIT; };
+  const o1={items:9};
+  while(!fits(page1(o1))&&o1.items>3) o1.items--;
+  const o2={debts:8,order:8,moves:12,obs:5};
+  const steps=[["moves",6],["obs",3],["order",4],["debts",4],["moves",3],["obs",2]];
+  for(const [k,min] of steps){ while(!fits(page2(o2))&&o2[k]>min) o2[k]--; }
+  for(const [k,max] of [["debts",8],["order",8],["moves",12]]){
+    while(o2[k]<max&&fits(page2({...o2,[k]:o2[k]+1}))) o2[k]++; }
+  while(o1.items<12&&fits(page1({items:o1.items+1}))) o1.items++;
+  box.innerHTML="";
+  $("rpt1").innerHTML=page1(o1);
+  $("rpt2").innerHTML=page2(o2);
+}
+function reportMeasure(){
+  let m=$("rptMeasure");
+  if(!m){ m=document.createElement("article"); m.id="rptMeasure"; m.className="sheetpage measure";
+    m.setAttribute("aria-hidden","true"); document.body.appendChild(m); }
+  return m;
+}
+$("pdfBtn").addEventListener("click",()=>{
+  safely(renderReport);
+  const was=document.title;
+  document.title=`Waterline report ${iso(new Date())}`;   // becomes the suggested PDF filename
+  const restore=()=>{ document.title=was; window.removeEventListener("afterprint",restore); };
+  window.addEventListener("afterprint",restore);
+  setTimeout(()=>window.print(),30);
+});
+$("reportRefresh").addEventListener("click",()=>{ safely(renderReport); flag("Report rebuilt",1400); });
+
+/* ============================================================
    11. WELCOME DEMO
    ============================================================ */
 function drawDemo(animate){
@@ -1556,8 +2021,8 @@ function applyTheme(){
 /* ============================================================
    13. ROUTER
    ============================================================ */
-const PAGES=["welcome","budget","forecast","whatif","debt"];
-const TITLES={welcome:"Waterline — find the day you go under",budget:"Budget — Waterline",
+const PAGES=["welcome","budget","forecast","whatif","debt","report"];
+const TITLES={welcome:"Waterline — find the day you go under",budget:"Budget — Waterline",report:"Report — Waterline",
   forecast:"Forecast — Waterline",whatif:"What-if — Waterline",debt:"Debt — Waterline"};
 function go(){
   const want=location.hash.replace(/^#\/?/,"").split("/")[0];
@@ -1573,6 +2038,7 @@ function render(){
   if(route==="forecast") safely(renderForecast);
   if(route==="whatif")   safely(renderWhatIf);
   if(route==="debt")     safely(renderDebt);
+  if(route==="report")   safely(renderReport);
   if(route==="welcome")  safely(()=>drawDemo(true));
   save();
 }
@@ -1587,6 +2053,7 @@ function save(){
   if(savePaused) return;
   clearTimeout(saveTimer);
   saveTimer=setTimeout(async()=>{
+    doc.savedAt=new Date().toISOString();
     local.set(KEY,JSON.stringify(doc));
     if(sb&&user){
       const{error}=await sb.from("plans").upsert({user_id:user.id,data:doc,updated_at:new Date().toISOString()});
@@ -1596,9 +2063,15 @@ function save(){
 }
 async function loadCloud(){
   if(!sb||!user) return null;
-  const{data,error}=await sb.from("plans").select("data").eq("user_id",user.id).maybeSingle();
+  const{data,error}=await sb.from("plans").select("data,updated_at").eq("user_id",user.id).maybeSingle();
   if(error) return null;
-  return data?.data??null;
+  if(!data||!data.data) return null;
+  return{doc:data.data,at:data.updated_at||null};
+}
+async function pushCloud(d){
+  if(!sb||!user) return;
+  try{ await sb.from("plans").upsert({user_id:user.id,data:d,updated_at:new Date().toISOString()}); }
+  catch(e){ console.error("Waterline:",e); }
 }
 function loadLocal(){ try{ const raw=local.get(KEY); return raw?JSON.parse(raw):null; }catch(e){ return null; } }
 
@@ -1626,14 +2099,58 @@ function paintAccount(){
     inBtn.hidden=!sb; outBtn.hidden=true; delBtn.hidden=true;
   }
 }
+/* What actually matters when deciding whether two plans differ. Theme, the seen
+   flag and save stamps are left out, so cosmetic drift never triggers a question. */
+function fingerprint(d){
+  if(!d||!Array.isArray(d.scenarios)) return "";
+  const slim=sc=>({n:sc.name,b:+sc.balance||0,s:sc.start,
+    i:(sc.inflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||""]),
+    o:(sc.outflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||""]),
+    f:(sc.oneoffs||[]).map(x=>[x.name||"",+x.amount||0,x.date,x.dir,x.cat||""])});
+  return JSON.stringify({sc:d.scenarios.map(slim),
+    dt:(d.debts||[]).map(x=>[x.name||"",+x.balance||0,+x.apr||0,+x.minimum||0]),
+    sp:d.split,pm:d.payoffMonths});
+}
+function planBlurb(d,at){
+  if(!hasEntries(d)) return "Empty.";
+  let items=0; d.scenarios.forEach(sc=>{ items+=sc.inflow.length+sc.outflow.length+sc.oneoffs.length; });
+  const bits=[`${items} budget ${items===1?"line":"lines"}`];
+  if(d.scenarios.length>1) bits.push(`${d.scenarios.length} scenarios`);
+  if(d.debts.length) bits.push(`${d.debts.length} ${d.debts.length===1?"debt":"debts"}`);
+  if(at){ const t=new Date(at);
+    if(!isNaN(t)) bits.push(`saved ${t.toLocaleDateString("en-CA",{month:"short",day:"numeric"})}, ${t.toLocaleTimeString("en-CA",{hour:"numeric",minute:"2-digit"})}`); }
+  return bits.join(" · ");
+}
+function askMerge(localDoc,cloudDoc,cloudAt){
+  return new Promise(resolve=>{
+    const v=$("mergeVeil");
+    $("mergeLocal").textContent=planBlurb(localDoc,localDoc.savedAt||null);
+    $("mergeCloud").textContent=planBlurb(cloudDoc,cloudAt);
+    const done=pick=>{ v.dataset.open="0";
+      $("keepLocal").onclick=null; $("keepCloud").onclick=null; resolve(pick); };
+    $("keepLocal").onclick=()=>done("local");
+    $("keepCloud").onclick=()=>done("cloud");
+    v.dataset.open="1"; $("keepCloud").focus();
+  });
+}
+/* Supabase re-emits SIGNED_IN whenever the tab regains focus. Reconcile once per
+   user per page load, and write the winner to both sides so they can't disagree again. */
+let reconciledFor=null;
 async function onSignedIn(){
-  const cloudRaw=await loadCloud(), localRaw=loadLocal();
-  const cloud=cloudRaw?normalise(cloudRaw):null, localDoc=localRaw?normalise(localRaw):null;
-  if(cloud){
-    if(hasEntries(localDoc)&&confirm("You have a plan saved on this device and one in your account. Use the device version and overwrite your account?")) doc=localDoc;
-    else doc=cloud;
-  } else if(hasEntries(localDoc)) doc=localDoc;
+  const uid=user?user.id:null;
+  if(!uid||reconciledFor===uid) return;
+  reconciledFor=uid;
+  savePaused=true; clearTimeout(saveTimer);
+  const cloudRes=await loadCloud(), localRaw=loadLocal();
+  const cloud=cloudRes?normalise(cloudRes.doc):null, localDoc=localRaw?normalise(localRaw):null;
+  if(!cloud){ if(hasEntries(localDoc)) doc=localDoc; }
+  else if(!hasEntries(localDoc)||fingerprint(localDoc)===fingerprint(cloud)) doc=cloud;
+  else doc=(await askMerge(localDoc,cloud,cloudRes.at))==="local"?localDoc:cloud;
+  doc.savedAt=new Date().toISOString();
   setActive(doc.activeId); applyTheme(); fillSeed(); render();
+  local.set(KEY,JSON.stringify(doc));
+  await pushCloud(doc);
+  savePaused=false;
 }
 let authMode="link", isSignup=false;
 function paintAuth(){
@@ -1697,7 +2214,7 @@ $("primaryAuth").addEventListener("click",async()=>{
 });
 $("signOutBtn").addEventListener("click",async()=>{
   if(sb) await sb.auth.signOut();
-  user=null; paintAccount(); flag("Signed out");
+  user=null; reconciledFor=null; paintAccount(); flag("Signed out");
 });
 $("deleteBtn").addEventListener("click",async()=>{
   if(!sb||!user) return;
@@ -1706,7 +2223,7 @@ $("deleteBtn").addEventListener("click",async()=>{
   await sb.from("plans").delete().eq("user_id",user.id);
   await sb.auth.signOut();
   const theme=doc.theme;
-  user=null; local.del(KEY); doc=emptyDoc(); doc.seen=true; doc.theme=theme;
+  user=null; reconciledFor=null; local.del(KEY); doc=emptyDoc(); doc.seen=true; doc.theme=theme;
   setActive(doc.activeId); applyTheme(); fillSeed(); paintAccount(); closeAuth(); render();
   savePaused=false;
 });
@@ -1798,6 +2315,13 @@ $("themeBtn").addEventListener("click",()=>{
   if(route==="welcome")  safely(()=>drawDemo(false));
 });
 
+document.addEventListener("mouseover",e=>{
+  const t=e.target.closest&&e.target.closest("#donutLegend [data-li], #donutBox [data-i]");
+  if(t) hiSlice(t.dataset.li??t.dataset.i);
+});
+document.addEventListener("mouseout",e=>{
+  if(e.target.closest&&e.target.closest("#donutLegend [data-li], #donutBox [data-i]")) hiSlice(null);
+});
 document.addEventListener("click",e=>{
   const ko=e.target.closest("[data-killoff]");
   if(ko){ e.stopPropagation();
@@ -1805,8 +2329,21 @@ document.addEventListener("click",e=>{
     renderForecast(); save(); return; }
   const chip=e.target.closest("[data-off]");
   if(chip){ editOneoff(chip.dataset.off); return; }
+  const eo=e.target.closest("[data-editoff]");
+  if(eo){ editOneoff(eo.dataset.editoff,$("daySlot")); return; }
+  const da=e.target.closest("[data-dayadd]");
+  if(da){ openOneoff(selDay,da.dataset.dayadd,$("daySlot")); return; }
+  if(e.target.id==="dayClose"){ selDay=null; closeOneoff(); renderCalendar(project()); return; }
   const cell=e.target.closest("[data-day]");
-  if(cell){ openOneoff(cell.dataset.day); return; }
+  if(cell){
+    const k=cell.dataset.day;
+    selDay = selDay===k ? null : k;
+    if($("daySlot").contains($("addOff"))) closeOneoff();
+    renderCalendar(project());
+    if(selDay) try{ $("dayPanel").scrollIntoView({block:"nearest",behavior:"smooth"}); }catch(err){}
+    return; }
+  const sl=e.target.closest("[data-slice]");
+  if(sl){ sliceMode=sl.dataset.slice; safely(renderDonut); return; }
 
   const kill=e.target.closest(".kill");
   if(kill){
@@ -1892,17 +2429,24 @@ function startWith(d){
 }
 
 let editingOff=null;
-function openOneoff(prefill){
+/* The editor normally sits above the calendar; opened from a day it moves into that day's panel. */
+const offHome={parent:$("addOff").parentNode,next:$("addOff").nextSibling};
+function homeOneoff(){ const b=$("addOff"); if(b.parentNode!==offHome.parent) offHome.parent.insertBefore(b,offHome.next); }
+function hostOneoff(host){ if(host) host.appendChild($("addOff")); else homeOneoff(); }
+function openOneoff(prefill,dir,host){
   if(route!=="forecast") return;
+  hostOneoff(host);
   $("addOff").hidden=false;
   $("offDate").value=prefill||state.start||iso(new Date());
   $("offName").value=""; $("offAmt").value="";
-  $("offDir").value="out"; $("offCat").value=""; $("offCat").dataset.c="";
-  editingOff=null; $("offSave").textContent="Add";
+  $("offDir").value=dir||"out"; $("offCat").value=""; $("offCat").dataset.c="";
+  $("offName").placeholder=dir==="in"?"Refund, bonus, gift…":"Car repair, tax refund, tuition…";
+  editingOff=null; $("offSave").textContent=dir==="in"?"Add income":dir==="out"?"Add expense":"Add";
   $("offName").focus();
 }
-function editOneoff(oid){
+function editOneoff(oid,host){
   const o=(state.oneoffs||[]).find(x=>x.id===oid); if(!o) return;
+  hostOneoff(host);
   $("addOff").hidden=false;
   $("offDate").value=o.date; $("offName").value=o.name||"";
   $("offAmt").value=Math.abs(+o.amount||0); $("offDir").value=o.dir||"out";
@@ -1911,7 +2455,7 @@ function editOneoff(oid){
   $("offName").focus();
   try{ $("addOff").scrollIntoView({block:"nearest",behavior:"smooth"}); }catch(e){}
 }
-function closeOneoff(){ $("addOff").hidden=true; editingOff=null; }
+function closeOneoff(){ $("addOff").hidden=true; editingOff=null; homeOneoff(); }
 function commitOneoff(){
   const date=$("offDate").value, name=$("offName").value.trim(),
         amt=Math.abs(+$("offAmt").value||0), dir=$("offDir").value, cat=$("offCat").value;
@@ -1956,8 +2500,12 @@ if(sb){
   const{data:{session}}=await sb.auth.getSession();
   if(session){ user=session.user; paintAccount(); await onSignedIn(); }
   sb.auth.onAuthStateChange(async(evt,sess)=>{
-    if(evt==="SIGNED_IN"&&sess){ user=sess.user; closeAuth(); paintAccount(); await onSignedIn(); }
-    if(evt==="SIGNED_OUT"){ user=null; paintAccount(); }
+    if(evt==="SIGNED_IN"&&sess){
+      const fresh=!user||user.id!==sess.user.id;
+      user=sess.user; paintAccount();
+      if(fresh){ closeAuth(); await onSignedIn(); }
+    }
+    if(evt==="SIGNED_OUT"){ user=null; reconciledFor=null; paintAccount(); }
   });
 }
 </script>

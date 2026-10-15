@@ -334,3 +334,18 @@ Apple devices render in real SF and nothing is downloaded.
   scales with it.
 - Dark-mode hairlines were nearly invisible against black, which made the calendar grid
   disappear. Lifted from `#1f1f21` to `#28282c`.
+
+## Update — October 2026: report, day view, sync fix (2.1)
+
+- **Report page** (`#/report`) — a two-page A4 overview. *Export PDF* uses the browser's print
+  dialog (choose *Save as PDF*). Each page measures itself off-screen and trims its longest lists
+  until it fits, so it never spills onto a third page.
+- **Calendar day view** — click a day to see every payment that lands on it, and to add income or an
+  expense on that date in place.
+- **Budget donut** — *Where the money goes*, by category or by item. It replaces the second list of
+  bills.
+- **Sync** — the device-or-account question is asked at most once per sign-in, never on tab
+  switches, and never when both copies already match. The kept plan is written to both sides
+  straight away.
+
+See `RELEASE_NOTES.md` for the full list.

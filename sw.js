@@ -1,7 +1,7 @@
 /* Waterline service worker — shell caching only.
    Network-first so a deploy is picked up immediately;
    the cache is a fallback for offline use. */
-const CACHE = "waterline-v2";
+const CACHE = "waterline-v3";
 const SHELL = ["/", "/index.html", "/icon.svg", "/icon-192.png", "/manifest.webmanifest"];
 
 self.addEventListener("install", e => {

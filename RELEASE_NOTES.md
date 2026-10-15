@@ -9,6 +9,73 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 2.1 — 15 October 2026
+
+**A report you can hand to someone, a calendar you can work in, and the sign-in prompt that
+wouldn't go away is gone.**
+
+---
+
+### New
+
+**A Report page that exports a two-page PDF.** `#/report` builds an overview from everything you
+have entered and shows it as two A4 sheets. **Export PDF** opens the print dialog; choose *Save as
+PDF*. The file is named `Waterline report YYYY-MM-DD`.
+
+- **Page 1, Where you stand:** the verdict (the day you go under, or your tightest day), four
+  headline figures, a category donut against your targets, your split as bars, and your largest
+  outgoings.
+- **Page 2, Debt and outlook:** total owed, monthly interest, blended rate and minimums; every debt
+  ranked by rate; the payment that clears it in your chosen horizon, with the order debts fall; the
+  next dated movements; and a short *What stands out* list written from your own numbers.
+
+The report measures itself before it renders. When a plan is long (we tested nine debts and two
+dozen bills), it trims the least important rows first and notes what it left out. Totals always
+include everything. It never spills onto a third page.
+
+**Calendar days open up.** Click a day and it expands below the grid. You see every payment that
+lands that day with its amount, category and frequency, the net movement, and the balance after.
+**Add an expense** or **Add income** opens the editor right there with the date and direction
+already set. One-offs can be edited or removed in place. Recurring bills link back to Budget.
+
+**A pie chart replaces the duplicate list.** The Budget page listed every bill twice. The second
+list is now a donut called **Where the money goes**:
+
+- **By category** shows needs, wants, debt payments and what's left over.
+- **By item** shows each bill, shaded by its category.
+
+The centre shows what's left of your income, or the shortfall in red. Hovering a legend row
+highlights its slice.
+
+---
+
+### Fixed
+
+- **"You have a plan saved on this device and one in your account" kept coming back.** Supabase
+  re-announces the sign-in every time the tab regains focus, and Waterline treated each
+  announcement as a fresh sign-in. It now settles the two copies once per session. If they're
+  identical it doesn't ask at all. If they differ, a proper dialog shows what each one holds and
+  when it was saved. Whichever you keep is written to both places at once, so the question can't
+  come back.
+- **The Sign out button was invisible in dark mode.** A dark-mode colour rule meant for the filled
+  Sign in button was also painting the outlined Sign out button near-black on a black bar.
+- **"You go under on…" showed the wrong date.** It named the *lowest* day, not the *first* day
+  below zero, and those can be months apart. It now names the first day you go under and says
+  separately when and how low the balance bottoms out.
+- **Calendar cells had heavy default button borders** on some browsers instead of hairlines.
+
+---
+
+### Under the hood
+
+- Saved plans now carry a `savedAt` stamp. It is used only to describe each copy in the sync dialog.
+- The forecast engine records `firstUnder` alongside `low`.
+- Service worker cache bumped to `waterline-v3`.
+- 136KB. Still one file, no build step, no new dependencies. The PDF uses the browser's own print
+  engine, so text stays selectable and nothing extra is downloaded.
+
+---
+
 ## 2.0 — 15 October 2026
 
 **Waterline is now a budget app that forecasts, rather than a forecaster that reports a budget.**
