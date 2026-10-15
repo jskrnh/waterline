@@ -1,5 +1,4 @@
 # Waterline — deployment guide
-[Visit My Website wtrline.com](https://wtrline.com/)
 
 A cash-flow forecaster that finds the day a balance goes below zero. Single HTML file, no build step, no server to run.
 
@@ -172,3 +171,102 @@ Plans saved under the older single-plan shape are lifted into a scenario named "
 **Month-end drift.** Stepping a date with `setMonth` turns Jan 31 into Feb 28, then Mar 28 — creeping earlier forever. Month-based items now recompute from the anchor day each time and clamp to the month's length: Sep 30, Oct 31, Nov 30, Dec 31.
 
 **Back-filled start dates.** An item starting on a future date was generating occurrences before it, so a bill moved to next month still fired this month. Occurrences are now clamped to the later of the item's start date and the forecast start. Past-dated anchors still rewind, so a paycheque anchored months ago keeps its correct fortnightly rhythm.
+
+---
+
+## Configuration lives in config.js
+
+Supabase keys are **not** in `index.html`. Copy `config.example.js` to `config.js` and fill it in:
+
+```js
+export const SUPABASE_URL      = "https://your-project-ref.supabase.co";
+export const SUPABASE_ANON_KEY = "your-anon-public-key";
+```
+
+Both values are in Supabase under **Project Settings → API**.
+
+This is deliberate: dropping in a new `index.html` no longer wipes your keys. If the sign-in button disappears after an update, `config.js` is missing — the account strip will say so.
+
+With no `config.js` the app still works, device-only, with no accounts.
+
+`config.js` is excluded from the service worker cache so a key change takes effect immediately.
+
+---
+
+## Update — October 2026: three pages
+
+The site is now a hash-routed app in one file: `#/forecast`, `#/budget`, `#/debt`.
+Each route sets its own `document.title` and only the active page renders, so adding a
+page costs nothing on the others.
+
+### One-offs live in the ledger, not the rules table
+
+Recurring items (rent, pay, groceries) stay in Money in / Money out. Anything that happens
+once — a repair, a refund, a filing fee — is added straight into the day-by-day list with
+**Add a one-off**. It appears in the ledger as a chip on its date: click to edit, × to delete.
+
+Saved plans migrate automatically. Any item previously stored with frequency `once` is moved
+out of the recurring table and becomes a one-off on the same date, keeping its name, amount
+and direction.
+
+Data shape:
+
+```json
+{
+  "scenarios": [{
+    "id": "…", "name": "Current plan", "balance": 1500, "start": "2026-10-15",
+    "inflow":  [{ "id": "…", "name": "Pay", "amount": 2100, "freq": "biweekly",
+                  "start": "2026-10-19", "cat": "" }],
+    "outflow": [{ "…": "…", "cat": "need" }],
+    "oneoffs": [{ "id": "…", "name": "Car repair", "amount": 450,
+                  "date": "2026-11-04", "dir": "out", "cat": "need" }]
+  }],
+  "debts": [{ "id": "…", "name": "Credit card", "balance": 1800,
+              "apr": 21.99, "minimum": 50 }],
+  "split": { "need": 50, "want": 30, "save": 20 },
+  "payoffMonths": 36,
+  "activeId": "…", "baseId": "…", "compare": false
+}
+```
+
+### Budget
+
+Every income and outgoing carries a category: **need**, **want**, or **savings & debt**.
+The page shows each bucket as a share of income against a target you set (50/30/20,
+60/20/20 and 65/15/20 presets, or your own). One-offs are spread across the forecast
+window so a single large payment does not swamp one month. Anything uncategorised is
+flagged rather than silently dropped.
+
+### Debt
+
+Debts are listed by interest rate, highest first — that is the order to attack them.
+Each row shows what it costs per month in interest alone.
+
+The planner simulates the real payoff rather than using a closed-form annuity: interest
+accrues monthly, minimums are paid on everything, and the remainder goes to the highest
+rate. To find the payment for a chosen horizon it bisects on the monthly amount (64
+iterations) until the simulation clears inside that many months.
+
+Two behaviours worth knowing:
+
+- **The payment has a floor.** Once the required payment equals the sum of the minimums,
+  a longer finish line cannot lower it — it only adds interest. The page says so and offers
+  to set the horizon to the minimums-only payoff date.
+- **Clear order is not rate order.** A low-rate loan with a large minimum often clears
+  first. The "order they fall" table shows what actually happens, which is usually not
+  the same as the avalanche ranking above it.
+
+The suggested finish line uses the surplus from the Budget page when there is one —
+minimums plus whatever the month actually leaves over — and falls back to a stretch above
+the minimums when the budget is empty.
+
+### Fixes in this pass
+
+- `[hidden]` did nothing, because an author `display` rule outranks the browser default.
+  The one-off entry row was permanently open. Added `[hidden]{display:none!important}`.
+- Chart type rendered at roughly four physical pixels on a phone: the viewBox is fixed at
+  960 wide, so labels now scale up as the box shrinks, and the chart redraws on resize.
+- Inline `grid-template-columns` on debt rows outranked the mobile media query and
+  collapsed the inputs. Moved to a class, with stacked labelled fields under 700px.
+- Editing a debt rebuilt the whole page and stole focus mid-keystroke. Rows and derived
+  figures are now rendered separately; typing updates every total without touching the inputs.
