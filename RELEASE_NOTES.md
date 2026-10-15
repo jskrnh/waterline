@@ -9,6 +9,52 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.3 — 15 October 2026
+
+**Your debt plan, in your forecast.** Plan how you'll pay off your debts, then see exactly what
+that plan does to your balance, day by day, before you commit to it.
+
+### New
+
+**Put this plan into your forecast.** It's a new card on the Debt page. Pick your finish line with
+the slider as before, then flip the switch and the plan becomes real payments in your forecast:
+
+- **Debt by debt, month by month.** Each month's payment is split the way the payoff plan spends
+  it: minimums on everything, and the rest to the highest-rate debt. When a debt clears, its money
+  moves on to the next one. The forecast shows each payment by name (*Credit card*, *Personal
+  loan*), and payments stop the month you're debt-free.
+- **No double counting.** Your bills marked *Debt payment*, such as card minimums and loan
+  instalments, pause while the plan runs, because the plan already pays those debts. Untick the
+  option if you'd rather keep both. Paused bills say so on Overview.
+- **You choose the first payment date.** Later payments land on the same day each month.
+- **A preview before you switch it on.** The card shows what you'd pay each month (and how that
+  compares with your current debt bills), your lowest balance with and without the plan, and your
+  debt-free date. If the plan would push you under zero, it tells you the date, and suggests a
+  longer finish line or a later start.
+
+**On the Forecast,** a bar at the top says the plan is included, with **Adjust** and **Turn off**
+buttons. The chart draws a dashed line for *the forecast without the plan*, so you can see the
+cost of paying faster. When the plan is off but you have debts, the same bar offers to add it.
+
+**Everywhere else follows the plan too:**
+
+- **Overview:** the *Debt payments* tile counts the plan's monthly payment and links to it, so
+  "left over" is honest.
+- **Calendar and day details:** plan payments are labelled *debt plan payment*.
+- **Chart window:** shows the with-and-without comparison.
+- **PDF report:** includes the plan's payments, and still fits on two pages.
+- **Syncing:** the plan settings follow your account to other devices.
+
+### Under the hood
+
+- A new payoff schedule records each month's payment to each debt. The monthly amount is rounded up
+  to whole cents so it always finishes on time: 36 payments of $207.48 and a final $207.11 on the
+  sample plan, matching the planner to the cent.
+- The forecast engine accepts the plan as an input, either from your setting, forced on for
+  previews, or forced off for the dashed comparison line.
+
+---
+
 ## 3.2 — 15 October 2026
 
 **The chart window holds still while you explore.**

@@ -378,6 +378,51 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 .card.money .addrow:hover{background:color-mix(in srgb,var(--tone) 10%,var(--panel))}
 .card.money .endbtn{background:var(--panel)}
 
+/* debt plan in the forecast */
+.switch{position:relative;display:inline-block;width:46px;height:28px;margin-left:auto;flex:none;cursor:pointer}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
+.switch span{position:absolute;inset:0;border-radius:var(--pill);background:var(--line);transition:background .2s var(--ease)}
+.switch span::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s var(--ease)}
+.switch input:checked+span{background:var(--gain)}
+.switch input:checked+span::after{transform:translateX(18px)}
+.switch input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+.switch input:disabled+span{opacity:.45}
+.plancard{border-top:3px solid var(--gain)}
+.planstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.planstats>div{background:var(--paper);border-radius:14px;padding:12px 14px;min-width:0}
+.planstats b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:2px}
+.planstats b.neg{color:var(--signal)}
+.planstats small{display:block;font-size:12.5px;color:var(--ink-faint);letter-spacing:0;margin-top:2px}
+.planopts{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-top:14px;font-size:14.5px;color:var(--ink-soft)}
+.planopts label{display:flex;align-items:center;gap:10px}
+.planopts input[type=date]{font-family:var(--font);font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink)}
+.planopts .chk{align-items:flex-start;cursor:pointer;max-width:620px}
+.planopts .chk input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent);flex:none}
+.planopts .chk small{color:var(--ink-faint);font-size:12.5px}
+.planfoot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
+.planbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-radius:14px;
+  border:1px solid var(--line);background:var(--panel);font-size:14px;color:var(--ink-soft);letter-spacing:-.005em}
+.planbar.on{border-color:color-mix(in srgb,var(--gain) 45%,var(--line));background:var(--gain-wash);color:var(--ink)}
+.planbar b{color:var(--ink);font-weight:600}
+.planbar>span:nth-child(2){flex:1 1 320px;min-width:0}
+.planbar .pdot{width:9px;height:9px;border-radius:50%;background:var(--ink-faint);flex:none}
+.planbar.on .pdot{background:var(--gain)}
+.planbar .pacts{display:flex;gap:8px}
+.planbar .chip.on{background:var(--gain);border-color:var(--gain);color:#fff}
+@media(max-width:760px){
+  .planstats{grid-template-columns:1fr;gap:8px}
+  .planstats>div{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;column-gap:10px;padding:10px 12px}
+  .planstats .caplabel{margin:0}
+  .planstats b{font-size:18px;margin:0;text-align:right}
+  .planstats small{grid-column:1/-1}
+  .plancard>header{flex-wrap:nowrap;align-items:center}
+  .plancard>header .sub{display:none}
+  .planbar{padding:12px 14px;gap:10px}
+  .planbar .pdot{display:none}
+  .planbar>span:nth-child(2){flex-basis:100%}
+}
+
 /* pages menu (phones) */
 .mark .pagename{display:none}
 .menubtn{display:none;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--line);
@@ -1007,9 +1052,9 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <div class="card feat">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
           <path d="M12 3v18M5 8h9a3.5 3.5 0 010 7H5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <h3>Debt with a finish line</h3>
-        <p>Every balance ordered by what it costs you. Pick a date to be free of it and see the
-          payment that gets you there.</p>
+        <h3>A debt plan you can live with</h3>
+        <p>Pick a date to be debt-free and see the payment it takes. Then play that plan into your
+          forecast, payment by payment, and check it never pushes you under zero.</p>
       </div>
     </div>
 
@@ -1133,6 +1178,8 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
     </div>
 
     <div class="stack">
+      <div class="planbar" id="planBar" hidden></div>
+
       <div class="verdict" id="verdict">
         <div class="vlead">
           <h2 id="vTitle">Nothing to forecast yet</h2>
@@ -1315,6 +1362,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="card plancard" id="planCard">
+        <header><h3>Put this plan into your forecast</h3><span class="sub">see what paying it off does to your day-to-day balance</span>
+          <label class="switch" title="Include the debt plan in the forecast"><input type="checkbox" id="planOn" aria-label="Include the debt plan in the forecast"><span></span></label></header>
+        <div class="body" id="planBody"></div>
       </div>
 
       <div class="card">
@@ -1500,7 +1553,8 @@ function seedState(){
 }
 function baseDoc(sc,debts){
   return{ scenarios:[sc], activeId:sc.id, baseId:sc.id, compare:false,
-    debts:debts||[], split:{need:70,want:20,save:10}, payoffMonths:36, seen:false, theme:"system", seedSet:true };
+    debts:debts||[], split:{need:70,want:20,save:10}, payoffMonths:36, seen:false, theme:"system", seedSet:true,
+    debtPlan:{on:false,start:"",replace:true} };
 }
 function seedDoc(){
   return baseDoc(seedState(),[
@@ -1552,6 +1606,9 @@ function normalise(raw){
   if(!d.split||typeof d.split!=="object") d.split={need:70,want:20,save:10};
   ["need","want","save"].forEach(k=>{ if(typeof d.split[k]!=="number") d.split[k]={need:70,want:20,save:10}[k]; });
   if(typeof d.payoffMonths!=="number") d.payoffMonths=36;
+  if(!d.debtPlan||typeof d.debtPlan!=="object") d.debtPlan={on:false,start:"",replace:true};
+  d.debtPlan.on=!!d.debtPlan.on; if(typeof d.debtPlan.replace!=="boolean") d.debtPlan.replace=true;
+  if(typeof d.debtPlan.start!=="string") d.debtPlan.start="";
   d.seen=!!d.seen;
   /* plans saved before the pill existed: treat the balance as set once anything has been entered */
   if(typeof d.seedSet!=="boolean") d.seedSet=hasEntries(d)||d.scenarios.some(sc=>(+sc.balance||0)!==0);
@@ -1603,8 +1660,55 @@ const ended=(it,start)=>!!it.end&&parseD(it.end)<parseD(start||(state&&state.sta
 const monthly=(it,start)=>ended(it,start)?0:({weekly:(+it.amount||0)*52/12,biweekly:(+it.amount||0)*26/12,
   monthly:+it.amount||0,quarterly:(+it.amount||0)/3,yearly:(+it.amount||0)/12}[it.freq]||0);
 
-function project(sc){
-  sc=sc||state;
+/* ============================================================
+   5b. DEBT PLAN IN THE FORECAST
+   The Debt page's payoff plan, turned into real dated payments: each month the
+   plan's payment is split the way the avalanche spends it, until every debt clears.
+   ============================================================ */
+function payoffSchedule(debts,pay,cap){
+  const list=debts.map(d=>({id:d.id,name:d.name,bal:+d.balance||0,r:(+d.apr||0)/100/12,min:+d.minimum||0}))
+                  .filter(d=>d.bal>0.005).sort((a,b)=>b.r-a.r);
+  if(!list.length) return null;
+  if(pay<list.reduce((a,d)=>a+d.min,0)-0.005) return null;
+  const months=[];
+  for(let m=0;m<(cap||600);m++){
+    list.forEach(d=>{ if(d.bal>0) d.bal*=(1+d.r); });
+    let pool=pay; const paid=new Map();
+    const give=(d,q)=>{ d.bal-=q; pool-=q; paid.set(d,(paid.get(d)||0)+q); };
+    list.forEach(d=>{ if(d.bal>0) give(d,Math.min(d.min,d.bal,pool)); });
+    for(const d of list){ if(pool<=0.005) break; if(d.bal>0) give(d,Math.min(pool,d.bal)); }
+    months.push([...paid].filter(([,a])=>a>0.005).map(([d,a])=>({id:d.id,name:d.name||"Debt",amt:Math.round(a*100)/100})));
+    if(list.every(d=>d.bal<=0.005)) return months;
+  }
+  return null;
+}
+function nextFirst(){ const t=new Date(); return iso(new Date(t.getFullYear(),t.getMonth()+1,1)); }
+let planCache={key:"",val:null};
+/* the plan as dated payments; force=true builds it even when it's switched off (for previews) */
+const planSettings=()=>{ if(doc&&!doc.debtPlan) doc.debtPlan={on:false,start:"",replace:true}; return doc&&doc.debtPlan; };
+function debtPlan(force){
+  const dp=planSettings(); if(!dp||(!dp.on&&!force)) return null;
+  const f=debtFacts(); if(!f.total) return null;
+  const start=dp.start||nextFirst();
+  const key=JSON.stringify([f.list.map(d=>[d.id,d.name,+d.balance,+d.apr,+d.minimum]),doc.payoffMonths,start,dp.replace]);
+  if(planCache.key!==key){
+    const pay=Math.ceil(requiredMonthly(f.list,doc.payoffMonths)*100-1e-6)/100;   // whole cents, rounded up so it still finishes on time
+    const sch=payoffSchedule(f.list,pay,doc.payoffMonths+3);
+    let val=null;
+    if(sch&&sch.length){
+      const a=parseD(start), day=a.getDate();
+      const dates=sch.map((_,i)=>{ const y=a.getFullYear(), m=a.getMonth()+i, dim=new Date(y,m+1,0).getDate(); return new Date(y,m,Math.min(day,dim)); });
+      val={pay,schedule:sch,dates,start:a,end:dates[dates.length-1],replace:dp.replace!==false};
+    }
+    planCache={key,val};
+  }
+  return planCache.val;
+}
+const pausedByPlan=(it,plan)=>!!plan&&plan.replace&&it.cat==="debt";
+
+function project(sc,opt){
+  sc=sc||state; opt=opt||{};
+  const plan=opt.plan==="none"?null:debtPlan(opt.plan==="force");
   const from=parseD(sc.start), to=new Date(from); to.setDate(to.getDate()+horizon);
   const map=new Map();
   const push=(d,name,amt,oid,cat,freq)=>{
@@ -1613,7 +1717,12 @@ function project(sc){
     const e=map.get(k); e.items.push({name,amt,oid,cat:cat||"",freq}); e.delta+=amt;
   };
   sc.inflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Income",+it.amount||0,null,it.cat,it.freq)));
-  sc.outflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Bill",-(+it.amount||0),null,it.cat,it.freq)));
+  sc.outflow.forEach(it=>{ if(pausedByPlan(it,plan)) return;   // the plan already pays these debts
+    occurrences(it,from,to).forEach(d=>push(d,it.name||"Bill",-(+it.amount||0),null,it.cat,it.freq)); });
+  if(plan) plan.schedule.forEach((pays,i)=>{
+    const d=plan.dates[i]; if(d<from||d>to) return;
+    pays.forEach(x=>push(d,x.name,-x.amt,null,"debt","plan"));
+  });
   (sc.oneoffs||[]).forEach(o=>{
     if(!o.date||!o.amount) return;
     const d=parseD(o.date); if(d<from||d>to) return;
@@ -1797,7 +1906,7 @@ const DAY=864e5;
 const CW={open:false,p:null,gp:null,dm:null,min:0,max:0,t0:0,t1:0,sel:null};
 function cwOpen(src){
   const p=project(); if(!p||!p.series||p.series.length<2) return;
-  CW.p=p; CW.gp=baseline(); CW.dm=dayMap(p);
+  CW.p=p; CW.gp=src==="chart"?forecastGhost():baseline(); CW.dm=dayMap(p);
   CW.min=p.from.getTime(); CW.max=p.to.getTime(); CW.t0=CW.min; CW.t1=CW.max;
   CW.sel=p.low.date.getTime(); CW.open=true;
   $("cwTitle").textContent=src==="chart2"?`Balance forecast · ${state.name}`:"Balance forecast";
@@ -1909,7 +2018,7 @@ function cwDetail(){
       </div>
       ${items.length?`<ul class="dlist">${items.map(i=>{
         const c=i.amt>0?"gain":(i.cat||"ink-faint");
-        const what=i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
+        const what=i.freq==="plan"?"debt plan payment":i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
           :`${freqL(i.freq).toLowerCase()} ${i.amt>0?"income":"bill"}${i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:""}`;
         return `<li style="grid-template-columns:9px minmax(0,1fr) auto"><i style="background:var(--${c})"></i>
           <span class="nm">${esc(i.name)}<small>${esc(what)}</small></span>
@@ -2002,7 +2111,9 @@ function budgetTotals(sc){
   sc=sc||state;
   const income=sc.inflow.reduce((a,i)=>a+monthly(i,sc.start),0);
   const t={need:0,want:0,debt:0,"":0};
-  sc.outflow.forEach(it=>{ t[it.cat||""]+=monthly(it,sc.start); });
+  const plan=debtPlan();
+  sc.outflow.forEach(it=>{ if(!pausedByPlan(it,plan)) t[it.cat||""]+=monthly(it,sc.start); });
+  if(plan) t.debt+=plan.pay;
   const span=spanMonths();
   (sc.oneoffs||[]).forEach(o=>{ if(o.dir!=="out") return; t[o.cat||""]+=Math.abs(+o.amount||0)/span; });
   const out=t.need+t.want+t.debt+t[""];
@@ -2037,6 +2148,7 @@ function rows(kind){
 /* The preview line under each name, and the totals footer. Text only, so typing never loses focus. */
 function itemPreview(it){
   const start=state.start, m=monthly(it,start);
+  if(pausedByPlan(it,debtPlan())) return `Paused — your <a href="#/debt">debt plan</a> pays this debt until ${debtPlan().end.toLocaleDateString("en-CA",{month:"short",year:"numeric"})}`;
   if(!it.amount||!it.start) return "";
   if(ended(it,start)) return `Ended ${dLabel(parseD(it.end))} — not counted`;
   let txt=`≈ <b>${money(Math.round(m))}</b>/mo · ${money(Math.round(m*12))}/yr`;
@@ -2193,7 +2305,8 @@ function renderBudget(){
     tile("need","Needs",t.need,sp.need,gap(pct(t.need),sp.need))+
     tile("want","Wants",t.want,sp.want,gap(pct(t.want),sp.want))+
     tile("debt","Debt payments",t.debt,null,
-      t.debt>0?"Comes straight out of what you could save.":"Nothing going to debt right now.")+
+      debtPlan()?`From your <a href="#/debt">debt plan</a> — debt-free by ${debtPlan().end.toLocaleDateString("en-CA",{month:"short",year:"numeric"})}.`
+      :t.debt>0?"Comes straight out of what you could save.":"Nothing going to debt right now.")+
     tile("save","Savings",save,sp.save,
       save<0?"You are short each month. Something else is covering the gap.":gap(pct(save),sp.save));
 
@@ -2308,8 +2421,8 @@ function paintCompare(p,gp){
   const strip=$("cmpStrip"); if(!strip) return;
   strip.dataset.on=gp?"1":"0";
   if(!gp) return;
-  $("cmpBaseName").textContent=byId(doc.baseId).name;
-  $("cmpThisName").textContent=state.name;
+  $("cmpBaseName").textContent=gp.noPlan?"Without the debt plan":byId(doc.baseId).name;
+  $("cmpThisName").textContent=gp.noPlan?"With it":state.name;
   $("cmpBaseVal").textContent=money2(gp.low.bal);
   $("cmpThisVal").textContent=money2(p.low.bal);
   const diff=p.low.bal-gp.low.bal, el=$("cmpDelta");
@@ -2403,7 +2516,7 @@ function renderDayPanel(dm){
       <button class="x" id="dayClose" aria-label="Close day">&times;</button></div>
     <ul class="dlist">${items.length?items.map(i=>{
       const c=i.amt>0?"gain":(i.cat||"ink-faint");
-      const what=i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
+      const what=i.freq==="plan"?"debt plan payment":i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
         :`${freqL(i.freq).toLowerCase()} ${i.amt>0?"income":"bill"}${i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:""}`;
       const acts=i.oid?`<span class="acts"><button data-editoff="${i.oid}">Edit</button><button class="rm" data-killoff="${i.oid}">Remove</button></span>`
         :`<span class="acts"><a href="#/overview" style="font-size:12.5px;color:var(--ink-faint);padding:4px 7px">On Overview</a></span>`;
@@ -2415,8 +2528,28 @@ function renderDayPanel(dm){
       <button class="btn ghost sm" data-dayadd="in">Add income</button>
     </div>`;
 }
+/* what to draw as the dashed comparison line: a What-if baseline, or else the forecast without the debt plan */
+function forecastGhost(){
+  const gp=baseline(); if(gp) return gp;
+  if(debtPlan()){ const g=project(state,{plan:"none"}); g.noPlan=true; return g; }
+  return null;
+}
+function paintPlanBar(){
+  const bar=$("planBar"); if(!bar) return;
+  const f=debtFacts(), plan=debtPlan(), pv=plan||debtPlan(true);
+  if(!f.total||!pv){ bar.hidden=true; return; }
+  bar.hidden=false;
+  const end=pv.end.toLocaleDateString("en-CA",{month:"short",year:"numeric"});
+  bar.className="planbar"+(plan?" on":"");
+  bar.innerHTML=plan
+    ? `<span class="pdot"></span><span><b>Your debt plan is in this forecast</b> — ${money2(plan.pay)} a month to debts from ${dLabel(plan.start)}, debt-free by ${end}.${plan.replace?" Your Debt payment bills are paused while it runs.":""} The dashed line is the forecast without it.</span>
+       <span class="pacts"><a class="chip" href="#/debt">Adjust</a><button class="chip" id="planOffBar">Turn off</button></span>`
+    : `<span class="pdot"></span><span><b>See your debt plan here.</b> Paying ${money2(pv.pay)} a month clears everything by ${end}.</span>
+       <span class="pacts"><button class="chip on" id="planOnBar">Add it to the forecast</button></span>`;
+}
 function renderForecast(){
-  const p=project(), gp=baseline();
+  const p=project(), gp=forecastGhost();
+  safely(paintPlanBar);
   safely(()=>updateVerdict(p));
   safely(()=>ledger(p));
   safely(()=>renderCalendar(p));
@@ -2625,7 +2758,47 @@ function renderDebtFigures(){
     }).join("");
   } else $("orderBody").innerHTML=`<tr><td colspan="4" class="empty">Raise the payment until everything clears.</td></tr>`;
 }
-function renderDebt(){ renderDebtRows(); renderDebtFigures(); }
+function renderPlanCard(){
+  const box=$("planBody"); if(!box) return;
+  const dp=planSettings(), f=debtFacts();
+  $("planOn").checked=!!dp.on; $("planOn").disabled=!f.total;
+  if(!f.total){ box.innerHTML=`<p class="tiny" style="font-size:14px">Add a debt above, and you can play its payoff plan into your forecast.</p>`; return; }
+  const pv=debtPlan(true);
+  if(!pv){ box.innerHTML=`<p class="tiny" style="font-size:14px">This finish line isn't reachable yet. Move the slider until a monthly payment shows above.</p>`; return; }
+  const debtBills=state.outflow.filter(it=>it.cat==="debt"&&+it.amount&&!ended(it));
+  const billsMo=debtBills.reduce((a,it)=>a+monthly(it),0);
+  const withP=project(state,{plan:"force"}), without=project(state,{plan:"none"});
+  const diff=withP.low.bal-without.low.bal;
+  const end=pv.end.toLocaleDateString("en-CA",{month:"long",year:"numeric"});
+  const extra=pv.pay-(dp.replace?billsMo:0);
+  let verdict;
+  if(withP.low.bal<0&&without.low.bal>=0) verdict=`<div class="note bad"><b>Paying at this pace takes you below zero on ${dLong(withP.firstUnder||withP.low.date)}</b>, down to ${money2(withP.low.bal)}. Try a longer finish line, or start the plan a little later.</div>`;
+  else if(withP.low.bal<0) verdict=`<div class="note warn">You already go below zero without the plan; with it, the lowest point is <b>${money2(withP.low.bal)}</b> (${diff>=0?"no worse":money2(-diff)+" lower"}).</div>`;
+  else verdict=`<div class="note good"><b>You stay above zero with the plan.</b> Your tightest day is ${dLong(withP.low.date)} at ${money2(withP.low.bal)}${Math.abs(diff)>0.5?` — ${money2(Math.abs(diff))} ${diff<0?"lower":"higher"} than without it`:""}.</div>`;
+  box.innerHTML=`
+    <div class="planstats">
+      <div><span class="caplabel">Paid to debts each month</span><b>${money2(pv.pay)}</b>
+        <small>${dp.replace&&billsMo?`instead of ${money2(billsMo)} in Debt payment bills · ${extra>=0?"+":"−"}${money2(Math.abs(extra))}`:"on top of your other bills"}</small></div>
+      <div><span class="caplabel">Lowest balance (next ${horizon===365?"12":horizon===180?"6":"3"} months)</span><b class="${withP.low.bal<0?"neg":""}">${money2(withP.low.bal)}</b>
+        <small>without the plan: ${money2(without.low.bal)}</small></div>
+      <div><span class="caplabel">Debt-free</span><b>${end}</b><small>${pv.schedule.length} monthly payments</small></div>
+    </div>
+    ${verdict}
+    <div class="planopts">
+      <label>First payment <input type="date" id="planStart" value="${esc(dp.start||iso(pv.start))}"></label>
+      <label class="chk"><input type="checkbox" id="planReplace" ${dp.replace?"checked":""}>
+        <span>Pause my <b>Debt payment</b> bills while the plan runs${debtBills.length?` <small>(${esc(debtBills.map(it=>it.name||"unnamed").join(", "))} · ${money2(billsMo)}/mo)</small>`:` <small>(you have none)</small>`}</span></label>
+    </div>
+    <div class="planfoot">${dp.on?`<a class="btn fill sm" href="#/forecast">See it on the Forecast</a>`:`<button class="btn fill sm" id="planOnBtn">Add it to the forecast</button>`}
+      <span class="tiny">Changing the finish line above changes the plan everywhere.</span></div>`;
+}
+function setPlan(on){
+  planSettings().on=!!on;
+  if(on&&!doc.debtPlan.start) doc.debtPlan.start=nextFirst();
+  planCache.key=""; render();
+  flag(on?"Debt plan added to your forecast":"Debt plan removed from your forecast",2200);
+}
+function renderDebt(){ renderDebtRows(); renderDebtFigures(); safely(renderPlanCard); }
 
 /* ============================================================
    10b. REPORT — two A4 pages, printed to PDF by the browser
@@ -3083,6 +3256,7 @@ function fingerprint(d){
     f:(sc.oneoffs||[]).map(x=>[x.name||"",+x.amount||0,x.date,x.dir,x.cat||""])});
   return JSON.stringify({sc:d.scenarios.map(slim),
     dt:(d.debts||[]).map(x=>[x.name||"",+x.balance||0,+x.apr||0,+x.minimum||0]),
+    dp:d.debtPlan?[!!d.debtPlan.on,d.debtPlan.start||"",d.debtPlan.replace!==false]:null,
     sp:d.split,pm:d.payoffMonths});
 }
 function planBlurb(d,at){
@@ -3358,6 +3532,9 @@ document.addEventListener("focusout",e=>{
     else if(it&&it.end&&e.target.value&&!row.querySelector(".endx")) renderBudget(); },120);
 });
 document.addEventListener("change",e=>{
+  if(e.target.id==="planOn"){ setPlan(e.target.checked); return; }
+  if(e.target.id==="planReplace"){ doc.debtPlan.replace=e.target.checked; planCache.key=""; render(); return; }
+  if(e.target.id==="planStart"){ if(e.target.value){ doc.debtPlan.start=e.target.value; planCache.key=""; render(); } return; }
   if(e.target.id==="cmpToggle"){ doc.compare=e.target.checked; renderWhatIf(); save(); return; }
   if(e.target.id==="baseSel"){ doc.baseId=e.target.value; renderWhatIf(); save(); return; }
   if(e.target.id==="offCat"){ e.target.dataset.c=e.target.value; return; }
@@ -3375,12 +3552,12 @@ $("horizRange").addEventListener("input",e=>{
   const m=+e.target.value; doc.payoffMonths=m;
   $("horizLabel").innerHTML=`${m} <small>month${m===1?"":"s"}${m>=24?` · ${(m/12).toFixed(m%12?1:0)} yr`:""}</small>`;
 });
-$("horizRange").addEventListener("change",()=>{ renderDebtFigures(); save(); });
+$("horizRange").addEventListener("change",()=>{ renderDebtFigures(); safely(renderPlanCard); save(); });
 $("themeBtn").addEventListener("click",()=>{
   const order=["system","light","dark"];
   doc.theme=order[(order.indexOf(doc.theme)+1)%3];
   applyTheme(); save();
-  if(route==="forecast") safely(()=>drawChart("chart",project(),baseline()));
+  if(route==="forecast") safely(()=>drawChart("chart",project(),forecastGhost()));
   if(route==="whatif")   safely(()=>drawChart("chart2",project(),baseline()));
   if(route==="welcome")  safely(()=>drawDemo(false));
 });
@@ -3420,6 +3597,8 @@ document.addEventListener("click",e=>{
   if(e.target.id==="seedDone"){ doc.seedSet=true; seedOpen=false; paintSeed(); save();
     try{ $("seedPill").scrollIntoView({block:"center",behavior:"smooth"}); }catch(err){}
     flag("Starting balance saved",1600); return; }
+  if(e.target.id==="planOnBtn"||e.target.id==="planOnBar"){ setPlan(true); return; }
+  if(e.target.id==="planOffBar"){ setPlan(false); return; }
   const sm=e.target.closest(".sum");
   if(sm){ const row=sm.closest(".erow"), id=row.dataset.id, opening=!row.classList.contains("open");
     document.querySelectorAll(".erow.pay.open").forEach(r=>{ r.classList.remove("open"); r.querySelector(".sum").setAttribute("aria-expanded","false"); });
@@ -3591,6 +3770,10 @@ $("addOff").addEventListener("keydown",e=>{
   if(e.key==="Escape") closeOneoff();
 });
 
+/* read-only hook for automated tests */
+window.__waterline={get doc(){return doc}, project:(o)=>project(state,o), debtPlan, debtFacts, runPayoff, iso, parseD,
+  showDay:k=>{ selDay=k; const d=parseD(k); calMonth=new Date(d.getFullYear(),d.getMonth(),1); renderForecast(); }};
+
 /* ============================================================
    17. BOOT
    ============================================================ */
@@ -3620,7 +3803,7 @@ if("ResizeObserver" in window){
   const ro=new ResizeObserver(entries=>{ entries.forEach(en=>{
     const w=Math.round(en.contentRect.width), id=en.target.id;
     if(!w||seen.get(en.target)===w) return; seen.set(en.target,w);
-    if(id==="chart"&&route==="forecast") safely(()=>drawChart("chart",project(),baseline()));
+    if(id==="chart"&&route==="forecast") safely(()=>drawChart("chart",project(),forecastGhost()));
     if(id==="chart2"&&route==="whatif")  safely(()=>drawChart("chart2",project(),baseline()));
   }); });
   ["chart","chart2"].forEach(i=>{ const el=$(i); if(el) ro.observe(el); });
@@ -3629,7 +3812,7 @@ if("ResizeObserver" in window){
 let rsz=null;
 window.addEventListener("resize",()=>{ clearTimeout(rsz);
   rsz=setTimeout(()=>{
-    if(route==="forecast") safely(()=>drawChart("chart",project(),baseline()));
+    if(route==="forecast") safely(()=>drawChart("chart",project(),forecastGhost()));
     if(route==="whatif")   safely(()=>drawChart("chart2",project(),baseline()));
   },180); });
 
