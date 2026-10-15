@@ -1,4 +1,13 @@
+
+**Waterline**
+wtrline.com
+
+Find the day you go under. A cash-flow forecaster, budget planner and debt payoff tool that runs entirely in your browser and never asks for a bank login.
+---
+
 # Waterline — deployment guide
+
+
 
 A cash-flow forecaster that finds the day a balance goes below zero. Single HTML file, no build step, no server to run.
 
