@@ -4,95 +4,161 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy — Waterline</title>
-<meta name="description" content="What Waterline stores, where it lives, and how to delete it.">
+<meta name="description" content="What Waterline stores, where it lives, and how to delete it. Covers wtrline.com and the Waterline Android app.">
 <meta name="robots" content="index,follow">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#0B2233">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#ffffff">
 <style>
-:root{--ink:#0B2233;--ink-soft:#3E5568;--ink-faint:#8397A6;--paper:#E9EDEF;--card:#fff;--rule:#CBD5DA;--sea:#0F5C6B}
-*{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:Archivo,system-ui,sans-serif;line-height:1.5}
-.wrap{max-width:720px;margin:0 auto;padding:0 20px 80px}
-header{padding:26px 0 18px;border-bottom:2px solid var(--ink);display:flex;align-items:baseline;gap:14px}
-header a.home{font-size:24px;font-weight:800;letter-spacing:-.03em;color:var(--ink);text-decoration:none}
-header span{font-size:13px;color:var(--ink-faint);margin-left:auto}
-main{background:var(--card);border:1px solid var(--rule);border-top:0;padding:34px 32px}
-h1{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:0 0 6px}
-.date{font-size:13px;color:var(--ink-faint);margin:0 0 26px}
-h2{font-size:18px;font-weight:700;margin:30px 0 8px;letter-spacing:-.01em}
-p,li{font-family:Newsreader,Georgia,serif;font-size:17px;color:var(--ink-soft);margin:0 0 12px}
-ul{padding-left:20px;margin:0 0 12px}
+:root{
+  --bg:#ffffff;--panel:#f5f5f7;--ink:#1d1d1f;--soft:#424245;--faint:#6e6e73;--line:#d2d2d7;--accent:#0a7184;--wash:#eaf4f6;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#000;--panel:#141416;--ink:#f5f5f7;--soft:#c7c7cc;--faint:#8e8e93;--line:#2f2f33;--accent:#5ccfe0;--wash:#10272d;color-scheme:dark}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.top{border-bottom:1px solid var(--line)}
+.top .in{max-width:760px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:10px}
+.top a.home{display:inline-flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.02em}
+.top a.home svg{border-radius:7px;display:block}
+.top .back{margin-left:auto;font-size:14px;text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:44px 20px 90px}
+h1{font-size:clamp(32px,6vw,44px);font-weight:600;letter-spacing:-.026em;line-height:1.08;margin-bottom:8px}
+.date{font-size:14px;color:var(--faint);margin-bottom:28px}
+h2{font-size:21px;font-weight:600;letter-spacing:-.018em;margin:38px 0 10px;scroll-margin-top:20px}
+h3{font-size:17px;font-weight:600;letter-spacing:-.012em;margin:22px 0 6px}
+p,li{color:var(--soft);margin-bottom:12px}
+ul{padding-left:22px;margin-bottom:12px}
+li{margin-bottom:6px}
 strong{color:var(--ink);font-weight:600}
-a{color:var(--sea)}
-.callout{background:#F4F7F8;border-left:4px solid var(--sea);padding:14px 18px;margin:18px 0}
-.callout p{margin:0}
-footer{margin-top:26px;font-family:Newsreader,Georgia,serif;font-size:14px;color:var(--ink-faint)}
-footer a{color:var(--ink-faint)}
-@media(max-width:640px){main{padding:24px 18px}h1{font-size:25px}p,li{font-size:16px}}
+.callout{background:var(--wash);border-radius:16px;padding:18px 20px;margin:4px 0 8px}
+.callout p{margin:0;color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:6px 0 14px}
+th,td{text-align:left;vertical-align:top;padding:10px 10px 10px 0;border-bottom:1px solid var(--line)}
+th{font-size:12.5px;font-weight:500;color:var(--faint);text-transform:uppercase;letter-spacing:.03em}
+td{color:var(--soft)} td:first-child{color:var(--ink);font-weight:500;width:28%}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding-left:34px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;
+  background:var(--accent);color:var(--bg);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center}
+footer{max-width:760px;margin:0 auto;padding:0 20px 50px;font-size:14px;color:var(--faint)}
+@media(max-width:600px){body{font-size:16px} td:first-child{width:36%}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <a class="home" href="/">Waterline</a>
-    <span>wtrline.com</span>
-  </header>
-  <main>
-    <h1>Privacy</h1>
-    <p class="date">Last updated 8 September 2026</p>
+<div class="top"><div class="in">
+  <a class="home" href="/">
+    <svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><defs><clipPath id="b"><rect x="0" y="34" width="64" height="30"/></clipPath></defs><rect width="64" height="64" rx="13" fill="#0B2233"/><path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26 L58 34 L6 34 Z" fill="#0F5C6B" clip-path="url(#b)"/><line x1="6" y1="34" x2="58" y2="34" stroke="#E9EDEF" stroke-width="2.6" stroke-linecap="round"/><path d="M6 20 L18 20 C26 20 24 50 34 50 C44 50 44 26 58 26" fill="none" stroke="#7FD4E3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="34" cy="50" r="5" fill="#B3202C" stroke="#0B2233" stroke-width="2"/></svg>
+    Waterline</a>
+  <a class="back" href="/">Back to Waterline</a>
+</div></div>
 
-    <p>Waterline is a cash-flow forecasting tool. This page explains what it stores, where that data lives, and how to remove it. It is written to be read, not to be skimmed past.</p>
+<main>
+  <h1>Privacy</h1>
+  <p class="date">Last updated 15 October 2026 · applies to wtrline.com and the Waterline app for Android</p>
 
-    <div class="callout">
-      <p><strong>Waterline never asks for bank logins, card numbers, or account numbers, and has no connection to any financial institution.</strong> Everything in your forecast is typed in by you.</p>
-    </div>
+  <div class="callout">
+    <p><strong>Waterline never asks for bank logins, card numbers or account numbers, and it has no
+      connection to any bank.</strong> Everything in your plan is something you typed in yourself.
+      There is no advertising, no analytics and no tracking.</p>
+  </div>
 
-    <h2>If you don't create an account</h2>
-    <p>Nothing leaves your device. Your forecast is held in your browser's local storage on that device only. We cannot see it, and clearing your browser data removes it.</p>
+  <h2 id="summary">The short version</h2>
+  <table>
+    <thead><tr><th>What</th><th>Why</th><th>Where it's kept</th></tr></thead>
+    <tbody>
+      <tr><td>Your plan: income, bills, dates, categories, debts, balance</td><td>To show your budget and forecast</td><td>On your device. Also in your account, if you create one</td></tr>
+      <tr><td>Backups of your plan</td><td>So an accident can be undone</td><td>On your device only</td></tr>
+      <tr><td>Email address</td><td>To sign you in, only if you create an account</td><td>Your account</td></tr>
+      <tr><td>Name</td><td>To greet you, only if you sign in with Google</td><td>Your account</td></tr>
+    </tbody>
+  </table>
+  <p>That is everything Waterline stores. It is never sold, never used for advertising, and never
+    shared except with the service providers listed below that run the site.</p>
 
-    <h2>If you create an account</h2>
-    <p>We store two things:</p>
-    <ul>
-      <li><strong>Your email address</strong>, used to sign you in and nothing else. We do not send marketing email.</li>
-      <li><strong>Your forecast</strong> — the labels, amounts, dates and frequencies you enter, plus your starting balance.</li>
-    </ul>
-    <p>Labels are free text, so please avoid typing anything into them that you would not want stored.</p>
+  <h2 id="no-account">If you don't create an account</h2>
+  <p>Your plan and its backups stay in your browser's storage on that device. Nothing about your
+    plan is sent to us, and we cannot see it. Clearing your browser's site data, or using
+    <strong>Delete all my data</strong>, removes it.</p>
 
-    <h2>Where it is stored</h2>
-    <p>Accounts and forecasts are held with <a href="https://supabase.com/privacy" rel="noopener">Supabase</a>, our database provider. The site itself is served by <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare</a>. Fonts are loaded from Google Fonts, which receives your IP address as part of that request.</p>
-    <p>Database rows are protected by row-level security, meaning the database itself refuses to return one account's data to any other account.</p>
+  <h2 id="account">If you create an account</h2>
+  <p>We store your <strong>email address</strong> to sign you in, and your <strong>plan</strong> so
+    it follows you to other devices. If you sign in with Google, Google tells us your name and email
+    address; we use the name only to say hello. We do not send marketing email.</p>
+  <p>The names you give your bills and income are free text, so please don't type anything into them
+    that you wouldn't want stored.</p>
+  <p>Backups are kept on the device you made them on. They are not uploaded to your account.
+    <strong>Download backup file</strong> gives you a copy you can store wherever you like.</p>
 
-    <h2>What we don't do</h2>
-    <ul>
-      <li>No advertising, and no data sold or shared with advertisers.</li>
-      <li>No analytics or tracking scripts, and no third-party cookies.</li>
-      <li>No profiling, credit scoring, or automated decisions about you.</li>
-      <li>No sharing with anyone except the providers named above, unless required by law.</li>
-    </ul>
+  <h2 id="android">The Android app</h2>
+  <p>The Waterline app for Android opens wtrline.com in Chrome, full-screen. It collects nothing
+    beyond what the website does, as described on this page. The app asks for no device permissions
+    beyond internet access, and it has no access to your contacts, photos, location or other apps.
+    Chrome's own privacy policy covers the browser itself.</p>
 
-    <h2>How long we keep it</h2>
-    <p>Your forecast is kept until you delete it. Accounts with no sign-in for two years may be removed along with their data.</p>
+  <h2 id="providers">Who runs it for us</h2>
+  <ul>
+    <li><strong><a href="https://supabase.com/privacy" rel="noopener">Supabase</a></strong> stores
+      accounts and saved plans. The database enforces row-level security, so it refuses to return one
+      account's plan to anyone else.</li>
+    <li><strong><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare</a></strong>
+      serves the website and sees your IP address as part of delivering pages.</li>
+    <li><strong><a href="https://policies.google.com/privacy" rel="noopener">Google</a></strong> handles
+      sign-in, only if you choose <em>Continue with Google</em>.</li>
+    <li><strong>esm.sh</strong> delivers the sign-in code library to your browser, and sees your IP
+      address as any web server would.</li>
+  </ul>
+  <p>All traffic is encrypted in transit using HTTPS.</p>
 
-    <h2>Deleting your data</h2>
-    <p>Sign in and use <strong>Delete account</strong> in the top bar. That removes your stored forecast immediately. To also remove the login record itself, email the address below and we will close it.</p>
-    <p>Under Canadian privacy law (PIPEDA) you may also ask what we hold about you, ask for it to be corrected, or withdraw consent. Email us and we will respond within 30 days.</p>
+  <h2 id="dont">What we don't do</h2>
+  <ul>
+    <li>No advertising, and no data sold or shared with advertisers or data brokers.</li>
+    <li>No analytics, tracking scripts or third-party cookies.</li>
+    <li>No credit checks, scoring, profiling or automated decisions about you.</li>
+    <li>No access to your bank, cards or financial accounts.</li>
+  </ul>
 
-    <h2>Children</h2>
-    <p>Waterline is not intended for anyone under 16.</p>
+  <h2 id="retention">How long we keep it</h2>
+  <p>Your plan is kept until you delete it. Accounts with no sign-in for two years may be removed
+    along with their data.</p>
 
-    <h2>Accuracy, and what this tool is not</h2>
-    <p>Waterline projects forward from figures you supply. It does not know your real bank balance, cannot see pending transactions, and does not account for interest, fees, or overdraft charges. It is a planning aid, not financial advice, and not a substitute for a licensed advisor.</p>
+  <h2 id="delete">Deleting your account and data</h2>
+  <p>You can delete your data yourself at any time, on the website or in the Android app:</p>
+  <ol class="steps">
+    <li>Open the <strong>account menu</strong> in the top-right corner.</li>
+    <li>Choose <strong>Delete account</strong> to remove the plan saved in your account and sign out,
+      or <strong>Delete all my data</strong> to remove everything from your account and from this
+      device, including its backups.</li>
+  </ol>
+  <p>Deletion from the database is immediate. To have the sign-in record itself (your email address)
+    removed as well, or if you can no longer sign in, email
+    <strong><a href="mailto:privacy@wtrline.com?subject=Delete%20my%20Waterline%20account">privacy@wtrline.com</a></strong>
+    from the address on the account, with the subject <em>Delete my Waterline account</em>. We will
+    delete the account and all associated data within 30 days and confirm by reply. Nothing is kept
+    afterwards.</p>
 
-    <h2>Changes</h2>
-    <p>If this policy changes materially, the date at the top will change and signed-in users will be notified by email.</p>
+  <h2 id="rights">Your rights</h2>
+  <p>Under Canadian privacy law (PIPEDA), you can ask what we hold about you, ask for it to be
+    corrected, or withdraw your consent. Email us and we will respond within 30 days.</p>
 
-    <h2>Contact</h2>
-    <p>Questions, corrections, or deletion requests: <strong>privacy@wtrline.com</strong></p>
-  </main>
-  <footer><a href="/">&larr; Back to Waterline</a></footer>
-</div>
+  <h2 id="children">Children</h2>
+  <p>Waterline is a personal finance tool for adults. It is not directed at children, and we do not
+    knowingly collect information from anyone under 16.</p>
+
+  <h2 id="accuracy">What this tool is not</h2>
+  <p>Waterline projects forward from figures you supply. It does not know your real bank balance,
+    cannot see pending transactions, and does not account for interest, fees or overdraft charges on
+    your accounts. It is a planning aid, not financial advice, and not a substitute for a licensed
+    advisor.</p>
+
+  <h2 id="changes">Changes</h2>
+  <p>If this policy changes in a way that matters, the date at the top will change and signed-in
+    users will be told by email.</p>
+
+  <h2 id="contact">Contact</h2>
+  <p>Questions, corrections or deletion requests:
+    <strong><a href="mailto:privacy@wtrline.com">privacy@wtrline.com</a></strong></p>
+</main>
+<footer><a href="/">&larr; Back to Waterline</a></footer>
 </body>
 </html>
