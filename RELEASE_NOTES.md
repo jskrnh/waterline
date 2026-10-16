@@ -24,6 +24,11 @@ own tab where people could miss it. Now its headline follows you around.
   it happens and a small chart of the next six months, with the low point marked in red. Click
   anywhere on it to open the Forecast.
 
+### Changed
+
+- **One total per table.** The Money in and Money out headers no longer repeat the monthly
+  total, because the Total row at the bottom of each table already shows it.
+
 ### Fixed
 
 - When you typed a new amount for a bill, the *Where the money goes* chart, the tiles and *The

@@ -1175,7 +1175,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       </div>
 
       <div class="card money in">
-        <header><h3>Money in</h3><span class="sub">regular, repeating income</span><span class="fig" id="inTot"></span></header>
+        <header><h3>Money in</h3><span class="sub">regular, repeating income</span></header>
         <div class="rowhead pay" data-for="in"><span></span><button class="sorth" data-sort="name" data-kind="in">Source<i></i></button><button class="sorth r" data-sort="amount" data-kind="in">Amount<i></i></button><button class="sorth" data-sort="freq" data-kind="in">How often<i></i></button><button class="sorth" data-sort="cat" data-kind="in">Category<i></i></button><button class="sorth" data-sort="start" data-kind="in">First payment<i></i></button><button class="sorth" data-sort="end" data-kind="in">Ends<i></i></button><span></span></div>
         <div id="inList" class="paylist"></div>
         <div class="rowfoot" id="inFoot"></div>
@@ -1183,7 +1183,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       </div>
 
       <div class="card money out">
-        <header><h3>Money out</h3><span class="sub">regular, repeating bills — one-offs live on the Forecast</span><span class="fig" id="outTot"></span></header>
+        <header><h3>Money out</h3><span class="sub">regular, repeating bills — one-offs live on the Forecast</span></header>
         <div class="rowhead pay" data-for="out"><span></span><button class="sorth" data-sort="name" data-kind="out">Bill<i></i></button><button class="sorth r" data-sort="amount" data-kind="out">Amount<i></i></button><button class="sorth" data-sort="freq" data-kind="out">How often<i></i></button><button class="sorth" data-sort="cat" data-kind="out">Category<i></i></button><button class="sorth" data-sort="start" data-kind="out">First payment<i></i></button><button class="sorth" data-sort="end" data-kind="out">Ends<i></i></button><span></span></div>
         <div id="outList" class="paylist"></div>
         <div class="rowfoot" id="outFoot"></div>
@@ -3584,9 +3584,7 @@ async function wipeEverything(){
    16. EVENTS
    ============================================================ */
 function paintHeadTotals(){
-  const rec=kind=>listOf(kind).reduce((a,it)=>a+monthly(it),0);
-  $("inTot").textContent=money(Math.round(rec("in")))+" / mo";
-  $("outTot").textContent=money(Math.round(rec("out")))+" / mo";
+  /* The card headers used to repeat each table's monthly total; the Total row below now carries it alone. */
 }
 function budgetLight(){
   paintHeadTotals();
