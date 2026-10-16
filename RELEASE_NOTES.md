@@ -18,12 +18,12 @@ phones now open in a simpler view and the full detail is one tap away.
 
 **Simple and Advanced views (phones).** A Simple | Advanced switch sits under the Overview title.
 
-- **Simple** is the default. It shows only Money in, Money out, the *Where the money goes* chart
-  and *The month in one line*. Each bill shows just its name, how often it's paid and the amount,
+- **Simple** is the default. It shows only your starting balance, Money in, Money out, the *Where
+  the money goes* chart and *The month in one line*. Each bill shows just its name, how often it's paid and the amount,
   and each table's total is the monthly figure on one line. Tapping a bill opens only Name,
   Amount and How often.
 - **Advanced** shows everything as before: sorting, drag to reorder, categories, first payment and
-  end dates, the starting-balance pill, the tiles and your target split.
+  end dates, the tiles and your target split.
 - **Nothing is lost.** Categories and dates are still saved while hidden. New bills added in Simple
   are filed under *Need* and start on your plan's start date, and you can change both in
   Advanced.
@@ -31,6 +31,8 @@ phones now open in a simpler view and the full detail is one tap away.
 
 ### Changed
 
+- **What-if has moved to the account menu** (top right), next to Report. The main tabs are now
+  Overview, Forecast and Debt.
 - **"Every 2 weeks" is now "Bi-Weekly"** everywhere, including the How often list, the bill rows
   and the amount labels.
 
