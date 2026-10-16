@@ -9,6 +9,38 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.7 — 16 October 2026
+
+**Security, front and centre.** Waterline was always careful with your numbers. Now it says so
+plainly, and shows how.
+
+### New
+
+- **Security page** at [wtrline.com/security.html](https://wtrline.com/security.html). It explains,
+  in plain words:
+  - Why there's no bank connection.
+  - What stays on your device.
+  - How a signed-in plan is encrypted in transit (HTTPS) and at rest (AES-256).
+  - How row-level security locks each plan to its own account.
+  - How to delete everything.
+
+  It also says clearly what we don't claim: Waterline is not end-to-end encrypted, and anyone who
+  wants no copy outside their own device can simply use it without an account.
+- **Security on the About page.** A new *Your numbers stay yours* section sets out the six
+  protections, with *Learn more about security* linking to the full page. A short trust line sits
+  under the main buttons: *No bank logins · Stays on your device unless you sign in · Encrypted
+  when synced*.
+- **Forecast bar on desktop.** The floating bar with your lowest point now appears on wider screens
+  too, centred at the bottom of Overview and Debt. On Overview it stays out of the way while the
+  Forecast card at the top is on screen, then glides in once you scroll past it.
+
+### Changed
+
+- *Security* has been added to the account menu, the footer and the privacy policy.
+- **Hardened site headers:** no sniffing of file types, no framing by other sites, a stricter
+  referrer policy, HTTPS-only (HSTS), and camera, microphone and location access switched off.
+- The privacy and security pages have a proper page header for screen readers.
+
 ## 3.6 — 16 October 2026
 
 **Easier to read, safer to use, kinder to every screen.** A full design and accessibility review
