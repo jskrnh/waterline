@@ -9,6 +9,31 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.4 — 16 October 2026
+
+**A calmer Overview on your phone.** Feedback said the mobile view showed too much at once, so
+phones now open in a simpler view and the full detail is one tap away.
+
+### New
+
+**Simple and Advanced views (phones).** A Simple | Advanced switch sits under the Overview title.
+
+- **Simple** is the default. It shows only Money in, Money out, the *Where the money goes* chart
+  and *The month in one line*. Each bill shows just its name, how often it's paid and the amount,
+  and each table's total is the monthly figure on one line. Tapping a bill opens only Name,
+  Amount and How often.
+- **Advanced** shows everything as before: sorting, drag to reorder, categories, first payment and
+  end dates, the starting-balance pill, the tiles and your target split.
+- **Nothing is lost.** Categories and dates are still saved while hidden. New bills added in Simple
+  are filed under *Need* and start on your plan's start date, and you can change both in
+  Advanced.
+- Each phone remembers your choice. Desktop is unchanged.
+
+### Changed
+
+- **"Every 2 weeks" is now "Bi-Weekly"** everywhere, including the How often list, the bill rows
+  and the amount labels.
+
 ## 3.3 — 15 October 2026
 
 **Your debt plan, in your forecast.** Plan how you'll pay off your debts, then see exactly what
