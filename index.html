@@ -402,6 +402,40 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
   body.simple .rowfoot span:nth-of-type(2) b{display:inline;font-size:16px;margin:0}
 }
 
+/* forecast peek: a card on desktop, a floating bar on phones */
+.fcbar{display:none}
+.fcpeek{display:grid;grid-template-columns:minmax(0,1fr) 42%;grid-template-areas:"t sp" "go go";gap:6px 16px;padding:18px 20px 14px;
+  text-decoration:none;color:var(--ink);border:1px solid var(--line);transition:border-color .15s}
+.fcpeek:hover{border-color:var(--accent)}
+.fcpeek,.fcpeek *,.fcbar,.fcbar *{text-decoration:none!important}
+.pk-t{grid-area:t;display:flex;flex-direction:column;gap:3px;min-width:0}
+.pk-k{font-size:12.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+.pk-h{font-size:19px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.pk-h.neg{color:var(--signal)}
+.pk-s{font-size:14px;color:var(--ink-soft)}
+.fcpeek .spark{grid-area:sp;width:100%;height:64px;align-self:center}
+.pk-go{grid-area:go;display:flex;align-items:center;gap:6px;font-size:14.5px;font-weight:500;color:var(--accent);
+  border-top:1px solid var(--line);padding-top:11px;margin-top:6px}
+.spark .ln{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+.spark .ar{fill:var(--accent);opacity:.1}
+.spark .z{stroke:var(--ink-faint);stroke-width:1;stroke-dasharray:3 3}
+@media(max-width:760px){
+  .fcpeek{display:none}
+  .fcbar:not([hidden]){display:flex}
+  body.typing .fcbar{display:none}
+  .fcbar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:40;align-items:center;gap:12px;
+    padding:9px 10px 9px 14px;border-radius:18px;background:var(--panel);border:1px solid var(--line);
+    box-shadow:0 8px 28px rgba(0,0,0,.16);text-decoration:none;color:var(--ink)}
+  .fcbar .spark{width:64px;height:30px;flex:none}
+  .fb-t{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.2}
+  .fb-t small{font-size:11.5px;color:var(--ink-faint)}
+  .fb-t b{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fb-t b.neg{color:var(--signal)}
+  .fb-go{display:flex;align-items:center;gap:5px;flex:none;font-size:14px;font-weight:600;color:var(--bg);background:var(--accent);
+    padding:8px 13px;border-radius:var(--pill)}
+  body.hasfcbar main,body.hasfcbar footer{padding-bottom:84px}
+}
+
 /* debt plan in the forecast */
 .switch{position:relative;display:inline-block;width:46px;height:28px;margin-left:auto;flex:none;cursor:pointer}
 .switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
@@ -1021,6 +1055,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   </div>
 </nav>
 
+<a class="fcbar" id="fcBar" href="#/forecast" hidden>
+  <svg class="spark" aria-hidden="true"></svg>
+  <span class="fb-t"><small>Lowest point</small><b class="pk-h2"></b></span>
+  <span class="fb-go">Forecast <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</a>
 <div class="sandbar" id="sandbar" hidden>
   <div class="wide sandin">
     <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10.2 8.8 12.5 13.5 7.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1111,6 +1150,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
     </div>
 
     <div class="stack">
+      <a class="card fcpeek" id="fcPeek" href="#/forecast">
+        <div class="pk-t"><span class="pk-k">Forecast</span><b class="pk-h"></b><span class="pk-s"></span></div>
+        <svg class="spark" aria-hidden="true"></svg>
+        <span class="pk-go">See the day-by-day forecast <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
       <div id="uncatFlag" class="advonly"></div>
 
       <div class="card" id="seedCard">
@@ -2310,6 +2354,12 @@ document.addEventListener("keydown",e=>{
   const ng=document.querySelector(`.erow[data-id="${row.dataset.id}"] .grip`); if(ng) ng.focus();
 });
 function renderBudget(){
+  rows("in"); rows("out");
+  paintHeadTotals();
+  budgetFigures();
+}
+/* Everything on Overview that is worked out from the rows: tiles, pie, the month in one line. */
+function budgetFigures(){
   const {income,t,out,save}=budgetTotals(), sp=doc.split;
   const pct=v=>income>0?(v/income*100):0;
   const gap=(got,target)=>{
@@ -2342,9 +2392,6 @@ function renderBudget(){
   const sum=sp.need+sp.want+sp.save;
   $("tSum").innerHTML = sum===100 ? `<span style="color:var(--gain)">= 100%</span>`
     : `<span style="color:var(--amber)">= ${sum}% — targets should total 100</span>`;
-
-  rows("in"); rows("out");
-  paintHeadTotals();
 
   const unc=[];
   state.outflow.forEach(it=>{ if(!it.cat) unc.push(it.name||"(unnamed)"); });
@@ -3091,7 +3138,42 @@ function render(){
 let saveTimer=null, savePaused=false;
 function flag(t,ms=1600){ const n=$("savedNote"); n.textContent=t;
   if(ms) setTimeout(()=>{ if(n.textContent===t) n.textContent=""; },ms); }
+/* forecast peek: keeps the main answer in view (card on desktop Overview, bar on phones) */
+let peekRT=0; addEventListener("resize",()=>{ clearTimeout(peekRT); peekRT=setTimeout(()=>safely(paintPeek),150); });
+document.addEventListener("focusin",e=>{ if(e.target.matches("input,select,textarea")) document.body.classList.add("typing"); });
+document.addEventListener("focusout",()=>setTimeout(()=>{ const a=document.activeElement;
+  if(!a||!a.matches("input,select,textarea")) document.body.classList.remove("typing"); },0));
+function sparkInto(svg,p){
+  if(!svg||!p||!p.series||p.series.length<2){ if(svg) svg.innerHTML=""; return; }
+  const r=svg.getBoundingClientRect(), W=Math.round(r.width)||300, H=Math.round(r.height)||56;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const s=p.series, t0=p.from.getTime(), t1=p.to.getTime(), m=5;
+  const vals=s.map(d=>d.bal); let lo=Math.min(0,...vals), hi=Math.max(0,...vals);
+  const X=t=>(t-t0)/(t1-t0)*W, Y=v=>m+(1-(v-lo)/((hi-lo)||1))*(H-2*m);
+  let d=`M0 ${Y(s[0].bal).toFixed(1)}`;
+  for(let i=1;i<s.length;i++){ const x=X(s[i].date.getTime()).toFixed(1); d+=` L${x} ${Y(s[i-1].bal).toFixed(1)} L${x} ${Y(s[i].bal).toFixed(1)}`; }
+  d+=` L${W} ${Y(s[s.length-1].bal).toFixed(1)}`;
+  svg.innerHTML=`<path class="ar" d="${d} L${W} ${H} L0 ${H}Z"/><line class="z" x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}"/><path class="ln" d="${d}"/>`+
+    `<circle cx="${X(p.low.date.getTime())}" cy="${Y(p.low.bal)}" r="4" fill="var(--signal)" stroke="var(--panel)" stroke-width="1.5"/>`;
+}
+function paintPeek(){
+  const n=state.inflow.length+state.outflow.length+(state.oneoffs||[]).length;
+  let p=null; try{ p=project(); }catch(e){}
+  const has=n&&p&&p.series&&p.series.length>1;
+  const head=!has?"Add income and bills to see it":p.low.bal<0?`You go under on ${dLabel(p.firstUnder||p.low.date)}`:`Lowest point ${money2(p.low.bal)}`;
+  const sub=!has?"":p.low.bal<0?`Falls to ${money2(p.low.bal)} on ${dLong(p.low.date)}`:`on ${dLong(p.low.date)}, in the next ${Math.round(horizon/30)} months`;
+  const a=$("fcPeek");
+  if(a){ a.querySelector(".pk-h").textContent=head; a.querySelector(".pk-h").classList.toggle("neg",has&&p.low.bal<0);
+    a.querySelector(".pk-s").textContent=sub; sparkInto(a.querySelector(".spark"),has?p:null); }
+  const b=$("fcBar");
+  if(b){ b.hidden=!(has&&["overview","debt","whatif"].includes(route)); document.body.classList.toggle("hasfcbar",!b.hidden);
+    b.querySelector(".fb-t small").textContent=has&&p.low.bal<0?"Goes under":"Lowest point";
+    const h=b.querySelector(".pk-h2"); h.textContent=has?`${money2(p.low.bal)} · ${dLabel(p.low.date)}`:""; h.classList.toggle("neg",has&&p.low.bal<0);
+    sparkInto(b.querySelector(".spark"),has?p:null); }
+}
+
 function save(){
+  queueMicrotask(()=>safely(paintPeek));
   if(savePaused||sandbox) return;           // the sample preview is never saved
   clearTimeout(saveTimer);
   saveTimer=setTimeout(async()=>{
@@ -3509,6 +3591,7 @@ function paintHeadTotals(){
 function budgetLight(){
   paintHeadTotals();
   safely(()=>{ paintPay("in"); paintPay("out"); });
+  safely(budgetFigures);
   save();
 }
 document.addEventListener("input",e=>{

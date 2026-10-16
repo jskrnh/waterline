@@ -9,6 +9,26 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.5 — 16 October 2026
+
+**The forecast, always in view.** The Forecast is Waterline's main answer, but it lived on its
+own tab where people could miss it. Now its headline follows you around.
+
+### New
+
+- **Forecast bar (phones).** A small bar floats at the bottom of the screen on Overview, Debt and
+  What-if. It shows your lowest point and its date with a tiny chart, and *Forecast* opens the
+  full day-by-day view. If your plan goes below zero, it says *Goes under* in red. It updates as
+  you edit a bill, and steps out of the way while you're typing.
+- **Forecast card (desktop).** The top of Overview shows a card with your lowest point, the day
+  it happens and a small chart of the next six months, with the low point marked in red. Click
+  anywhere on it to open the Forecast.
+
+### Fixed
+
+- When you typed a new amount for a bill, the *Where the money goes* chart, the tiles and *The
+  month in one line* didn't update until the page redrew. They now update as you type.
+
 ## 3.4 — 16 October 2026
 
 **A calmer Overview on your phone.** Feedback said the mobile view showed too much at once, so
