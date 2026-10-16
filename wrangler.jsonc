@@ -1,0 +1,6 @@
+// Cloudflare Workers config. Lets branch builds (test sites) upload the static site the same way production does.
+{
+  "name": "waterline",
+  "compatibility_date": "2026-09-01",
+  "assets": { "directory": "./", "not_found_handling": "none" }
+}
