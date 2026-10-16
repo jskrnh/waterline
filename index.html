@@ -3406,14 +3406,29 @@ function undoToast(msg,undo){
 function hideToast(){ $("toast").hidden=true; toastUndo=null; }
 $("toastUndo").addEventListener("click",()=>{ const u=toastUndo; hideToast(); if(u){ safely(u); save(); flag("Restored",1600); } });
 const nameOf=(x,fallback)=>`“${(x&&x.name||"").trim()||fallback}”`;
-/* About page: rows rise into place as they scroll into view */
-const rvIO=("IntersectionObserver" in window)?new IntersectionObserver(es=>{
-  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); rvIO.unobserve(e.target); } });
-},{rootMargin:"0px 0px -12% 0px",threshold:0.12}):null;
+/* About page: each row rises into place once the whole card fits on screen, so it never animates
+   half-hidden below the fold. Rows taller than the screen start once their top passes a third of the way up. */
+const RV_SHIFT=36;                       /* matches the starting translate in the CSS */
+let rvPending=[], rvTick=0;
+function rvCheck(){
+  rvTick=0;
+  const vh=innerHeight;
+  rvPending=rvPending.filter(el=>{
+    const r=el.getBoundingClientRect(), top=r.top-RV_SHIFT, bottom=r.bottom-RV_SHIFT;
+    const fits=r.height<=vh-24, whole=top>=-4&&bottom<=vh-12;
+    if((fits&&whole)||(!fits&&top<=vh*0.33)||bottom<0){ el.classList.add("in"); return false; }
+    return true;
+  });
+  if(!rvPending.length) removeEventListener("scroll",rvOnScroll);
+}
+function rvOnScroll(){ if(!rvTick) rvTick=requestAnimationFrame(rvCheck); }
 function armReveal(){
-  if(!rvIO||matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches) return;
   document.documentElement.classList.add("rvready");
-  document.querySelectorAll("#page-welcome .rv:not(.in)").forEach(el=>rvIO.observe(el));
+  rvPending=[...document.querySelectorAll("#page-welcome .rv:not(.in)")];
+  if(!rvPending.length) return;
+  addEventListener("scroll",rvOnScroll,{passive:true}); addEventListener("resize",rvOnScroll,{passive:true});
+  requestAnimationFrame(rvCheck);
 }
 /* forecast peek: keeps the main answer in view (card on desktop Overview, bar on phones) */
 let peekSeen=false;

@@ -9,144 +9,127 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
-## 3.7 — 16 October 2026
+## 3.0.0 — 16 October 2026
 
-**Security, front and centre.** Waterline was always careful with your numbers. Now it says so
-plainly, and shows how.
+**Simpler on phones, the forecast always in view, safer to use, and security front and centre.**
+Everything released on 16 October, previously numbered 3.4 to 3.7, plus today's fixes.
 
-### New
+### Highlights
 
-- **Security page** at [wtrline.com/security.html](https://wtrline.com/security.html). It explains,
-  in plain words:
-  - Why there's no bank connection.
-  - What stays on your device.
-  - How a signed-in plan is encrypted in transit (HTTPS) and at rest (AES-256).
-  - How row-level security locks each plan to its own account.
-  - How to delete everything.
-
-  It also says clearly what we don't claim: Waterline is not end-to-end encrypted, and anyone who
-  wants no copy outside their own device can simply use it without an account.
-- **Security on the About page.** A new *Your numbers stay yours* section sets out the six
-  protections, with *Learn more about security* linking to the full page. A short trust line sits
-  under the main buttons: *No bank logins · Stays on your device unless you sign in · Encrypted
-  when synced*.
-- **Forecast bar on desktop.** The floating bar with your lowest point now appears on wider screens
-  too, centred at the bottom of Overview and Debt. On Overview it stays out of the way while the
-  Forecast card at the top is on screen, then glides in once you scroll past it.
-
-### Changed
-
-- *Security* has been added to the account menu, the footer and the privacy policy.
-- **Hardened site headers:** no sniffing of file types, no framing by other sites, a stricter
-  referrer policy, HTTPS-only (HSTS), and camera, microphone and location access switched off.
-- The privacy and security pages have a proper page header for screen readers.
-
-## 3.6 — 16 October 2026
-
-**Easier to read, safer to use, kinder to every screen.** A full design and accessibility review
-of the site, with every finding fixed, plus a calmer About page.
-
-### New
-
-- **Undo after a delete.** Removing a bill, income, debt or one-off now shows *Deleted
-  “Rent” · Undo* for a few seconds. One tap puts it back exactly where it was.
-- **In-app confirmations.** Starting a blank plan, restoring or deleting a backup, deleting a
-  scenario, deleting your account and *Delete all my data* now ask in a Waterline sheet instead of
-  a plain browser pop-up. Destructive choices are marked in red, and Escape or Cancel always backs
-  out.
-- **A new About page.** Each feature now sits beside a small picture of the real screen: your
-  budget split, a week of the forecast calendar ending on the lowest day, and a two-debt payoff
-  plan. As you scroll, each row rises smoothly into place, with its picture following just behind
-  and the bars drawing in. Motion is switched off for anyone whose device asks for reduced motion.
-
-### Changed
-
-- **Readable phone calendar.** Each day shows its number, payment dots and a short change you can
-  read (*−1.8k*, *+2.1k*, *−150*). Tap a day for every payment and the balance.
-- **Shorter Debt page on phones.** The three figures at the top sit in one row, and *The order
-  they fall* and the payment breakdown fold behind *Show* buttons. Desktop shows everything as
-  before.
-- **The forecast bar stays off What-if**, which shows its own scenario figures.
-- **Clearer text.** Secondary grey text is darker, so it meets the WCAG AA contrast standard on
-  every background, including the printable report.
-- **Softer dark mode.** The background is a very dark grey instead of pure black.
-- **Bigger touch targets.** On touch screens, the theme, account, menu and calendar arrows, the
-  chips, the Simple/Advanced switch, the sort headers, the checkboxes and the delete buttons are
-  all at least 36–40px.
-- Headlines wrap in balanced lines, so a single word is never left alone.
-
-### Fixed
-
-- **Small phones (320px wide):** the calendar no longer runs off the side of the screen.
-- **Dark mode:** *Add it to the forecast* was white text on light green and hard to read.
-- **Screen readers:**
-  - The account button has a name.
-  - *Saved* and *Restored* messages are read out.
-  - Sort headers say how a table is sorted.
-  - Card titles and labels follow a proper heading order.
-  - The forecast bar has its own labelled region.
-- **Keyboard:** tables that scroll sideways (What-if, Debt and the report on phones) can be reached
-  and scrolled with the keyboard.
-- Footer links are underlined, so they don't rely on colour alone.
-
-## 3.5 — 16 October 2026
-
-**The forecast, always in view.** The Forecast is Waterline's main answer, but it lived on its
-own tab where people could miss it. Now its headline follows you around.
-
-### New
-
-- **Forecast bar (phones).** A small bar floats at the bottom of the screen on Overview, Debt and
-  What-if. It shows your lowest point and its date with a tiny chart, and *Forecast* opens the
-  full day-by-day view. If your plan goes below zero, it says *Goes under* in red. It updates as
-  you edit a bill, and steps out of the way while you're typing.
-- **Forecast card (desktop).** The top of Overview shows a card with your lowest point, the day
-  it happens and a small chart of the next six months, with the low point marked in red. Click
-  anywhere on it to open the Forecast.
-
-### Changed
-
-- **One total per table.** The Money in and Money out headers no longer repeat the monthly
-  total, because the Total row at the bottom of each table already shows it.
-
-### Fixed
-
-- When you typed a new amount for a bill, the *Where the money goes* chart, the tiles and *The
-  month in one line* didn't update until the page redrew. They now update as you type.
-
-## 3.4 — 16 October 2026
-
-**A calmer Overview on your phone.** Feedback said the mobile view showed too much at once, so
-phones now open in a simpler view and the full detail is one tap away.
+- **Simple and Advanced views on phones**, with Simple as the default.
+- **A forecast bar and card** keep your lowest point in view on every screen.
+- **Undo after a delete**, and in-app confirmations instead of browser pop-ups.
+- **A new About page** with a security section and a full **Security page**.
+- **A full accessibility review**, with every finding fixed.
 
 ### New
 
 **Simple and Advanced views (phones).** A Simple | Advanced switch sits under the Overview title.
 
 - **Simple** is the default. It shows only your starting balance, Money in, Money out, the *Where
-  the money goes* chart and *The month in one line*. Each bill shows just its name, how often it's paid and the amount,
-  and each table's total is the monthly figure on one line. Tapping a bill opens only Name,
-  Amount and How often.
-- **Advanced** shows everything as before: sorting, drag to reorder, categories, first payment and
-  end dates, the tiles and your target split.
+  the money goes* chart and *The month in one line*. Each bill shows just its name, how often it's
+  paid and the amount, and each table's total is the monthly figure on one line. Tapping a bill
+  opens only Name, Amount and How often.
+- **Advanced** shows everything: sorting, drag to reorder, categories, first payment and end dates,
+  the tiles and your target split.
 - **Nothing is lost.** Categories and dates are still saved while hidden. New bills added in Simple
-  are filed under *Need* and start on your plan's start date, and you can change both in
-  Advanced.
-- Each phone remembers your choice. Desktop is unchanged.
+  are filed under *Need* and start on your plan's start date. Each phone remembers your choice.
+  Desktop is unchanged.
+
+**The forecast, always in view.**
+
+- **Forecast bar.** A small bar floats at the bottom of Overview and Debt, on phones and desktop.
+  It shows your lowest point and its date with a tiny chart, and *Forecast* opens the full
+  day-by-day view. If your plan goes below zero, it says *Goes under* in red. It updates as you
+  edit. On phones it steps aside while you type. On desktop Overview it waits until the Forecast
+  card has scrolled away.
+- **Forecast card (desktop).** The top of Overview shows your lowest point, the day it happens and
+  a small chart of the next six months, with the low point in red. Click it to open the Forecast.
+
+**Safer editing.**
+
+- **Undo after a delete.** Removing a bill, income, debt or one-off shows *Deleted “Rent” · Undo*
+  for a few seconds. One tap puts it back exactly where it was.
+- **In-app confirmations.** Starting a blank plan, restoring or deleting a backup, deleting a
+  scenario, deleting your account and *Delete all my data* ask in a Waterline sheet instead of a
+  plain browser pop-up. Destructive choices are red, and Escape or Cancel always backs out.
+
+**A new About page.**
+
+- Each feature sits beside a small picture of the real screen: your budget split, a week of the
+  forecast calendar ending on the lowest day, and a two-debt payoff plan.
+- As you scroll, each row waits until the whole card fits on screen, then rises smoothly into
+  place with its picture following just behind. Rows taller than the screen, such as Security on a
+  phone, start once their top is a third of the way up. Motion is off for anyone whose device asks
+  for reduced motion.
+
+**Security, front and centre.**
+
+- **Security page** at [wtrline.com/security.html](https://wtrline.com/security.html). It explains:
+  - Why there's no bank connection.
+  - What stays on your device.
+  - How a signed-in plan is encrypted in transit (HTTPS) and at rest (AES-256).
+  - How row-level security locks each plan to its own account.
+  - How to delete everything.
+
+  It is also upfront that Waterline is **not** end-to-end encrypted, and that using it without an
+  account keeps every copy on your own device.
+- **On the About page,** a *Your numbers stay yours* section sets out six protections and links to
+  the full page. A trust line under the main buttons reads: *No bank logins · Stays on your device
+  unless you sign in · Encrypted when synced*.
 
 ### Changed
 
-- **What-if has moved to the account menu** (top right), next to Report. The main tabs are now
-  Overview, Forecast and Debt.
-- **"Every 2 weeks" is now "Bi-Weekly"** everywhere, including the How often list, the bill rows
-  and the amount labels.
+- **What-if has moved to the account menu**, next to Report. The main tabs are now Overview,
+  Forecast and Debt.
+- **"Every 2 weeks" is now "Bi-Weekly"** everywhere.
+- **One total per table.** The Money in and Money out headers no longer repeat the monthly total,
+  because the Total row already shows it.
+- **Readable phone calendar.** Each day shows its number, payment dots and a short change
+  (*−1.8k*, *+2.1k*, *−150*). Tap a day for every payment and the balance.
+- **Shorter Debt page on phones.** The three figures at the top sit in one row, and *The order they
+  fall* and the payment breakdown fold behind *Show* buttons.
+- **The forecast bar stays off What-if**, which shows its own scenario figures.
+- **Clearer text.** Secondary grey text meets the WCAG AA contrast standard on every background,
+  including the printable report.
+- **Softer dark mode.** The background is a very dark grey instead of pure black.
+- **Bigger touch targets** for every small control on touch screens.
+- **Balanced headlines.** Lines wrap evenly, so a single word is never left alone.
+- **Security everywhere it belongs.** *Security* has been added to the account menu, the footer and
+  the privacy policy.
+- **Hardened site headers:** no file-type sniffing, no framing by other sites, a stricter referrer
+  policy, HTTPS-only (HSTS), and camera, microphone and location access switched off.
 
-## 3.3 — 15 October 2026
+### Fixed
+
+- **About page:** cards no longer animate while half below the screen. Each one appears whole.
+- **Charts while typing:** typing a new amount didn't update *Where the money goes*, the tiles or
+  *The month in one line* until the page redrew. They now update as you type.
+- **Small phones (320px wide):** the calendar no longer runs off the side of the screen.
+- **Dark mode:** *Add it to the forecast* was white text on light green and hard to read.
+- **Screen readers:**
+  - The account button has a name.
+  - *Saved* and *Restored* messages are read out.
+  - Sort headers say how a table is sorted.
+  - Card titles follow a proper heading order.
+  - The forecast bar and the privacy and security page headers are labelled regions.
+- **Keyboard:** tables that scroll sideways can be reached and scrolled with the keyboard.
+- **Footer links** are underlined, so they don't rely on colour alone.
+
+---
+
+## 2.10 — 15 October 2026
+
+**An explorable forecast chart, a tidier phone layout, and your debt plan inside the forecast.**
+This brings together the four updates released after 2.9 on 15 October (previously numbered 3.0
+to 3.3).
+
+### Your debt plan, in your forecast
 
 **Your debt plan, in your forecast.** Plan how you'll pay off your debts, then see exactly what
 that plan does to your balance, day by day, before you commit to it.
 
-### New
+#### New
 
 **Put this plan into your forecast.** It's a new card on the Debt page. Pick your finish line with
 the slider as before, then flip the switch and the plan becomes real payments in your forecast:
@@ -177,7 +160,7 @@ cost of paying faster. When the plan is off but you have debts, the same bar off
 - **PDF report:** includes the plan's payments, and still fits on two pages.
 - **Syncing:** the plan settings follow your account to other devices.
 
-### Under the hood
+#### Under the hood
 
 - A new payoff schedule records each month's payment to each debt. The monthly amount is rounded up
   to whole cents so it always finishes on time: 36 payments of $207.48 and a final $207.11 on the
@@ -185,13 +168,11 @@ cost of paying faster. When the plan is off but you have debts, the same bar off
 - The forecast engine accepts the plan as an input, either from your setting, forced on for
   previews, or forced off for the dashed comparison line.
 
----
-
-## 3.2 — 15 October 2026
+### A steadier chart window
 
 **The chart window holds still while you explore.**
 
-### Fixed
+#### Fixed
 
 - **On desktop the window jumped around as you moved across the chart.** It sized itself to the
   day you'd picked, so a day with four payments made it taller than a day with one, and because it
@@ -207,13 +188,11 @@ cost of paying faster. When the plan is off but you have debts, the same bar off
   Nov 1 made the range an hour longer than three months, so the two never matched exactly. 3M is
   now hidden when it's the whole forecast, and only one range chip is ever lit.
 
----
-
-## 3.1 — 15 October 2026
+### A tidy top bar on phones
 
 **A tidy top bar on phones.**
 
-### Changed
+#### Changed
 
 - **On phones, the page tabs fold into a ☰ menu.** The tabs (Overview · Forecast · What-if · Debt)
   used to be squeezed into the top bar, and the last one got cut off on narrower screens.
@@ -224,13 +203,11 @@ cost of paying faster. When the plan is off but you have debts, the same bar off
   - **The account menu and the pages menu** never open on top of each other.
   - **Desktop and tablets in landscape** keep the tabs as before.
 
----
-
-## 3.0 — 15 October 2026
+### Explore the forecast chart
 
 **The forecast chart is now something you can explore, and Light mode stays light on phones.**
 
-### New
+#### New
 
 **Tap the chart to open it in its own window.** This works on the Forecast and What-if pages. The
 window opens on your lowest point, and you can:
@@ -251,7 +228,7 @@ window opens on your lowest point, and you can:
 On a phone the window slides up from the bottom. A tap that lands near a payment snaps to it, so
 spikes are easy to hit with a finger. Esc, × or tapping outside the window closes it.
 
-### Fixed
+#### Fixed
 
 - **Light mode didn't work on phones that darken websites.** Chrome's "auto dark" setting and
   Samsung Internet's dark mode were repainting the page dark, and even inverting the logo,
