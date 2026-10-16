@@ -9,6 +9,54 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.6 — 16 October 2026
+
+**Easier to read, safer to use, kinder to every screen.** A full design and accessibility review
+of the site, with every finding fixed, plus a calmer About page.
+
+### New
+
+- **Undo after a delete.** Removing a bill, income, debt or one-off now shows *Deleted
+  “Rent” · Undo* for a few seconds. One tap puts it back exactly where it was.
+- **In-app confirmations.** Starting a blank plan, restoring or deleting a backup, deleting a
+  scenario, deleting your account and *Delete all my data* now ask in a Waterline sheet instead of
+  a plain browser pop-up. Destructive choices are marked in red, and Escape or Cancel always backs
+  out.
+- **A new About page.** Each feature now sits beside a small picture of the real screen: your
+  budget split, a week of the forecast calendar ending on the lowest day, and a two-debt payoff
+  plan. As you scroll, each row rises smoothly into place, with its picture following just behind
+  and the bars drawing in. Motion is switched off for anyone whose device asks for reduced motion.
+
+### Changed
+
+- **Readable phone calendar.** Each day shows its number, payment dots and a short change you can
+  read (*−1.8k*, *+2.1k*, *−150*). Tap a day for every payment and the balance.
+- **Shorter Debt page on phones.** The three figures at the top sit in one row, and *The order
+  they fall* and the payment breakdown fold behind *Show* buttons. Desktop shows everything as
+  before.
+- **The forecast bar stays off What-if**, which shows its own scenario figures.
+- **Clearer text.** Secondary grey text is darker, so it meets the WCAG AA contrast standard on
+  every background, including the printable report.
+- **Softer dark mode.** The background is a very dark grey instead of pure black.
+- **Bigger touch targets.** On touch screens, the theme, account, menu and calendar arrows, the
+  chips, the Simple/Advanced switch, the sort headers, the checkboxes and the delete buttons are
+  all at least 36–40px.
+- Headlines wrap in balanced lines, so a single word is never left alone.
+
+### Fixed
+
+- **Small phones (320px wide):** the calendar no longer runs off the side of the screen.
+- **Dark mode:** *Add it to the forecast* was white text on light green and hard to read.
+- **Screen readers:**
+  - The account button has a name.
+  - *Saved* and *Restored* messages are read out.
+  - Sort headers say how a table is sorted.
+  - Card titles and labels follow a proper heading order.
+  - The forecast bar has its own labelled region.
+- **Keyboard:** tables that scroll sideways (What-if, Debt and the report on phones) can be reached
+  and scrolled with the keyboard.
+- Footer links are underlined, so they don't rely on colour alone.
+
 ## 3.5 — 16 October 2026
 
 **The forecast, always in view.** The Forecast is Waterline's main answer, but it lived on its
