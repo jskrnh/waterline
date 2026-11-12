@@ -9,6 +9,42 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.1.0 — 12 November 2026
+
+**A first look at Wealth: net worth, assets, liabilities, goals and where it's all heading.**
+This is a preview. The layout and basic features are in so you can get a feel for it; nothing in
+it changes your forecast or your debt plan.
+
+### New
+
+**Wealth page (preview).** A new **Wealth** tab next to Debt, also in the phone menu.
+
+- **At a glance:** net worth with the change since last month, what you own, what you owe, the
+  lowest point ahead from your forecast, your debt-free date from the Debt page, and goal progress.
+- **What you own:** chequing, savings, TFSA, RRSP, FHSA, RESP, investments, crypto, home, vehicle,
+  business equipment and other. Each has a value and a yearly growth rate. Picking a type fills in
+  a sensible rate (for example −15% for a vehicle), which you can change.
+- **What you owe:** your cards and loans from the Debt page show up automatically. Mortgages, car
+  loans, lines of credit, student loans and money owed to family can be added here.
+- **Where it sits:** a bar showing your assets split into cash, registered, investments, property,
+  vehicles and other.
+- **Net worth over time:** a snapshot is saved for each month you update, and the line fills in.
+- **Goals:** a target, what you've saved and a date. Each shows the monthly amount it needs, and
+  the total is compared with what your budget leaves over.
+- **Where it's heading:** a 1 to 30 year projection. Assets grow at their own rates, debts pay down
+  at their payments, and what you put away each month (your budget leftover unless you set it)
+  earns the return you choose. It also estimates when everything owed is paid off and when your
+  invested money reaches 25 times a year of spending.
+- **Contribution room:** room left for each TFSA, RRSP, FHSA and RESP.
+- **Ideas, not built yet:** accounts in the forecast, bank CSV import, budget vs. actual, a net worth
+  statement, live investment prices, a monthly check-in and shared household plans.
+
+### Also
+
+- **Sample numbers** now include assets, a car loan, goals and six months of net worth history.
+- **Backups and sync** include everything on the Wealth page.
+- **Offline cache** bumped so phones pick up the new page.
+
 ## 3.0.0 — 16 October 2026
 
 **Simpler on phones, the forecast always in view, safer to use, and security front and centre.**

@@ -1131,6 +1131,94 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 }
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* ---- wealth (preview) ---- */
+.prevtag{display:inline-block;vertical-align:middle;margin-left:10px;font-size:12px;font-weight:600;letter-spacing:.02em;
+  padding:3px 9px;border-radius:var(--pill);background:var(--amber-wash);color:var(--amber);border:1px solid var(--amber)}
+#wStats .stat a{color:inherit;text-decoration:none}
+#wStats .stat a:hover b{color:var(--accent)}
+#wStats .stat b.neg{color:var(--signal)} #wStats .stat b.pos{color:var(--gain)}
+#wStats .stat .up{color:var(--gain)} #wStats .stat .down{color:var(--signal)}
+.wcols{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;align-items:start}
+#wStats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rowhead.wrow,.erow.wrow{grid-template-columns:minmax(0,1fr) 196px 120px 90px 36px}
+.rowhead.wrow.lb,.erow.wrow.lb{grid-template-columns:minmax(0,1fr) 128px 104px 70px 92px 36px}
+.rowhead.wrow.gl,.erow.wrow.gl{grid-template-columns:minmax(0,1fr) 112px 112px 146px 128px 36px}
+.rowhead.wrow.rm,.erow.wrow.rm{grid-template-columns:minmax(0,1fr) 120px 140px 160px}
+.rowhead.wrow{padding:10px 22px 6px;font-size:12px;color:var(--ink-faint);letter-spacing:0}
+.rowhead.wrow span:not(:first-child){text-align:right}
+.erow.wrow .fld{display:block;min-width:0}
+.erow.wrow .mlabel{display:none}
+.erow.wrow .ro{font-size:15px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+.erow.wrow .ro.l{text-align:left}
+.erow.wrow.linked{background:var(--paper)}
+.erow.wrow.linked .nmro{font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.erow.wrow .golink{justify-self:end;color:var(--accent);font-size:13px;text-decoration:none;white-space:nowrap}
+.erow.wrow .gstat{text-align:right;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
+.erow.wrow .gstat.ok{color:var(--gain)} .erow.wrow .gstat.late{color:var(--signal)}
+.erow.wrow .gbar{grid-column:1/-1;height:6px;border-radius:var(--pill);background:var(--hair);overflow:hidden;margin:2px 0 4px}
+.erow.wrow .gbar i{display:block;height:100%;background:var(--gain);border-radius:var(--pill)}
+.wsub{padding:10px 22px;font-size:12.5px;color:var(--ink-faint);background:var(--paper);border-bottom:1px solid var(--hair)}
+.wsub a{color:var(--accent)}
+.wfoot{display:flex;justify-content:space-between;gap:12px;padding:14px 22px;border-top:1px solid var(--hair);font-size:14px;color:var(--ink-soft)}
+.wfoot b{color:var(--ink);font-variant-numeric:tabular-nums}
+.mixbar{display:flex;height:14px;border-radius:var(--pill);overflow:hidden;margin:22px 22px 8px;background:var(--hair)}
+.mixbar i{display:block;height:100%}
+.mixleg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px 22px;padding:10px 22px 20px}
+.mixleg div{display:flex;align-items:center;gap:9px;font-size:14px;padding:5px 0;border-bottom:1px solid var(--hair)}
+.mixleg .dot{width:10px;height:10px;border-radius:3px;flex:none}
+.mixleg span{flex:1;min-width:0;color:var(--ink-soft)}
+.mixleg b{font-variant-numeric:tabular-nums;font-weight:600}
+.mixleg small{color:var(--ink-faint);font-size:12px;width:38px;text-align:right;font-variant-numeric:tabular-nums}
+.wchart{padding:16px 18px 8px}
+.wchart svg{display:block;width:100%}
+.wchart text{font-family:var(--font);font-size:11px;fill:var(--ink-faint)}
+.wnote{padding:4px 22px 20px;font-size:14px;color:var(--ink-soft);line-height:1.5}
+.projctl{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:18px;padding:20px 22px;border-bottom:1px solid var(--hair);align-items:start}
+.projctl label{display:block;font-size:12.5px;color:var(--ink-faint)}
+.projctl input[type=number]{width:100%;margin-top:6px;font-family:var(--font);font-size:15px;padding:9px 11px;border-radius:10px;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink);font-variant-numeric:tabular-nums}
+.projctl input[type=range]{margin:10px 0 0}
+.projctl .bigfig{font-size:26px}
+.projkv{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 28px;padding:6px 22px 18px}
+.projkv .kv{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--hair);font-size:14px}
+.projkv .kv span{color:var(--ink-soft)} .projkv .kv b{font-variant-numeric:tabular-nums;text-align:right}
+.ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;padding:18px 22px 22px}
+.idea{border:1px dashed var(--line);border-radius:var(--r-md);padding:14px 16px}
+.idea b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em;margin-bottom:4px}
+.idea span{font-size:13.5px;color:var(--ink-soft);line-height:1.45}
+.idea em{display:block;margin-top:8px;font-style:normal;font-size:11.5px;color:var(--ink-faint)}
+@media(max-width:760px){
+  .prevtag{font-size:11px;padding:2px 7px}
+  #wStats{grid-template-columns:1fr 1fr;gap:10px}
+  #wStats .stat{padding:12px 12px 13px;border-radius:var(--r-md)}
+  #wStats .stat .h4{font-size:12px;margin-bottom:3px}
+  #wStats .stat b{font-size:19px}
+  #wStats .stat span:not(.h4){font-size:11.5px}
+  .rowhead.wrow{display:none}
+  .erow.wrow,.erow.wrow.lb,.erow.wrow.gl,.erow.wrow.rm{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 34px;grid-template-areas:none;gap:8px 10px;padding:12px 12px 12px 16px}
+  .erow.wrow>*{grid-area:auto}
+  .erow.wrow .fld,.erow.wrow .ro,.erow.wrow .gstat{grid-column:span 1}
+  .erow.wrow .wn,.erow.wrow .nmro{grid-column:1/3;grid-row:1;font-weight:500}
+  .erow.wrow.linked .nmro,.erow.wrow.rm .nmro{grid-column:1/-1}
+  .erow.wrow>.fld:nth-of-type(odd){grid-column:1}
+  .erow.wrow.rm>.ro.l{grid-column:1/-1}
+  .erow.wrow.linked,.erow.wrow.rm{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .erow.wrow.linked>span:empty{display:none}
+  .erow.wrow.rm>.fld{grid-column:2}
+  .erow.wrow .mlabel{display:block;font-size:11px;color:var(--ink-faint);letter-spacing:0;margin-bottom:3px}
+  .erow.wrow .ro{text-align:left}
+  .erow.wrow .gstat{text-align:left;align-self:end}
+  .erow.wrow .kill{grid-column:3;grid-row:1;justify-self:end;align-self:center;font-size:22px}
+  .erow.wrow .golink{grid-column:1/-1;justify-self:start}
+  .wsub,.wfoot{padding-left:16px;padding-right:16px}
+  .mixbar{margin:18px 16px 6px} .mixleg{padding:8px 16px 16px}
+  .projctl{grid-template-columns:1fr 1fr;padding:16px}
+  .projctl .yrs{grid-column:1/-1}
+  .projkv{padding:4px 16px 14px}
+  .ideas{padding:14px 16px 18px}
+  .wnote{padding:4px 16px 16px}
+  body.simple .erow.wrow .wg{display:none}
+}
 </style>
 </head>
 <body>
@@ -1151,6 +1239,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <li><a href="#/overview" data-r="overview">Overview</a></li>
       <li><a href="#/forecast" data-r="forecast">Forecast</a></li>
       <li><a href="#/debt" data-r="debt">Debt</a></li>
+      <li><a href="#/wealth" data-r="wealth">Wealth</a></li>
     </ul>
     <span class="nav-right">
       <button class="menubtn" id="menuBtn" aria-label="Open pages menu" aria-expanded="false" aria-controls="navMenu">
@@ -1207,6 +1296,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <a class="mitem" href="#/overview" data-r="overview" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3.5 4.5h13v11h-13zM3.5 8.5h13M8 8.5v7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Overview<small>Income, bills and where it goes</small></span></a>
       <a class="mitem" href="#/forecast" data-r="forecast" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3 15.5h14M4 12l3.5-4 3 2.5L16 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Forecast<small>Day by day, and when you go under</small></span></a>
       <a class="mitem" href="#/debt" data-r="debt" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 8.5h14M6 12h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>Debt<small>Every balance and the way out</small></span></a>
+      <a class="mitem" href="#/wealth" data-r="wealth" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3 16.5h14M4.5 16.5V10M8.5 16.5V7M12.5 16.5V9M16 16.5V4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Wealth<small>Net worth, goals and where it's heading</small></span></a>
   </div>
 </nav>
 
@@ -1664,6 +1754,91 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   </div>
 </section>
 
+<!-- ======================= WEALTH (preview) ======================= -->
+<section class="page" id="page-wealth">
+  <div class="wide">
+    <div class="pagehead">
+      <h1>Wealth <span class="prevtag">Preview</span></h1>
+      <p class="lede">Everything you own, everything you owe, and where it's heading. An early look, so
+        some parts are simple for now.</p>
+    </div>
+
+    <div class="stack">
+      <div class="grid g3" id="wStats"></div>
+
+      <div class="wcols">
+        <div class="card">
+          <header><h2 class="h3">What you own</h2><span class="sub">assets</span><span class="fig" id="wAssetTot"></span></header>
+          <div class="rowhead wrow"><span>Asset</span><span>Type</span><span>Value</span><span>Grows %/yr</span><span></span></div>
+          <div id="wAssets"></div>
+          <button class="addrow" data-wadd="assets">Add an asset</button>
+        </div>
+
+        <div class="card">
+          <header><h2 class="h3">What you owe</h2><span class="sub">liabilities</span><span class="fig" id="wLiabTot"></span></header>
+          <div id="wDebtLinked"></div>
+          <div class="rowhead wrow lb"><span>Other liabilities</span><span>Type</span><span>Balance</span><span>Rate %</span><span>Payment/mo</span><span></span></div>
+          <div id="wLiabs"></div>
+          <button class="addrow" data-wadd="liabs">Add a mortgage, car loan or other</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <header><h2 class="h3">Where it sits</h2><span class="sub">your assets by kind</span></header>
+        <div id="wMix"></div>
+      </div>
+
+      <div class="card">
+        <header><h2 class="h3">Net worth over time</h2><span class="sub">a snapshot is kept for each month you update</span></header>
+        <div id="wHist"></div>
+      </div>
+
+      <div class="card">
+        <header><h2 class="h3">Goals</h2><span class="sub">what you're saving toward</span><span class="fig" id="wGoalTot"></span></header>
+        <div class="rowhead wrow gl"><span>Goal</span><span>Target</span><span>Saved so far</span><span>By</span><span>Needs</span><span></span></div>
+        <div id="wGoals"></div>
+        <button class="addrow" data-wadd="goals">Add a goal</button>
+        <div id="wGoalFoot"></div>
+      </div>
+
+      <div class="card">
+        <header><h2 class="h3">Where it's heading</h2><span class="sub">your net worth, projected forward</span></header>
+        <div class="projctl">
+          <div class="yrs"><label for="wYears">Look ahead</label>
+            <span class="bigfig" id="wYearsLab">10 <small>years</small></span>
+            <input type="range" id="wYears" min="1" max="30" step="1" value="10" aria-label="Years to look ahead"></div>
+          <div><label for="wMonthly">You put away each month</label>
+            <input type="number" id="wMonthly" step="10" min="0" inputmode="decimal" aria-describedby="wMonLab">
+            <small id="wMonLab" style="display:block;margin-top:5px;font-size:11.5px;color:var(--ink-faint)"></small></div>
+          <div><label for="wRet">It earns, % a year</label>
+            <input type="number" id="wRet" step="0.5" inputmode="decimal"></div>
+        </div>
+        <div class="wchart" id="wProjChart"></div>
+        <div class="projkv" id="wProjKv"></div>
+      </div>
+
+      <div class="card">
+        <header><h2 class="h3">Contribution room</h2><span class="sub">TFSA, RRSP, FHSA and RESP</span></header>
+        <div class="rowhead wrow rm"><span>Account</span><span>Value</span><span>Room left</span><span>Note</span></div>
+        <div id="wRoom"></div>
+      </div>
+
+      <div class="card">
+        <header><h2 class="h3">Ideas, not built yet</h2><span class="sub">tell me which of these you'd actually use</span></header>
+        <div class="ideas">
+          <div class="idea"><b>Accounts in the forecast</b><span>Tie each bill to chequing, savings or a credit card, move money between them, and see the low point for each account.</span><em>Not built</em></div>
+          <div class="idea"><b>Import a bank CSV</b><span>Drop in a statement export. Waterline spots your recurring bills and offers to add them. Still no bank login.</span><em>Not built</em></div>
+          <div class="idea"><b>Budget vs. actual</b><span>Compare what you really spent each month with your plan and your Need / Want / Save split.</span><em>Not built</em></div>
+          <div class="idea"><b>Net worth statement</b><span>A one-page PDF of assets and liabilities, handy for a rental or loan application.</span><em>Not built</em></div>
+          <div class="idea"><b>Live investment prices</b><span>Enter ticker and shares instead of a value, and let the price update itself.</span><em>Not built</em></div>
+          <div class="idea"><b>Monthly check-in</b><span>A reminder on the 1st to update balances, so the net worth chart fills in on its own.</span><em>Not built</em></div>
+          <div class="idea"><b>Shared household plan</b><span>Two people editing the same plan, each from their own account.</span><em>Not built</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ======================= REPORT ======================= -->
 <section class="page" id="page-report">
   <div class="wide">
@@ -1844,12 +2019,13 @@ function seedState(){
 function baseDoc(sc,debts){
   return{ scenarios:[sc], activeId:sc.id, baseId:sc.id, compare:false,
     debts:debts||[], split:{need:70,want:20,save:10}, payoffMonths:36, seen:false, theme:"system", seedSet:true,
-    debtPlan:{on:false,start:"",replace:true} };
+    debtPlan:{on:false,start:"",replace:true}, wealth:wealthDefaults() };
 }
 function seedDoc(){
-  return baseDoc(seedState(),[
+  const d=baseDoc(seedState(),[
     {id:id(),name:"Credit card",balance:1800,apr:21.99,minimum:50},
     {id:id(),name:"Personal loan",balance:4200,apr:12.5,minimum:125}]);
+  d.wealth=sampleWealth(); return d;
 }
 function emptyDoc(){
   const t=new Date(); t.setHours(0,0,0,0);
@@ -1897,6 +2073,7 @@ function normalise(raw){
   ["need","want","save"].forEach(k=>{ if(typeof d.split[k]!=="number") d.split[k]={need:70,want:20,save:10}[k]; });
   if(typeof d.payoffMonths!=="number") d.payoffMonths=36;
   if(!d.debtPlan||typeof d.debtPlan!=="object") d.debtPlan={on:false,start:"",replace:true};
+  d.wealth=wealthDefaults(d.wealth);
   d.debtPlan.on=!!d.debtPlan.on; if(typeof d.debtPlan.replace!=="boolean") d.debtPlan.replace=true;
   if(typeof d.debtPlan.start!=="string") d.debtPlan.start="";
   d.seen=!!d.seen;
@@ -3277,6 +3454,304 @@ $("pdfBtn").addEventListener("click",()=>{
 $("reportRefresh").addEventListener("click",()=>{ safely(renderReport); flag("Report rebuilt",1400); });
 
 /* ============================================================
+   10b. WEALTH (preview) — net worth, goals, projection
+   Additive only: nothing here changes the forecast or the debt plan.
+   ============================================================ */
+const A_GROUPS={cash:["Cash","--need"],reg:["Registered","--gain"],inv:["Investments","--amber"],
+  prop:["Property","--want"],veh:["Vehicles","--debt"],other:["Other","--ink-faint"]};
+const A_TYPES=[["chequing","Chequing","cash",0],["savings","Savings","cash",2],["tfsa","TFSA","reg",5],
+  ["rrsp","RRSP","reg",5],["fhsa","FHSA","reg",5],["resp","RESP","reg",5],["invest","Investments","inv",5],
+  ["crypto","Crypto","inv",0],["home","Home / property","prop",3],["vehicle","Vehicle","veh",-15],
+  ["business","Business equipment","other",-10],["other","Other","other",0]];
+const L_TYPES=[["mortgage","Mortgage"],["car","Car loan"],["loc","Line of credit"],["student","Student loan"],
+  ["family","Owed to family"],["other","Other"]];
+const aType=k=>A_TYPES.find(t=>t[0]===k)||A_TYPES[A_TYPES.length-1];
+const REG=["tfsa","rrsp","fhsa","resp"];
+const num=v=>+v||0;
+function wealthDefaults(w){
+  w=(w&&typeof w==="object")?w:{};
+  ["assets","liabs","goals","history"].forEach(k=>{ if(!Array.isArray(w[k])) w[k]=[]; });
+  ["assets","liabs","goals"].forEach(k=>w[k].forEach(x=>{ if(!x.id) x.id=id(); }));
+  if(!w.proj||typeof w.proj!=="object") w.proj={};
+  if(typeof w.proj.years!=="number") w.proj.years=10;
+  if(w.proj.monthly===undefined) w.proj.monthly="";
+  if(w.proj.ret===undefined) w.proj.ret=5;
+  return w;
+}
+function sampleWealth(){
+  const t=new Date(), m=k=>iso(new Date(t.getFullYear(),t.getMonth()+k,1));
+  const w=wealthDefaults({
+    assets:[{id:id(),name:"Chequing",type:"chequing",value:1250,growth:0},
+      {id:id(),name:"High-interest savings",type:"savings",value:2400,growth:2},
+      {id:id(),name:"TFSA",type:"tfsa",value:6800,growth:5,room:4200},
+      {id:id(),name:"RRSP",type:"rrsp",value:3100,growth:5,room:9000},
+      {id:id(),name:"2019 Civic",type:"vehicle",value:14000,growth:-15},
+      {id:id(),name:"3D printers",type:"business",value:1800,growth:-10}],
+    liabs:[{id:id(),name:"Car loan",type:"car",balance:9800,apr:6.9,payment:344}],
+    goals:[{id:id(),name:"Emergency fund",target:6000,saved:2400,by:m(12)},
+      {id:id(),name:"New printer",target:1200,saved:300,by:m(6)}]});
+  // six months of made-up history so the chart has a shape
+  [-5,-4,-3,-2,-1].forEach((k,i)=>{ const d=new Date(t.getFullYear(),t.getMonth()+k,1);
+    w.history.push({m:iso(d).slice(0,7),a:26900+i*520,l:17600-i*370}); });
+  return w;
+}
+function wTotals(){
+  const w=doc.wealth, f=debtFacts();
+  const assets=w.assets.reduce((s,a)=>s+num(a.value),0);
+  const other=w.liabs.reduce((s,l)=>s+num(l.balance),0);
+  const liab=f.total+other;
+  return{assets,debts:f.total,other,liab,net:assets-liab};
+}
+function wSnap(){
+  const w=doc.wealth; if(!w.assets.length&&!w.liabs.length&&!doc.debts.length) return;
+  const t=wTotals(), m=iso(new Date()).slice(0,7);
+  const a=Math.round(t.assets), l=Math.round(t.liab);
+  const cur=w.history.find(h=>h.m===m);
+  if(cur){ if(cur.a===a&&cur.l===l) return; cur.a=a; cur.l=l; }
+  else{ w.history.push({m,a,l}); w.history.sort((x,y)=>x.m<y.m?-1:1); if(w.history.length>240) w.history.shift(); }
+}
+const mk=n=>{ const a=Math.abs(n), s=n<0?"-":"";
+  return a>=1e6?`${s}$${(a/1e6).toFixed(a>=1e7?0:1)}M`:a>=1e3?`${s}$${(a/1e3).toFixed(a>=1e5?0:1).replace(/\.0$/,"")}k`:`${s}$${Math.round(a)}`; };
+const monLab=m=>{ const[y,mo]=m.split("-").map(Number); return new Date(y,mo-1,1).toLocaleDateString("en-CA",{month:"short",year:"2-digit"}); };
+
+/* a small line chart; series = [{pts:[y…], color:"--accent", dash, fill}] sharing one x axis of labels */
+function wChart(el,labels,series,opt){
+  opt=opt||{}; const W=Math.max(280,el.clientWidth-36||600), H=opt.h||210, pl=50, pr=12, pt=12, pb=24;
+  const all=series.flatMap(s=>s.pts); let lo=Math.min(...all), hi=Math.max(...all);
+  if(lo>0&&lo<hi*0.5) lo=0; if(hi===lo){ hi+=1; lo-=1; }
+  const pad=(hi-lo)*0.08; lo-=lo===0?0:pad; hi+=pad;
+  const n=labels.length, X=i=>pl+(W-pl-pr)*(n<2?0.5:i/(n-1)), Y=v=>pt+(H-pt-pb)*(1-(v-lo)/(hi-lo));
+  let g="";
+  for(let k=0;k<=3;k++){ const v=lo+(hi-lo)*k/3, y=Y(v);
+    g+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" style="stroke:var(--hair)"/><text x="${pl-8}" y="${y+4}" text-anchor="end">${mk(v)}</text>`; }
+  if(lo<0&&hi>0) g+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(0)}" y2="${Y(0)}" style="stroke:var(--line)" stroke-dasharray="3 3"/>`;
+  const ticks=n<=(W<520?4:7)?[...Array(n).keys()]:[0,Math.round((n-1)/3),Math.round(2*(n-1)/3),n-1];
+  ticks.forEach(i=>{ g+=`<text x="${X(i)}" y="${H-6}" text-anchor="${i===0?"start":i===n-1?"end":"middle"}">${esc(labels[i])}</text>`; });
+  series.forEach(s=>{
+    const d=s.pts.map((v,i)=>`${i?"L":"M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(" ");
+    if(s.fill) g+=`<path d="${d} L${X(n-1)} ${Y(Math.max(lo,0))} L${X(0)} ${Y(Math.max(lo,0))}Z" style="fill:var(${s.color});opacity:.10"/>`;
+    g+=`<path d="${d}" fill="none" style="stroke:var(${s.color})" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" ${s.dash?'stroke-dasharray="5 4"':""}/>`;
+    if(s.dots) s.pts.forEach((v,i)=>{ g+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3.5" style="fill:var(--panel);stroke:var(${s.color})" stroke-width="2"/>`; });
+  });
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="${esc(opt.label||"Chart")}">${g}</svg>`+(opt.legend||"");
+}
+
+function wRows(){
+  const w=doc.wealth;
+  const opts=(list,v)=>list.map(t=>`<option value="${t[0]}"${t[0]===v?" selected":""}>${t[1]}</option>`).join("");
+  $("wAssets").innerHTML=w.assets.length?w.assets.map(a=>`<div class="erow wrow" data-w="assets" data-wid="${a.id}">
+      <input class="wn" data-f="name" value="${esc(a.name)}" placeholder="e.g. TD chequing" aria-label="Asset name">
+      <label class="fld"><span class="mlabel">Type</span><select data-f="type" aria-label="Asset type">${opts(A_TYPES,a.type)}</select></label>
+      <label class="fld"><span class="mlabel">Value</span><input class="amt" type="number" step="0.01" data-f="value" value="${esc(a.value)}" aria-label="Value"></label>
+      <label class="fld wg"><span class="mlabel">Grows %/yr</span><input class="amt" type="number" step="0.5" data-f="growth" value="${esc(a.growth)}" aria-label="Growth or depreciation per year"></label>
+      <button class="kill" title="Remove" aria-label="Remove">&times;</button></div>`).join("")
+    :`<p class="empty">Add your accounts, investments, car or home.</p>`;
+
+  const f=debtFacts();
+  $("wDebtLinked").innerHTML=f.list.length?`<div class="wsub">From your Debt page · <a href="#/debt">edit there</a></div>`+
+    f.list.map(d=>`<div class="erow wrow lb linked"><span class="nmro">${esc(d.name||"Debt")}</span>
+      <span class="ro l"><span class="mlabel">Type</span>Debt page</span>
+      <span class="ro"><span class="mlabel">Balance</span>${money(Math.round(num(d.balance)))}</span>
+      <span class="ro"><span class="mlabel">Rate %</span>${num(d.apr).toFixed(2)}</span>
+      <span class="ro"><span class="mlabel">Payment/mo</span>${money(Math.round(num(d.minimum)))}</span><span></span></div>`).join(""):"";
+
+  $("wLiabs").innerHTML=w.liabs.length?w.liabs.map(l=>`<div class="erow wrow lb" data-w="liabs" data-wid="${l.id}">
+      <input class="wn" data-f="name" value="${esc(l.name)}" placeholder="e.g. Mortgage" aria-label="Liability name">
+      <label class="fld"><span class="mlabel">Type</span><select data-f="type" aria-label="Liability type">${opts(L_TYPES,l.type)}</select></label>
+      <label class="fld"><span class="mlabel">Balance</span><input class="amt" type="number" step="0.01" data-f="balance" value="${esc(l.balance)}" aria-label="Balance"></label>
+      <label class="fld"><span class="mlabel">Rate %</span><input class="amt" type="number" step="0.01" data-f="apr" value="${esc(l.apr)}" aria-label="Interest rate"></label>
+      <label class="fld"><span class="mlabel">Payment/mo</span><input class="amt" type="number" step="0.01" data-f="payment" value="${esc(l.payment)}" aria-label="Monthly payment"></label>
+      <button class="kill" title="Remove" aria-label="Remove">&times;</button></div>`).join("")
+    :`<p class="empty">${f.list.length?"Cards and loans come from your Debt page. Add a mortgage or car loan here.":"Nothing owed yet. Debts from your Debt page show up here too."}</p>`;
+
+  $("wGoals").innerHTML=w.goals.length?w.goals.map(g=>`<div class="erow wrow gl" data-w="goals" data-wid="${g.id}">
+      <input class="wn" data-f="name" value="${esc(g.name)}" placeholder="e.g. Emergency fund" aria-label="Goal name">
+      <label class="fld"><span class="mlabel">Target</span><input class="amt" type="number" step="10" data-f="target" value="${esc(g.target)}" aria-label="Target amount"></label>
+      <label class="fld"><span class="mlabel">Saved so far</span><input class="amt" type="number" step="10" data-f="saved" value="${esc(g.saved)}" aria-label="Saved so far"></label>
+      <label class="fld"><span class="mlabel">By</span><input type="date" data-f="by" value="${esc(g.by)}" aria-label="Target date"></label>
+      <span class="gstat" data-gs="${g.id}"></span>
+      <button class="kill" title="Remove" aria-label="Remove">&times;</button>
+      <span class="gbar"><i data-gb="${g.id}"></i></span></div>`).join("")
+    :`<p class="empty">An emergency fund, a down payment, a new printer: add a target and a date.</p>`;
+}
+function goalNeed(g){
+  const left=Math.max(0,num(g.target)-num(g.saved));
+  if(!left) return{left:0,mo:0,months:0};
+  if(!g.by) return{left,mo:null,months:null};
+  const t=new Date(), b=parseD(g.by);
+  const months=Math.max(1,(b.getFullYear()-t.getFullYear())*12+b.getMonth()-t.getMonth());
+  return{left,mo:left/months,months,late:b<t};
+}
+function wGoalsPaint(){
+  const w=doc.wealth; let total=0;
+  w.goals.forEach(g=>{
+    const n=goalNeed(g), pct=num(g.target)>0?Math.min(100,num(g.saved)/num(g.target)*100):0;
+    const s=document.querySelector(`[data-gs="${g.id}"]`), b=document.querySelector(`[data-gb="${g.id}"]`);
+    if(b) b.style.width=pct.toFixed(1)+"%";
+    if(!s) return;
+    s.className="gstat"+(n.left===0?" ok":n.late?" late":"");
+    s.innerHTML=`<span class="mlabel">Needs</span>`+(n.left===0?"Done":n.mo===null?`${money(Math.round(n.left))} to go`:n.late?"Date passed":`${money(Math.round(n.mo))}/mo`);
+    if(n.mo) total+=n.mo;
+  });
+  $("wGoalTot").textContent=total?money(Math.round(total))+" / mo":"";
+  const left=budgetTotals().save;
+  $("wGoalFoot").innerHTML=w.goals.length&&total?`<div class="wfoot"><span>All goals together need</span><b>${money(Math.round(total))} a month</b></div>
+    <div class="wfoot" style="border-top:0;padding-top:0"><span>Your budget leaves over</span><b class="${left<total?"neg":"pos"}">${money(Math.round(left))} a month</b></div>`:"";
+}
+function wStats(){
+  const t=wTotals(), w=doc.wealth, h=w.history;
+  const m=iso(new Date()).slice(0,7), prev=[...h].reverse().find(x=>x.m<m);
+  let chg="";
+  if(prev){ const dv=t.net-(prev.a-prev.l);
+    chg=`<span class="${dv>=0?"up":"down"}">${dv>=0?"+":"−"}${money(Math.abs(Math.round(dv)))} since ${monLab(prev.m)}</span>`; }
+  else chg=`<span>${w.assets.length} ${w.assets.length===1?"asset":"assets"} listed</span>`;
+  // the forecast and the debt plan, read only
+  let low="—", lowSub="Add income and bills on Overview";
+  if(hasEntries(doc)){ const p=project(); low=money(Math.round(p.low.bal));
+    lowSub=`${p.low.bal<0?"goes under":"tightest"} on ${dLabel(p.firstUnder||p.low.date)}`; }
+  let free="—", freeSub="No debts on the Debt page";
+  const f=debtFacts();
+  if(f.total){ const need=requiredMonthly(f.list,doc.payoffMonths), run=runPayoff(f.list,need,doc.payoffMonths+2);
+    if(run){ const e=new Date(); e.setMonth(e.getMonth()+run.months);
+      free=e.toLocaleDateString("en-CA",{month:"short",year:"numeric"}); freeSub=`at ${money(Math.round(need))}/mo, your ${doc.payoffMonths}-month plan`; } }
+  let gl="—", glSub="No goals yet";
+  if(w.goals.length){ const tg=w.goals.reduce((s,g)=>s+num(g.target),0), sv=w.goals.reduce((s,g)=>s+Math.min(num(g.saved),num(g.target)),0);
+    gl=tg?Math.round(sv/tg*100)+"%":"—"; glSub=`saved across ${w.goals.length} ${w.goals.length===1?"goal":"goals"}`; }
+  const tile=(lab,val,sub,cls,href)=>`<div class="stat">${href?`<a href="${href}">`:""}<div class="h4">${lab}</div><b class="num ${cls||""}">${val}</b>${sub}${href?"</a>":""}</div>`;
+  $("wStats").innerHTML=
+    tile("Net worth",money(Math.round(t.net)),chg,t.net<0?"neg":"")+
+    tile("You own",money(Math.round(t.assets)),`<span>across ${w.assets.length} ${w.assets.length===1?"asset":"assets"}</span>`)+
+    tile("You owe",money(Math.round(t.liab)),`<span>${t.debts?`${money(Math.round(t.debts))} from the Debt page`:"cards, loans and more"}</span>`)+
+    tile("Lowest point ahead",low,`<span>${lowSub}</span>`,low!=="—"&&low.startsWith("-")?"neg":"","#/forecast")+
+    tile("Debt-free",free,`<span>${freeSub}</span>`,"","#/debt")+
+    tile("Goals",gl,`<span>${glSub}</span>`);
+  $("wAssetTot").textContent=w.assets.length?money(Math.round(t.assets)):"";
+  $("wLiabTot").textContent=t.liab?money(Math.round(t.liab)):"";
+}
+function wMix(){
+  const w=doc.wealth, by={};
+  w.assets.forEach(a=>{ const v=num(a.value); if(v>0){ const g=aType(a.type)[2]; by[g]=(by[g]||0)+v; } });
+  const tot=Object.values(by).reduce((s,v)=>s+v,0);
+  if(!tot){ $("wMix").innerHTML=`<p class="empty">Add an asset with a value and the mix shows here.</p>`; return; }
+  const keys=Object.keys(A_GROUPS).filter(k=>by[k]);
+  $("wMix").innerHTML=`<div class="mixbar" role="img" aria-label="Asset mix">${keys.map(k=>`<i style="width:${(by[k]/tot*100).toFixed(2)}%;background:var(${A_GROUPS[k][1]})"></i>`).join("")}</div>
+    <div class="mixleg">${keys.map(k=>`<div><i class="dot" style="background:var(${A_GROUPS[k][1]})"></i><span>${A_GROUPS[k][0]}</span><b>${money(Math.round(by[k]))}</b><small>${Math.round(by[k]/tot*100)}%</small></div>`).join("")}</div>`;
+}
+function wHistory(){
+  const h=doc.wealth.history, el=$("wHist");
+  if(!h.length){ el.innerHTML=`<p class="empty">Add an asset or a debt and this month's snapshot is saved.</p>`; return; }
+  if(h.length<2){ el.innerHTML=`<p class="wnote" style="padding-top:20px">Your first snapshot is saved for ${monLab(h[0].m)}: <b>${money(h[0].a-h[0].l)}</b>.
+    Update your balances next month and the line starts to draw.</p>`; return; }
+  el.innerHTML=`<div class="wchart"></div>`;
+  wChart(el.firstChild,h.map(x=>monLab(x.m)),[{pts:h.map(x=>x.a-x.l),color:"--accent",fill:true,dots:h.length<=24}],{label:"Net worth by month"});
+}
+/* month by month: assets grow or depreciate at their own rate, debts pay down at their minimums,
+   and what you put away each month earns the return you set */
+function wProject(months){
+  const w=doc.wealth, pr=w.proj;
+  const monthly=pr.monthly===""?Math.max(0,budgetTotals().save):num(pr.monthly), r=num(pr.ret)/1200;
+  const A=w.assets.map(a=>({v:num(a.value),g:Math.pow(1+num(a.growth)/100,1/12),inv:["reg","inv"].includes(aType(a.type)[2])}));
+  const D=[...debtFacts().list.map(d=>({b:num(d.balance),r:num(d.apr)/1200,p:num(d.minimum)})),
+    ...w.liabs.map(l=>({b:num(l.balance),r:num(l.apr)/1200,p:num(l.payment)}))];
+  let pool=0; const net=[], inv=[]; let freeAt=null;
+  const snap=()=>{ const a=A.reduce((s,x)=>s+x.v,0), d=D.reduce((s,x)=>s+Math.max(0,x.b),0);
+    net.push(a+pool-d); inv.push(A.reduce((s,x)=>s+(x.inv?x.v:0),0)+pool); return d; };
+  snap();
+  for(let m=1;m<=months;m++){
+    A.forEach(x=>{ x.v*=x.g; });
+    D.forEach(x=>{ if(x.b<=0) return; x.b*=1+x.r; x.b-=Math.min(x.p,x.b); });
+    pool=pool*(1+r)+monthly;
+    const d=snap(); if(d<=0.5&&freeAt===null&&D.length) freeAt=m;
+  }
+  return{net,inv,monthly,freeAt};
+}
+function wProjection(){
+  const pr=doc.wealth.proj, yrs=pr.years;
+  $("wYears").value=yrs; $("wYearsLab").innerHTML=`${yrs} <small>year${yrs===1?"":"s"}</small>`;
+  if(document.activeElement!==$("wMonthly")) $("wMonthly").value=pr.monthly;
+  const lo=Math.round(Math.max(0,budgetTotals().save));
+  $("wMonthly").placeholder=String(lo);
+  $("wMonLab").textContent=pr.monthly===""?`Blank uses your ${money(lo)} monthly leftover`:"Clear it to use your monthly leftover";
+  if(document.activeElement!==$("wRet")) $("wRet").value=pr.ret;
+  const run=wProject(Math.max(yrs*12,600)), n=yrs*12;
+  const labels=[], net=[], inv=[], y0=new Date().getFullYear();
+  for(let i=0;i<=n;i+=(yrs<=3?1:12)){ labels.push(yrs<=3?new Date(y0,new Date().getMonth()+i,1).toLocaleDateString("en-CA",{month:"short",year:"2-digit"}):String(y0+i/12)); net.push(run.net[i]); inv.push(run.inv[i]); }
+  wChart($("wProjChart"),labels,[{pts:net,color:"--accent",fill:true},{pts:inv,color:"--gain",dash:true}],
+    {label:"Projected net worth",legend:`<div class="mixleg" style="padding:6px 4px 0;grid-template-columns:repeat(auto-fit,minmax(150px,max-content))">
+      <div style="border:0"><i class="dot" style="background:var(--accent)"></i><span>Net worth</span></div>
+      <div style="border:0"><i class="dot" style="background:var(--gain)"></i><span>Invested and saved</span></div></div>`});
+  // financial independence: invested money reaching 25 times a year of spending (the 4% rule of thumb)
+  const yearly=budgetTotals().out*12, target=yearly*25;
+  let fi="—";
+  if(yearly>0){ const k=run.inv.findIndex(v=>v>=target);
+    fi=k<0?"Not within 50 years at this pace":k===0?"Already there":`in about ${(k/12).toFixed(k<120?1:0)} years (${y0+Math.floor((new Date().getMonth()+k)/12)})`; }
+  const kv=(a,b)=>`<div class="kv"><span>${a}</span><b>${b}</b></div>`;
+  $("wProjKv").innerHTML=
+    kv(`Net worth in ${yrs} year${yrs===1?"":"s"}`,money(Math.round(run.net[n])))+
+    kv("Change from today",(run.net[n]-run.net[0]>=0?"+":"−")+money(Math.abs(Math.round(run.net[n]-run.net[0]))))+
+    kv("Invested and saved by then",money(Math.round(run.inv[n])))+
+    kv("Everything owed paid off",run.freeAt===null?(wTotals().liab?"Not at these payments":"Nothing owed"):`in ${run.freeAt<24?run.freeAt+" months":(run.freeAt/12).toFixed(1)+" years"}`)+
+    kv(`Financial independence <small style="color:var(--ink-faint)">(25× a year's spending, ${mk(target)})</small>`,fi)+
+    kv("Assumed saving",`${money(Math.round(run.monthly))}/mo at ${num(pr.ret)}%`);
+}
+function wRoom(){
+  const list=doc.wealth.assets.filter(a=>REG.includes(a.type));
+  $("wRoom").innerHTML=list.length?list.map(a=>`<div class="erow wrow rm" data-w="assets" data-wid="${a.id}">
+      <span class="nmro">${esc(a.name||aType(a.type)[1])} <small style="color:var(--ink-faint);font-weight:400">${aType(a.type)[1]}</small></span>
+      <span class="ro"><span class="mlabel">Value</span>${money(Math.round(num(a.value)))}</span>
+      <label class="fld"><span class="mlabel">Room left</span><input class="amt" type="number" step="100" data-f="room" value="${esc(a.room??"")}" placeholder="from CRA" aria-label="Contribution room left"></label>
+      <span class="ro l" style="font-size:13px">${num(a.room)>0?`${money(Math.round(num(a.room)))} you can still put in`:"Check CRA My Account"}</span></div>`).join("")
+    :`<p class="empty">Add a TFSA, RRSP, FHSA or RESP above to track how much room is left.</p>`;
+}
+function wFigures(){ wSnap(); safely(wStats); safely(wMix); safely(wHistory); safely(wGoalsPaint); safely(wProjection); }
+function renderWealth(){ wRows(); safely(wRoom); wFigures(); }
+
+(()=>{
+  const page=$("page-wealth");
+  page.addEventListener("input",e=>{
+    const t=e.target;
+    if(t.id==="wYears"){ doc.wealth.proj.years=+t.value; safely(wProjection); save(); return; }
+    if(t.id==="wMonthly"){ doc.wealth.proj.monthly=t.value; safely(wProjection); save(); return; }
+    if(t.id==="wRet"){ doc.wealth.proj.ret=t.value; safely(wProjection); save(); return; }
+    const row=t.closest("[data-w]"), f=t.dataset.f; if(!row||!f||t.tagName==="SELECT") return;
+    const it=doc.wealth[row.dataset.w].find(x=>x.id===row.dataset.wid); if(!it) return;
+    it[f]=t.value;
+    if(f==="room") safely(wRoom);
+    wFigures(); save();
+  });
+  page.addEventListener("change",e=>{
+    const t=e.target; if(t.tagName!=="SELECT") return;
+    const row=t.closest("[data-w]"); if(!row) return;
+    const it=doc.wealth[row.dataset.w].find(x=>x.id===row.dataset.wid); if(!it) return;
+    if(row.dataset.w==="assets"){
+      const was=aType(it.type)[3];
+      if(it.growth===""||it.growth===undefined||num(it.growth)===was) it.growth=aType(t.value)[3];
+    }
+    it.type=t.value; renderWealth(); save();
+  });
+  page.addEventListener("click",e=>{
+    const add=e.target.closest("[data-wadd]");
+    if(add){ const k=add.dataset.wadd, w=doc.wealth;
+      if(k==="assets") w.assets.push({id:id(),name:"",type:"savings",value:"",growth:2});
+      if(k==="liabs") w.liabs.push({id:id(),name:"",type:"mortgage",balance:"",apr:"",payment:""});
+      if(k==="goals") w.goals.push({id:id(),name:"",target:"",saved:"",by:""});
+      renderWealth(); save();
+      const host=$({assets:"wAssets",liabs:"wLiabs",goals:"wGoals"}[k]);
+      const last=host.querySelector(".erow:last-of-type .wn"); if(last) last.focus();
+      return; }
+    const kill=e.target.closest(".kill"), row=kill&&kill.closest("[data-w]");
+    if(row){ e.stopPropagation();
+      const list=doc.wealth[row.dataset.w], i=list.findIndex(x=>x.id===row.dataset.wid); if(i<0) return;
+      const [gone]=list.splice(i,1); renderWealth(); save();
+      undoToast(`Removed ${nameOf(gone,{assets:"asset",liabs:"liability",goals:"goal"}[row.dataset.w])}`,
+        ()=>{ list.splice(Math.min(i,list.length),0,gone); render(); });
+    }
+  });
+  let wr=0; addEventListener("resize",()=>{ if(route!=="wealth") return; clearTimeout(wr);
+    wr=setTimeout(()=>{ safely(wHistory); safely(wProjection); },150); });
+})();
+
+/* ============================================================
    11. WELCOME DEMO
    ============================================================ */
 function drawDemo(animate){
@@ -3332,9 +3807,9 @@ function applyTheme(){
 /* ============================================================
    13. ROUTER
    ============================================================ */
-const PAGES=["welcome","overview","forecast","whatif","debt","report"];
+const PAGES=["welcome","overview","forecast","whatif","debt","wealth","report"];
 const TITLES={welcome:"Waterline — find the day you go under",overview:"Overview — Waterline",report:"Report — Waterline",
-  forecast:"Forecast — Waterline",whatif:"What-if — Waterline",debt:"Debt — Waterline"};
+  forecast:"Forecast — Waterline",whatif:"What-if — Waterline",debt:"Debt — Waterline",wealth:"Wealth — Waterline"};
 function go(){
   const want=location.hash.replace(/^#\/?/,"").split("/")[0];
   const ALIAS={budget:"overview"};               // old links and bookmarks keep working
@@ -3342,7 +3817,7 @@ function go(){
   route=PAGES.includes(asked)?asked:(doc.seen?"overview":"welcome");
   PAGES.forEach(p=>$("page-"+p).classList.toggle("on",p===route));
   document.querySelectorAll("#routes a, #navMenu .mitem").forEach(a=>a.classList.toggle("on",a.dataset.r===route));
-  const pn={overview:"Overview",forecast:"Forecast",whatif:"What-if",debt:"Debt",report:"Report",welcome:"About"}[route]||"";
+  const pn={overview:"Overview",forecast:"Forecast",whatif:"What-if",debt:"Debt",wealth:"Wealth",report:"Report",welcome:"About"}[route]||"";
   $("pageName").textContent=pn;
   document.title=TITLES[route];
   render();
@@ -3355,6 +3830,7 @@ function render(){
   if(route==="forecast") safely(renderForecast);
   if(route==="whatif")   safely(renderWhatIf);
   if(route==="debt")     safely(renderDebt);
+  if(route==="wealth")   safely(renderWealth);
   if(route==="report")   safely(renderReport);
   if(route==="welcome")  { safely(paintWelcome); safely(()=>drawDemo(true)); safely(armReveal); }
   save();
@@ -3514,7 +3990,7 @@ function loadLocal(){ try{ const raw=local.get(KEY); return raw?JSON.parse(raw):
    ============================================================ */
 const BKEY="waterline:backups", BMAX=20;
 const worthKeeping=d=>!!d&&Array.isArray(d.scenarios)&&
-  (hasEntries(d)||(d.debts||[]).length>0||d.scenarios.some(sc=>(+sc.balance||0)!==0));
+  (hasEntries(d)||(d.debts||[]).length>0||!!(d.wealth&&(d.wealth.assets||[]).length+(d.wealth.liabs||[]).length+(d.wealth.goals||[]).length)||d.scenarios.some(sc=>(+sc.balance||0)!==0));
 const realDoc=()=>sandbox?sandbox.real:doc;
 function loadBackups(){ try{ const r=JSON.parse(local.get(BKEY)||"[]"); return Array.isArray(r)?r:[]; }catch(e){ return []; } }
 function storeBackups(list){
@@ -3666,7 +4142,8 @@ function fingerprint(d){
   return JSON.stringify({sc:d.scenarios.map(slim),
     dt:(d.debts||[]).map(x=>[x.name||"",+x.balance||0,+x.apr||0,+x.minimum||0]),
     dp:d.debtPlan?[!!d.debtPlan.on,d.debtPlan.start||"",d.debtPlan.replace!==false]:null,
-    sp:d.split,pm:d.payoffMonths});
+    sp:d.split,pm:d.payoffMonths,
+    w:d.wealth?[d.wealth.assets,d.wealth.liabs,d.wealth.goals,d.wealth.proj,d.wealth.history]:null});
 }
 function planBlurb(d,at){
   if(!hasEntries(d)) return "Empty.";
