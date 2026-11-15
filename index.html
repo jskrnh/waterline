@@ -128,18 +128,6 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
 .themebtn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;
   border:1px solid var(--line);border-radius:var(--pill);background:transparent;color:var(--ink-soft);cursor:pointer}
 .themebtn:hover{color:var(--ink);border-color:var(--ink-faint)}
-.acctbtn{font-family:var(--font);font-size:12.5px;background:var(--accent);color:#fff;
-  padding:6px 13px;border-radius:var(--pill);border:0;cursor:pointer;white-space:nowrap}
-:root[data-theme="dark"] .acctbtn{color:#06202b}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .acctbtn{color:#06202b}}
-/* .ghost must win against the dark-mode .acctbtn colour rules above, which are
-   more specific than a bare .acctbtn.ghost and were painting Sign out near-black. */
-.acctbtn.ghost,
-:root[data-theme="dark"] .acctbtn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]) .acctbtn.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
-}
-.acctbtn.ghost:hover{color:var(--ink);border-color:var(--ink-faint)}
 .whoami{font-size:12.5px;color:var(--ink);white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
 
 /* ---- account menu ---- */
@@ -750,6 +738,14 @@ svg.cwmini:active{cursor:grabbing}
 .seedpill b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .seedpill b.neg{color:var(--signal)}
 .seedpill .pd{color:var(--ink-faint)}
+.seedpill .ps{display:none}
+.seedpill.stale{border-color:var(--amber)}
+.seedpill.stale .ed{background:var(--amber-wash);color:var(--amber)}
+.seedroll{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 22px 18px;border-top:1px solid var(--hair);
+  background:var(--amber-wash);font-size:14px;color:var(--ink-soft);line-height:1.45;
+  border-bottom-left-radius:inherit;border-bottom-right-radius:inherit}
+.seedroll p{flex:1 1 260px;margin:0}
+@media(max-width:420px){ .seedpill .pl{display:none} .seedpill .ps{display:inline} }
 .seedpill .ed{font-size:12.5px;font-weight:500;color:var(--accent);background:var(--accent-wash);
   padding:3px 10px;border-radius:var(--pill);flex:none}
 #seedCard{scroll-margin-top:80px}
@@ -784,7 +780,6 @@ tr.dip td{background:var(--signal-wash)}
 tr.trough td{background:var(--signal);color:#fff}
 tr.trough td b,tr.trough .pillchip{color:#fff;border-color:rgba(255,255,255,.5)}
 td.mv{color:var(--ink-soft)} td.bal{font-weight:600;white-space:nowrap} td.dt{white-space:nowrap;color:var(--ink-soft)}
-.catdot{display:inline-block;width:7px;height:7px;border-radius:var(--pill);margin-right:7px;vertical-align:middle}
 
 /* ---- one-off chips ---- */
 .pillchip{display:inline-flex;align-items:center;gap:4px;background:var(--accent-wash);
@@ -1085,7 +1080,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 .sheetpage table{width:100%;border-collapse:collapse;font-size:9.4pt}
 .sheetpage th{text-align:left;font-weight:500;color:#6e6e73;font-size:8pt;letter-spacing:.01em;
   text-transform:uppercase;padding:0 0 5px;border-bottom:1px solid #d2d2d7}
-.sheetpage td{padding:4.5px 0;border-bottom:1px solid #e8e8ed;font-variant-numeric:tabular-nums}
+.sheetpage td{padding:4.5px 0;border-bottom:1px solid #e8e8ed;font-variant-numeric:tabular-nums;font-size:inherit;letter-spacing:0}
 .sheetpage th.r,.sheetpage td.r{text-align:right}
 .sheetpage td .dot{display:inline-block;width:6px;height:6px;border-radius:980px;margin-right:6px;vertical-align:middle}
 .sheetpage .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -1103,7 +1098,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 @media screen and (max-width:1000px){
   .sheetpage:not(.measure){width:100%;min-height:0;padding:22px 20px;font-size:14px;line-height:1.45}
   .sheetpage:not(.measure) h2{font-size:24px} .sheetpage:not(.measure) h3{font-size:16px}
-  .sheetpage:not(.measure) table{font-size:13px}
   .sheetpage:not(.measure) .rstats{grid-template-columns:repeat(2,1fr)}
   .sheetpage:not(.measure) .two{grid-template-columns:1fr}
   .sheetpage:not(.measure) .rsplit{flex-direction:column;align-items:stretch}
@@ -1112,14 +1106,19 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .sheetpage:not(.measure) table{font-size:12px}
   .sheetpage:not(.measure) .rhead{flex-wrap:wrap}
   .sheetpage:not(.measure) section{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .sheetpage:not(.measure) td,.sheetpage:not(.measure) th{padding-right:8px;white-space:nowrap}
+  .sheetpage:not(.measure) td,.sheetpage:not(.measure) th{padding-right:8px}
+  .sheetpage:not(.measure) th,.sheetpage:not(.measure) td:not(.r){white-space:normal!important;max-width:none!important}
+  .sheetpage:not(.measure) td.r{white-space:nowrap}
+  .sheetpage:not(.measure) td:last-child,.sheetpage:not(.measure) th:last-child{padding-right:0}
+  @media(max-width:420px){ .sheetpage:not(.measure){padding:18px 14px} .sheetpage:not(.measure) table{font-size:11.5px}
+    .sheetpage:not(.measure) td,.sheetpage:not(.measure) th{padding-right:6px} }
   .sheetpage:not(.measure) .rhead .bk{font-size:18px} .sheetpage:not(.measure) .rhead .ti{font-size:13px}
 }
 
 @page{size:A4;margin:13mm}
 @media print{
   html,body{background:#fff!important}
-  nav.top,.foot,.veil,.reportbar,#page-report .pagehead,.noprint,#rptMeasure{display:none!important}
+  nav.top,.foot,.veil,.reportbar,#page-report .pagehead,#rptMeasure{display:none!important}
   main{padding:0!important}
   .wide{max-width:none;padding:0}
   .paper{display:block}
@@ -1152,13 +1151,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 .erow.wrow .ro.l{text-align:left}
 .erow.wrow.linked{background:var(--paper)}
 .erow.wrow.linked .nmro{font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.erow.wrow .golink{justify-self:end;color:var(--accent);font-size:13px;text-decoration:none;white-space:nowrap}
 .erow.wrow .gstat{text-align:right;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
 .erow.wrow .gstat.ok{color:var(--gain)} .erow.wrow .gstat.late{color:var(--signal)}
 .erow.wrow .gbar{grid-column:1/-1;height:6px;border-radius:var(--pill);background:var(--hair);overflow:hidden;margin:2px 0 4px}
 .erow.wrow .gbar i{display:block;height:100%;background:var(--gain);border-radius:var(--pill)}
 .wsub{padding:10px 22px;font-size:12.5px;color:var(--ink-faint);background:var(--paper);border-bottom:1px solid var(--hair)}
-.wsub a{color:var(--accent)}
+.wsub a{color:var(--accent);text-decoration:underline}
 .wfoot{display:flex;justify-content:space-between;gap:12px;padding:14px 22px;border-top:1px solid var(--hair);font-size:14px;color:var(--ink-soft)}
 .wfoot b{color:var(--ink);font-variant-numeric:tabular-nums}
 .mixbar{display:flex;height:14px;border-radius:var(--pill);overflow:hidden;margin:22px 22px 8px;background:var(--hair)}
@@ -1179,7 +1177,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   border:1px solid var(--line);background:var(--paper);color:var(--ink);font-variant-numeric:tabular-nums}
 .projctl input[type=range]{margin:10px 0 0}
 .projctl .bigfig{font-size:26px}
-.projkv{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 28px;padding:6px 22px 18px}
+.projkv{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 28px;padding:6px 22px 18px}
 .projkv .kv{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--hair);font-size:14px}
 .projkv .kv span{color:var(--ink-soft)} .projkv .kv b{font-variant-numeric:tabular-nums;text-align:right}
 .ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;padding:18px 22px 22px}
@@ -1209,7 +1207,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .erow.wrow .ro{text-align:left}
   .erow.wrow .gstat{text-align:left;align-self:end}
   .erow.wrow .kill{grid-column:3;grid-row:1;justify-self:end;align-self:center;font-size:22px}
-  .erow.wrow .golink{grid-column:1/-1;justify-self:start}
   .wsub,.wfoot{padding-left:16px;padding-right:16px}
   .mixbar{margin:18px 16px 6px} .mixleg{padding:8px 16px 16px}
   .projctl{grid-template-columns:1fr 1fr;padding:16px}
@@ -1247,44 +1244,44 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       </button>
       <button class="themebtn" id="themeBtn" title="Theme" aria-label="Switch theme"></button>
       <div class="acct" id="acct">
-        <button class="acctrig" id="acctBtn" aria-label="Account menu" aria-haspopup="menu" aria-expanded="false" aria-controls="acctMenu">
+        <button class="acctrig" id="acctBtn" aria-label="Account menu" aria-expanded="false" aria-controls="acctMenu">
           <span class="avatar" id="avatar" aria-hidden="true"><svg viewBox="0 0 20 20" width="15" height="15"><circle cx="10" cy="7.2" r="3.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.8 17c.9-3.2 3.3-4.9 6.2-4.9s5.3 1.7 6.2 4.9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
           <span class="whoami" id="whoami">Account</span>
           <svg class="chev" viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <div class="acctmenu" id="acctMenu" role="menu" hidden>
+        <div class="acctmenu" id="acctMenu" hidden>
           <div class="ahead">
             <b id="acctName">Not signed in</b>
             <span id="acctSub">Your plan is saved on this device only.</span>
-            <button class="btn fill sm" id="signInBtn" role="menuitem">Sign in</button>
+            <button class="btn fill sm" id="signInBtn">Sign in</button>
           </div>
-          <a class="aitem" href="#/whatif" role="menuitem">
+          <a class="aitem" href="#/whatif">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M5 4v4a3 3 0 003 3h7M12 8l3 3-3 3M5 16v-2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <span>What-if<small>Try a change before you make it</small></span></a>
-          <a class="aitem" href="#/report" role="menuitem">
+          <a class="aitem" href="#/report">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M5 2.5h6.5L15 6v11.5H5z M11.5 2.5V6H15 M7.5 10h5M7.5 13h5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
             <span>Report<small>Export a two-page PDF</small></span></a>
-          <button class="aitem" id="openBackups" role="menuitem">
+          <button class="aitem" id="openBackups">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M3.5 6.5h13v9.5h-13zM2.8 3.8h14.4v2.7H2.8zM8 9.5h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
             <span>Backups<small id="bkMenuSub">Save, download or restore your plan</small></span></button>
-          <a class="aitem" href="#/welcome" role="menuitem">
+          <a class="aitem" href="#/welcome">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 9v5M10 6.2v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
             <span>About</span></a>
-          <a class="aitem" href="/privacy.html" role="menuitem">
+          <a class="aitem" href="/privacy.html">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M10 2.5 16 5v4.5c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
             <span>Privacy</span></a>
-          <a class="aitem" href="/security.html" role="menuitem">
+          <a class="aitem" href="/security.html">
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><rect x="4" y="8.5" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6.8 8.5V6.3a3.2 3.2 0 016.4 0v2.2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
             <span>Security</span></a>
-          <button class="aitem" id="signOutBtn" role="menuitem" hidden>
+          <button class="aitem" id="signOutBtn" hidden>
             <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M8 3.5H4.5v13H8M12 6.5 15.5 10 12 13.5M15.5 10H8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <span>Sign out</span></button>
           <div class="adanger">
             <span class="alabel">Danger zone</span>
-            <button class="aitem danger" id="resetBtn" role="menuitem">
+            <button class="aitem danger" id="resetBtn">
               <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M4 5.5h12M8 5.5V3.5h4v2M5.5 5.5l.8 11h7.4l.8-11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span>Delete all my data<small id="resetSub">Every plan, budget and debt</small></span></button>
-            <button class="aitem danger" id="deleteBtn" role="menuitem" hidden>
+            <button class="aitem danger" id="deleteBtn" hidden>
               <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="10" cy="7" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3.8 16.5c.8-3 3.3-4.6 6.2-4.6M12.5 12.5l4 4M16.5 12.5l-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
               <span>Delete account<small>Removes your saved plan and signs out</small></span></button>
           </div>
@@ -1292,11 +1289,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       </div>
     </span>
   </div>
-  <div class="navmenu" id="navMenu" role="menu" hidden>
-      <a class="mitem" href="#/overview" data-r="overview" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3.5 4.5h13v11h-13zM3.5 8.5h13M8 8.5v7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Overview<small>Income, bills and where it goes</small></span></a>
-      <a class="mitem" href="#/forecast" data-r="forecast" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3 15.5h14M4 12l3.5-4 3 2.5L16 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Forecast<small>Day by day, and when you go under</small></span></a>
-      <a class="mitem" href="#/debt" data-r="debt" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 8.5h14M6 12h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>Debt<small>Every balance and the way out</small></span></a>
-      <a class="mitem" href="#/wealth" data-r="wealth" role="menuitem"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3 16.5h14M4.5 16.5V10M8.5 16.5V7M12.5 16.5V9M16 16.5V4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Wealth<small>Net worth, goals and where it's heading</small></span></a>
+  <div class="navmenu" id="navMenu" hidden>
+      <a class="mitem" href="#/overview" data-r="overview"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3.5 4.5h13v11h-13zM3.5 8.5h13M8 8.5v7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Overview<small>Income, bills and where it goes</small></span></a>
+      <a class="mitem" href="#/forecast" data-r="forecast"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3 15.5h14M4 12l3.5-4 3 2.5L16 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Forecast<small>Day by day, and when you go under</small></span></a>
+      <a class="mitem" href="#/debt" data-r="debt"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 8.5h14M6 12h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>Debt<small>Every balance and the way out</small></span></a>
+      <a class="mitem" href="#/wealth" data-r="wealth"><svg viewBox="0 0 20 20" width="19" height="19" aria-hidden="true"><path d="M3 16.5h14M4.5 16.5V10M8.5 16.5V7M12.5 16.5V9M16 16.5V4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Wealth<small>Net worth, goals and where it's heading</small></span></a>
   </div>
 </nav>
 
@@ -1443,7 +1440,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       </div>
       <button class="seedpill" id="seedPill" title="Change your starting balance">
         <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 15.5h14M4.5 15.5V9m3.7 6.5V9m3.6 6.5V9m3.7 6.5V9M2.8 7.2 10 3.3l7.2 3.9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        <span>Starting balance <b class="pb"></b> <span class="pd"></span></span>
+        <span><span class="pl">Starting balance</span><span class="ps">Balance</span> <b class="pb"></b> <span class="pd"></span></span>
         <span class="ed">Edit</span>
       </button>
     </div>
@@ -1461,16 +1458,17 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
           <button class="btn fill sm" id="seedDone" style="margin-left:auto">Done</button></header>
         <div class="body grid g2">
           <div>
-            <label class="tiny" for="seedBal" style="display:block;margin-bottom:6px">Balance today</label>
+            <label class="tiny" for="seedBal" style="display:block;margin-bottom:6px">Balance</label>
             <input id="seedBal" type="number" step="0.01"
               style="width:100%;font-family:var(--font);font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--ink);font-variant-numeric:tabular-nums">
           </div>
           <div>
-            <label class="tiny" for="seedDate" style="display:block;margin-bottom:6px">Starting from</label>
+            <label class="tiny" for="seedDate" style="display:block;margin-bottom:6px">On this date</label>
             <input id="seedDate" type="date"
               style="width:100%;font-family:var(--font);font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--ink)">
           </div>
         </div>
+        <div class="seedroll" id="seedRoll" hidden><p id="seedRollTxt"></p><button class="btn fill sm" id="seedRollBtn"></button></div>
       </div>
 
       <div class="card money in">
@@ -1543,7 +1541,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
         repeat — a repair, a refund, a fee — straight onto the date they land.</p>
       <button class="seedpill" id="fcSeedPill" title="Change your starting balance">
         <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 15.5h14M4.5 15.5V9m3.7 6.5V9m3.6 6.5V9m3.7 6.5V9M2.8 7.2 10 3.3l7.2 3.9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        <span>Starting balance <b class="pb"></b> <span class="pd"></span></span>
+        <span><span class="pl">Starting balance</span><span class="ps">Balance</span> <b class="pb"></b> <span class="pd"></span></span>
         <span class="ed">Edit</span>
       </button>
     </div>
@@ -1961,7 +1959,7 @@ try{
 let sb=null, user=null;
 if(SUPABASE_URL&&SUPABASE_ANON_KEY){
   try{
-    const{createClient}=await import("https://esm.sh/@supabase/supabase-js@2");
+    const{createClient}=await import("https://esm.sh/@supabase/supabase-js@2.118.0");
     sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
   }catch(err){ console.error("Waterline: Supabase client failed to load.",err); }
 }
@@ -3578,7 +3576,7 @@ function goalNeed(g){
   const left=Math.max(0,num(g.target)-num(g.saved));
   if(!left) return{left:0,mo:0,months:0};
   if(!g.by) return{left,mo:null,months:null};
-  const t=new Date(), b=parseD(g.by);
+  const t=new Date(); t.setHours(0,0,0,0); const b=parseD(g.by);
   const months=Math.max(1,(b.getFullYear()-t.getFullYear())*12+b.getMonth()-t.getMonth());
   return{left,mo:left/months,months,late:b<t};
 }
@@ -3959,10 +3957,14 @@ function save(){
     local.set(KEY,JSON.stringify(doc));
     dailyBackup();
     if(sb&&user){
-      const sy=readSync();
-      if(sy&&sy.uid===user.id&&sy.fp===fp) return;   // the account already has exactly this; a stale tab never overwrites it
+      const sy=readSync(), mine=sy&&sy.uid===user.id&&sy.at;
+      if(mine&&sy.fp===fp) return;                   // the account already has exactly this
       const at=new Date().toISOString();
-      const{error}=await sb.from("plans").upsert({user_id:user.id,data:doc,updated_at:at});
+      // replace only the copy this device last synced; if another device saved since, reconcile (which keeps a backup)
+      const{data,error}=await (mine
+        ? sb.from("plans").update({data:doc,updated_at:at}).eq("user_id",user.id).eq("updated_at",sy.at).select("user_id")
+        : sb.from("plans").upsert({user_id:user.id,data:doc,updated_at:at}));
+      if(!error&&mine&&!(data&&data.length)){ if(syncing) setTimeout(save,2000); else syncWithAccount(); return; }
       if(!error) writeSync(fp,at);
       flag(error?"Saved on this device only":"Saved to your account");
     } else if(edited) flag("Saved on this device");
@@ -4183,7 +4185,7 @@ async function syncWithAccount(){
     const real=sandbox?sandbox.real:doc;
     const lfp=fingerprint(real), sy=readSync(), mine=sy&&sy.uid===user.id;
     if(!res){                                         // nothing in the account yet
-      if(worthKeeping(real)){ await pushCloud(real); writeSync(lfp,new Date().toISOString()); }
+      if(worthKeeping(real)) await pushCloud(real);
       return;
     }
     const cloud=normalise(res.doc), cfp=fingerprint(cloud);
@@ -4195,7 +4197,7 @@ async function syncWithAccount(){
       writeSync(cfp,res.at); return;
     }
     if(!cloudEdited){                                 // the account is just behind
-      await pushCloud(real); writeSync(lfp,new Date().toISOString()); return;
+      await pushCloud(real); return;
     }
     // both edited since the last sync: newest edit wins, the other copy is kept in Backups
     const localAt=Date.parse(real.savedAt||0)||0, cloudAt=Date.parse(res.at||0)||0;
@@ -4205,7 +4207,7 @@ async function syncWithAccount(){
       writeSync(cfp,res.at);
     } else {
       backup("Account copy, replaced by newer edits on this device",{from:cloud});
-      await pushCloud(real); writeSync(lfp,new Date().toISOString());
+      await pushCloud(real);
       flag("Your newer edits on this device were saved. The older account copy is in Backups.",3600);
     }
   } catch(e){ console.error("Waterline:",e); }
@@ -4259,7 +4261,8 @@ document.addEventListener("click",e=>{ const b=e.target.closest(".modeswitch [da
 function closeNavMenu(){ $("navMenu").hidden=true; $("menuBtn").setAttribute("aria-expanded","false"); $("menuBtn").setAttribute("aria-label","Open pages menu"); }
 $("menuBtn").addEventListener("click",e=>{
   e.stopPropagation(); const open=$("navMenu").hidden;
-  if(open){ closeMenu&&closeMenu(); $("navMenu").hidden=false; $("menuBtn").setAttribute("aria-expanded","true"); $("menuBtn").setAttribute("aria-label","Close pages menu"); }
+  if(open){ closeMenu&&closeMenu(); $("navMenu").hidden=false; $("menuBtn").setAttribute("aria-expanded","true"); $("menuBtn").setAttribute("aria-label","Close pages menu");
+    if(e.detail===0) $("navMenu").querySelector("a").focus(); }
   else closeNavMenu();
 });
 document.addEventListener("click",e=>{ if(!$("navMenu").hidden&&!e.target.closest("#navMenu,#menuBtn")) closeNavMenu(); },true);
@@ -4689,15 +4692,39 @@ window.__waterline={get doc(){return doc}, project:(o)=>project(state,o), debtPl
 function fillSeed(){ $("seedBal").value=state.balance; $("seedDate").value=state.start; paintSeed(); }
 /* The card shows on a fresh plan; after that it folds into a pill under the page title. */
 let seedOpen=false;
+/* The balance is as of its date. Once that's a week old, the forecast starts in the past,
+   so the pill says so and the card offers the balance the plan expects today. */
+function seedAge(){ if(!doc.seedSet||!state.start) return 0;
+  const t=new Date(); t.setHours(0,0,0,0); return Math.round((t-parseD(state.start))/864e5); }
+function expectedToday(){
+  const t=new Date(); t.setHours(0,0,0,0); let p=null; try{ p=project(); }catch(e){}
+  if(!p||t>p.to) return null;
+  let bal=p.series[0].bal; for(const s of p.series){ if(s.date>t) break; bal=s.bal; } return bal;
+}
 function paintSeed(){
   const open=!doc.seedSet||seedOpen;
   $("seedCard").hidden=!open;
   const bal=+state.balance||0, when=state.start?parseD(state.start).toLocaleDateString("en-CA",{month:"short",day:"numeric"}):"";
+  const age=seedAge(), stale=age>=7;
   ["seedPill","fcSeedPill"].forEach(pid=>{ const p=$(pid); if(!p) return;
     p.hidden = pid==="seedPill" ? open : false;
+    p.classList.toggle("stale",stale);
     const b=p.querySelector(".pb"); b.textContent=money2(bal); b.classList.toggle("neg",bal<0);
-    p.querySelector(".pd").textContent=when?`· from ${when}`:""; });
+    p.querySelector(".pd").textContent=when?`· ${stale?`${age} days old`:`from ${when}`}`:"";
+    p.querySelector(".ed").textContent=stale?"Update":"Edit"; });
+  const exp=stale?expectedToday():null;
+  $("seedRoll").hidden=!stale;
+  if(stale){
+    $("seedRollTxt").textContent=`This balance is from ${when}, ${age} days ago, so the forecast starts there. `+
+      (exp===null?"Enter today's balance and date to bring it up to date.":`Going by your plan, today it should be about ${money2(exp)}.`);
+    $("seedRollBtn").hidden=exp===null;
+    if(exp!==null){ $("seedRollBtn").textContent=`Use ${money2(exp)} from today`; $("seedRollBtn").dataset.v=Math.round(exp*100)/100; }
+  }
 }
+$("seedRollBtn").addEventListener("click",e=>{
+  state.balance=+e.currentTarget.dataset.v; state.start=iso(new Date()); calMonth=null;
+  fillSeed(); render(); save(); flag("Starting balance moved to today");
+});
 function openSeed(){
   seedOpen=true; paintSeed();
   const c=$("seedCard"); c.classList.remove("reveal"); void c.offsetWidth; c.classList.add("reveal");

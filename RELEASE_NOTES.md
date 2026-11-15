@@ -9,6 +9,44 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.1.1 — 15 November 2026
+
+**Fixes and clean-up: sync keeps every edit, the forecast tells you when your balance is out of date, and the Report prints at the right size.**
+
+### Fixed
+
+- **Edits made offline could be lost.** If an upload to your account failed, the app still marked
+  the device as up to date. When it next caught up with the account, the unsent edit was replaced.
+  Failed uploads are now retried, and the edit is kept.
+- **A device that was behind could overwrite newer changes.** Saving now only replaces the account
+  copy this device last saw. If another device saved in between, the two are reconciled as usual:
+  the newest edit wins and the other copy goes to Backups.
+- **Report tables were the wrong size.** A general table style made Report table text larger than
+  designed, on screen and in the PDF, so fewer rows fit. For example, "Coming up" could stop before
+  your lowest-point day. Tables now print at their intended size.
+- **Report tables on phones** fit the screen instead of cutting off columns.
+- **A goal due today** showed "Date passed".
+
+### Improved
+
+- **Old starting balances are flagged.** Your starting balance is as of its date, so after a few
+  weeks the forecast starts in the past. Once it's a week old, the pill shows its age with an
+  **Update** button, and the card offers the balance your plan expects today, ready to use with one
+  tap.
+- **The starting balance pill** shows its date on small phones instead of cutting it off.
+- **Keyboard and screen readers:** the account and page menus are now plain open/close buttons,
+  without menu roles that promised arrow-key navigation they didn't have. Opening the page menu
+  from the keyboard moves focus into it. The "edit there" link on the Wealth page is underlined so
+  it stands out from the text around it.
+- **Wealth projection** figures have more room on wide screens.
+
+### Under the hood
+
+- The account library is pinned to version 2.118.0, so a new release can't change the live site
+  unannounced.
+- Removed unused styles left over from earlier versions.
+- Offline cache bumped so phones pick up the update.
+
 ## 3.1.0 — 12 November 2026
 
 **A first look at Wealth: net worth, assets, liabilities, goals and where it's all heading.**
