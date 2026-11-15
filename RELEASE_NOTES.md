@@ -35,6 +35,11 @@ runs entirely in your browser and never asks for a bank login.
 - While the debt payoff plan is in your forecast, it pays your loans and cards, so their own
   schedules pause until it's finished.
 
+### Fixed
+
+- Phones and the Android app now pick up this update straight away, instead of showing the
+  previous version until the app is closed and reopened.
+
 ## 3.2.0 — 15 November 2026
 
 **Import your bank statement, track more than one account, and get a net worth page in your report.**
