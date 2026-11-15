@@ -9,6 +9,32 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.3.0 — 15 November 2026
+
+**Loan and credit card schedules: enter the terms, get the full amortization table, and every payment lands in your forecast.**
+
+### New
+
+**Loans and cards.** On the Debt page, a new **Loans and cards** card sits under What you owe.
+- **Add a loan:** the amount borrowed, the rate, the term (years or months), how often you pay
+  (monthly, bi-weekly or weekly) and the date of the first payment. Waterline works out the
+  payment, the number of payments, the payoff date, the total interest and what you owe today.
+- **Add a credit card:** the balance, the rate and the monthly payment you plan to make. Waterline
+  shows how many months it takes and what it costs. If the payment doesn't cover the interest, it
+  says so and tells you the amount you need to beat.
+- **The schedule:** tap **Show the schedule** for every payment, split into interest and principal,
+  with the balance after each one. Payments already made are greyed out and the next one is
+  highlighted. Switch to **By year** for a summary, or **Download CSV** to open it in a spreadsheet.
+- **In your forecast:** every payment goes into the Forecast calendar and list on its date, until
+  the loan or card is paid off. Turn the **In forecast** switch off to keep one out. If you have
+  more than one account, choose which account pays it.
+- **Counted once:** if a bill on Overview looks like the same payment, the loan says so and offers
+  to remove the bill, so it isn't counted twice.
+- What's still owed on each loan and card counts in the Debt page totals, the payoff planner,
+  the Wealth page and the Report. The Overview budget counts their payments as debt payments.
+- While the debt payoff plan is in your forecast, it pays your loans and cards, so their own
+  schedules pause until it's finished.
+
 ## 3.2.0 — 15 November 2026
 
 **Import your bank statement, track more than one account, and get a net worth page in your report.**

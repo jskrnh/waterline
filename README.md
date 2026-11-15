@@ -426,3 +426,19 @@ sign-in works because the page runs in Chrome rather than a WebView.
 ### Report
 - A third page (net worth, assets, liabilities, goals, projection) appears when the Wealth page has
   anything on it; otherwise the report stays two pages.
+
+---
+
+## Update — November 2026: loan and card schedules (3.3.0)
+
+- `doc.loans: [{id, kind: "loan"|"card", name, amount, apr, term, unit: "y"|"m", payment, first, freq, acct, fc}]`.
+  A loan uses `term`/`unit`/`freq` (monthly, biweekly, weekly) and its payment is computed; a card uses
+  `payment` and is always monthly. `first` is the first payment date. `fc` puts the payments in the forecast.
+- `amortize(L)` builds the schedule (cached per loan): standard annuity payment rounded to the cent, interest
+  rounded each period, the last payment settles what's left. Cards that can't clear return `err: "low"`.
+- `loanDebts()` turns each one into a virtual debt (balance owed today, rate, monthly-equivalent payment) and
+  `debtFacts()` includes them, so the planner, Wealth and Report pick them up without changes.
+- `project()` pushes each payment with `freq: "loan"|"card"`; `budgetTotals()` adds them to debt payments.
+  Both skip loans while the debt plan runs, because the plan already pays them.
+- The fingerprint only includes `ln` when there are loans, so plans without them keep the same fingerprint.
+

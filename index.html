@@ -934,6 +934,36 @@ td.mv{color:var(--ink-soft)} td.bal{font-weight:600;white-space:nowrap} td.dt{wh
 .erow.drow .mlabel{display:none}
 .erow.drow .cost{text-align:right;font-size:14px;font-weight:500;align-self:center;font-variant-numeric:tabular-nums}
 .erow.drow .cost.hot{color:var(--signal)} .erow.drow .cost.cool{color:var(--gain)}
+/* loans and cards */
+.lnrow{padding:16px 22px 14px;border-bottom:1px solid var(--hair)}
+.lnhead{display:flex;align-items:center;gap:10px}
+.lnkind{flex:none;font-size:11.5px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--debt);
+  background:color-mix(in srgb,var(--debt) 10%,var(--panel));border-radius:var(--pill);padding:3px 9px}
+.lnrow input,.lnrow select{width:100%;min-width:0;font-family:var(--font);font-size:15px;letter-spacing:-.005em;
+  color:var(--ink);background:var(--paper);border:1px solid transparent;border-radius:9px;padding:8px 10px}
+.lnrow input:focus,.lnrow select:focus{outline:none;border-color:var(--accent);background:var(--panel);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent)}
+.lnrow input.amt{text-align:right;font-weight:500;font-variant-numeric:tabular-nums}
+.lnhead input.lnname{flex:1;font-weight:600;font-size:16px}
+.lnfc{display:flex;align-items:center;gap:8px;flex:none;font-size:13px;color:var(--ink-faint);cursor:pointer}
+.lnfc .switch{margin-left:0}
+.lngrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
+.lngrid .mlabel{display:block;font-size:11.5px;color:var(--ink-faint);letter-spacing:0;margin-bottom:4px}
+.lnterm{display:grid;grid-template-columns:minmax(0,1fr) 84px;gap:6px}
+.lnsum{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:14px;font-size:13px;color:var(--ink-faint)}
+.lnsum b{display:block;font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.lnsum .note{flex-basis:100%;font-size:13.5px;padding:10px 14px}
+.lnsum .note .chip{margin:8px 0 0}
+.lnbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.lnbar .linkbtn{padding:4px 0}
+.lnsched{margin-top:12px;border:1px solid var(--hair);border-radius:var(--r-md);max-height:440px;overflow:auto}
+.lnsched table th{position:sticky;top:0;background:var(--panel);z-index:1}
+.lnsched td,.lnsched th{padding:8px 14px;font-size:13.5px;white-space:nowrap}
+.lnsched tr.past td{color:var(--ink-faint)}
+.lnsched tr.next td{background:var(--accent-wash);font-weight:600}
+.lnsched tfoot td{font-weight:600;border-bottom:0}
+.lnadd{display:grid;grid-template-columns:1fr 1fr}
+.lnadd .addrow+.addrow{border-left:1px solid var(--hair)}
 .planner{display:grid;grid-template-columns:1.1fr 1fr}
 .planner .left{padding:26px 28px;border-right:1px solid var(--hair)}
 .planner .right{padding:26px 28px;background:var(--paper)}
@@ -1046,6 +1076,9 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .erow.drow .mlabel{display:block;font-size:11px;color:var(--ink-faint);letter-spacing:0;margin-bottom:3px}
   .erow.drow .kill{grid-area:del;justify-self:start;font-size:14px;font-weight:500;color:var(--signal);padding:4px 0}
   .erow.drow .kill::after{content:" Remove"}
+  .lnrow{padding:14px 16px}
+  .lngrid{grid-template-columns:1fr 1fr}
+  .lnfc>span:first-child{display:none}
   .offbox{grid-template-columns:1fr 1fr;gap:9px;padding:16px}
   .offbox .wide-f{grid-column:1/-1}
   .offbox .acts{grid-column:1/-1}
@@ -1802,6 +1835,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
         <button class="addrow" data-add="debt">Add a debt</button>
       </div>
 
+      <div class="card" id="loanCard">
+        <header><h2 class="h3">Loans and cards</h2><span class="sub">enter the terms and get the full payment schedule</span><span class="fig" id="loanTot"></span></header>
+        <div id="loanList"></div>
+        <div class="lnadd"><button class="addrow" data-ladd="loan">Add a loan</button><button class="addrow" data-ladd="card">Add a credit card</button></div>
+      </div>
+
       <div class="card">
         <header><h2 class="h3">Clear it by</h2><span class="sub">pick a finish line and see the payment it takes</span></header>
         <div class="planner">
@@ -2116,7 +2155,7 @@ function seedState(){
 }
 function baseDoc(sc,debts){
   return{ scenarios:[sc], activeId:sc.id, baseId:sc.id, compare:false,
-    debts:debts||[], split:{need:70,want:20,save:10}, payoffMonths:36, seen:false, theme:"system", seedSet:true,
+    debts:debts||[], loans:[], split:{need:70,want:20,save:10}, payoffMonths:36, seen:false, theme:"system", seedSet:true,
     debtPlan:{on:false,start:"",replace:true}, wealth:wealthDefaults() };
 }
 function seedDoc(){
@@ -2172,6 +2211,9 @@ function normalise(raw){
   d.compare=!!d.compare;
   if(!Array.isArray(d.debts)) d.debts=[];
   d.debts.forEach(x=>{ if(!x.id)x.id=id(); });
+  if(!Array.isArray(d.loans)) d.loans=[];
+  d.loans.forEach(L=>{ if(!L.id)L.id=id(); if(L.kind!=="card")L.kind="loan"; if(typeof L.fc!=="boolean")L.fc=true;
+    if(!LFREQ[L.freq])L.freq="monthly"; if(L.unit!=="m")L.unit="y"; if(typeof L.acct!=="string")L.acct=""; });
   if(!d.split||typeof d.split!=="object") d.split={need:70,want:20,save:10};
   ["need","want","save"].forEach(k=>{ if(typeof d.split[k]!=="number") d.split[k]={need:70,want:20,save:10}[k]; });
   if(typeof d.payoffMonths!=="number") d.payoffMonths=36;
@@ -2287,9 +2329,90 @@ function debtPlan(force){
 }
 const pausedByPlan=(it,plan)=>!!plan&&plan.replace&&it.cat==="debt";
 
+/* ============================================================
+   5c. LOANS AND CARDS — amortization schedules
+   A loan (amount, rate, term) or a card (balance, rate, monthly payment) becomes a dated
+   schedule. Its payments land in the forecast, and what's still owed today counts as a debt
+   on the Debt page. While the debt plan is in the forecast, the plan pays these instead.
+   ============================================================ */
+const LFREQ={monthly:12,biweekly:26,weekly:52};
+const LFREQS=[["monthly","Monthly"],["biweekly","Bi-Weekly"],["weekly","Weekly"]];
+const r2=v=>Math.round(v*100)/100;
+const today0=()=>{ const t=new Date(); t.setHours(0,0,0,0); return t; };
+function loanDate(first,freq,k){                   // the k-th payment (0-based), month-end safe
+  const a=parseD(first);
+  if(freq!=="monthly"){ const d=new Date(a); d.setDate(d.getDate()+k*(freq==="weekly"?7:14)); return d; }
+  const y=a.getFullYear(), m=a.getMonth()+k, dim=new Date(y,m+1,0).getDate();
+  return new Date(y,m,Math.min(a.getDate(),dim));
+}
+const loanMonths=L=>Math.max(0,(+L.term||0)*(L.unit==="m"?1:12));
+const loanLabel=L=>(L.name||"").trim()||(L.kind==="card"?"Credit card":"Loan");
+const amCache=new Map();
+function amortize(L){
+  const key=JSON.stringify([L.kind,+L.amount||0,+L.apr||0,+L.term||0,L.unit,+L.payment||0,L.first,L.freq]);
+  const hit=amCache.get(L.id); if(hit&&hit.key===key) return hit.val;
+  const val=amortizeRaw(L); amCache.set(L.id,{key,val}); return val;
+}
+function amortizeRaw(L){
+  const card=L.kind==="card", freq=card?"monthly":(LFREQ[L.freq]?L.freq:"monthly"), ppy=LFREQ[freq];
+  const amt=+L.amount||0, r=Math.max(0,+L.apr||0)/100/ppy;
+  const out={rows:[],pay:0,interest:0,paid:0,freq,ppy,err:"",end:null};
+  if(amt<=0){ out.err="amount"; return out; }
+  if(!L.first){ out.err="first"; return out; }
+  let pay,n;
+  if(card){
+    pay=r2(+L.payment||0);
+    if(pay<=0){ out.err="payment"; return out; }
+    out.minInt=r2(amt*r);
+    if(pay<=out.minInt+0.004){ out.err="low"; out.pay=pay; return out; }
+    n=1200;                                         // 100 years: anything longer never really clears
+  } else {
+    n=Math.round(loanMonths(L)*ppy/12);
+    if(n<1){ out.err="term"; return out; }
+    pay=r>0?amt*r/(1-Math.pow(1+r,-n)):amt/n;
+    pay=r2(pay);                                    // whole cents, as a lender quotes it; the last payment settles the rest
+  }
+  out.pay=pay;
+  let bal=amt;
+  for(let k=0;k<n&&bal>0.005;k++){
+    const int=r2(bal*r);
+    let p=pay;
+    if(p>=bal+int-0.005||(!card&&k===n-1)) p=r2(bal+int);   // the last payment is whatever is left
+    const prin=r2(p-int); bal=Math.max(0,r2(bal-prin));
+    out.rows.push({n:k+1,date:loanDate(L.first,freq,k),pay:p,int,prin,bal});
+    out.interest+=int; out.paid+=p;
+  }
+  if(bal>0.005) out.err="long";
+  out.interest=r2(out.interest); out.paid=r2(out.paid);
+  if(out.rows.length) out.end=out.rows[out.rows.length-1].date;
+  return out;
+}
+/* what's still owed on a date: the balance after the last payment made by then */
+function loanLeft(L,at){
+  const a=amortize(L); let left=+L.amount||0;
+  for(const rw of a.rows){ if(rw.date<=at) left=rw.bal; else break; }
+  return left;
+}
+/* each loan and card as a debt, so totals, the payoff planner, Wealth and the Report include them */
+function loanDebts(){
+  const t=today0();
+  return (doc.loans||[]).map(L=>{ const a=amortize(L);
+    return{id:L.id,name:loanLabel(L),balance:r2(loanLeft(L,t)),apr:+L.apr||0,
+      minimum:r2((a.pay||+L.payment||0)*(a.ppy||12)/12),loan:true}; });
+}
+/* the payments a scenario's forecast should carry; none while the debt plan is paying them */
+const loanAcct=(L,sc)=>L.acct&&accts(sc).some(x=>x.id===L.acct&&x.type!=="card")?L.acct:MAIN;
+function loanMonthly(sc){
+  if(debtPlan()) return 0;
+  const from=parseD(sc.start);
+  return (doc.loans||[]).reduce((s,L)=>{ if(!L.fc) return s; const a=amortize(L);
+    return a.end&&a.end>=from?s+a.pay*a.ppy/12:s; },0);
+}
+
 function project(sc,opt){
   sc=sc||state; opt=opt||{}; const A=opt.account||MAIN;     // every page shows the main account unless asked
   const plan=opt.plan==="none"||A!==MAIN?null:debtPlan(opt.plan==="force");
+  const planRuns=opt.plan==="none"?false:!!debtPlan(opt.plan==="force");   // it pays the loans and cards too
   const from=parseD(sc.start), to=new Date(from); to.setDate(to.getDate()+horizon);
   const map=new Map();
   const push=(d,name,amt,oid,cat,freq)=>{
@@ -2305,6 +2428,9 @@ function project(sc,opt){
   if(plan) plan.schedule.forEach((pays,i)=>{
     const d=plan.dates[i]; if(d<from||d>to) return;
     pays.forEach(x=>push(d,x.name,-x.amt,null,"debt","plan"));
+  });
+  if(!planRuns) (doc.loans||[]).forEach(L=>{ if(!L.fc||loanAcct(L,sc)!==A) return;
+    amortize(L).rows.forEach(rw=>{ if(rw.date>=from&&rw.date<=to) push(rw.date,loanLabel(L),-rw.pay,null,"debt",L.kind==="card"?"card":"loan"); });
   });
   (sc.oneoffs||[]).forEach(o=>{
     if(!o.date||!o.amount||acctOf(o)!==A) return;
@@ -2601,7 +2727,7 @@ function cwDetail(){
       </div>
       ${items.length?`<ul class="dlist">${items.map(i=>{
         const c=i.amt>0?"gain":(i.cat||"ink-faint");
-        const what=i.freq==="plan"?"debt plan payment":i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
+        const what=i.freq==="plan"?"debt plan payment":i.freq==="loan"?"loan payment":i.freq==="card"?"card payment":i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
           :`${freqL(i.freq).toLowerCase()} ${i.amt>0?"income":"bill"}${i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:""}`;
         return `<li style="grid-template-columns:9px minmax(0,1fr) auto"><i style="background:var(--${c})"></i>
           <span class="nm">${esc(i.name)}<small>${esc(what)}</small></span>
@@ -2697,6 +2823,7 @@ function budgetTotals(sc){
   const plan=debtPlan();
   sc.outflow.forEach(it=>{ if(!pausedByPlan(it,plan)&&!isMove(it)) t[it.cat||""]+=monthly(it,sc.start); });
   if(plan) t.debt+=plan.pay;
+  t.debt+=loanMonthly(sc);
   const span=spanMonths();
   (sc.oneoffs||[]).forEach(o=>{ if(o.dir!=="out") return; t[o.cat||""]+=Math.abs(+o.amount||0)/span; });
   const out=t.need+t.want+t.debt+t[""];
@@ -2946,6 +3073,8 @@ function budgetSlices(mode,sc){
       sub:(FREQS.find(f=>f[0]===it.freq)||["",""])[1]}));
     (sc.oneoffs||[]).filter(o=>o.dir==="out").forEach(o=>lines.push({label:o.name||"(unnamed)",cat:o.cat||"",
       val:Math.abs(+o.amount||0)/span,sub:"one-off, spread"}));
+    if(!debtPlan()) (doc.loans||[]).forEach(L=>{ const a=amortize(L);
+      if(L.fc&&a.end&&a.end>=parseD(sc.start)) lines.push({label:loanLabel(L),cat:"debt",val:a.pay*a.ppy/12,sub:L.kind==="card"?"card payment":"loan payment"}); });
     lines.sort((a,b)=>b.val-a.val);
     const top=lines.slice(0,9), rest=lines.slice(9);
     if(rest.length) top.push({label:"Everything else",cat:"",val:rest.reduce((s,x)=>s+x.val,0),sub:`${rest.length} items`});
@@ -3030,7 +3159,7 @@ function updateVerdict(p){
   const b=budgetTotals(), nEl=$("sNet");
   nEl.textContent=(b.save>=0?"+":"")+money(Math.round(b.save)); nEl.className=b.save<0?"neg":"pos";
   const box=$("verdict"), title=$("vTitle"), body=$("vBody");
-  const n=state.inflow.length+state.outflow.length+(state.oneoffs||[]).length;
+  const n=state.inflow.length+state.outflow.length+(state.oneoffs||[]).length+(doc.loans||[]).filter(L=>L.fc).length;
   if(!n){ box.classList.remove("under");
     title.textContent="Nothing to forecast yet";
     body.innerHTML=`Add your income and bills on the <a href="#/overview">Overview page</a> and this fills in.`; }
@@ -3113,9 +3242,10 @@ function renderDayPanel(dm){
       <button class="x" id="dayClose" aria-label="Close day">&times;</button></div>
     <ul class="dlist">${items.length?items.map(i=>{
       const c=i.amt>0?"gain":(i.cat||"ink-faint");
-      const what=i.freq==="plan"?"debt plan payment":i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
+      const what=i.freq==="plan"?"debt plan payment":i.freq==="loan"?"loan payment":i.freq==="card"?"card payment":i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
         :`${freqL(i.freq).toLowerCase()} ${i.amt>0?"income":"bill"}${i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:""}`;
       const acts=i.oid?`<span class="acts"><button data-editoff="${i.oid}">Edit</button><button class="rm" data-killoff="${i.oid}">Remove</button></span>`
+        :i.freq==="loan"||i.freq==="card"?`<span class="acts"><a href="#/debt" style="font-size:12.5px;color:var(--ink-faint);padding:4px 7px">On Debt</a></span>`
         :`<span class="acts"><a href="#/overview" style="font-size:12.5px;color:var(--ink-faint);padding:4px 7px">On Overview</a></span>`;
       return `<li><i style="background:var(--${c})"></i><span class="nm">${esc(i.name)}<small>${esc(what)}</small></span>
         <span class="mv ${i.amt>0?"pos":"neg"}">${i.amt>0?"+":"−"}${money2(Math.abs(i.amt))}</span>${acts}</li>`;
@@ -3139,7 +3269,7 @@ function paintPlanBar(){
   const end=pv.end.toLocaleDateString("en-CA",{month:"short",year:"numeric"});
   bar.className="planbar"+(plan?" on":"");
   bar.innerHTML=plan
-    ? `<span class="pdot"></span><span><b>Your debt plan is in this forecast</b> — ${money2(plan.pay)} a month to debts from ${dLabel(plan.start)}, debt-free by ${end}.${plan.replace?" Your Debt payment bills are paused while it runs.":""} The dashed line is the forecast without it.</span>
+    ? `<span class="pdot"></span><span><b>Your debt plan is in this forecast</b> — ${money2(plan.pay)} a month to debts from ${dLabel(plan.start)}, debt-free by ${end}.${plan.replace?" Your Debt payment bills are paused while it runs.":""}${(doc.loans||[]).some(L=>L.fc)?" It pays your loans and cards instead of their own schedules.":""} The dashed line is the forecast without it.</span>
        <span class="pacts"><a class="chip" href="#/debt">Adjust</a><button class="chip" id="planOffBar">Turn off</button></span>`
     : `<span class="pdot"></span><span><b>See your debt plan here.</b> Paying ${money2(pv.pay)} a month clears everything by ${end}.</span>
        <span class="pacts"><button class="chip on" id="planOnBar">Add it to the forecast</button></span>`;
@@ -3251,7 +3381,7 @@ function requiredMonthly(debts,target){
   return hi;
 }
 function debtFacts(){
-  const d=doc.debts.filter(x=>(+x.balance||0)>0);
+  const d=[...doc.debts,...loanDebts()].filter(x=>(+x.balance||0)>0);
   const total=d.reduce((s,x)=>s+(+x.balance||0),0);
   const monthInt=d.reduce((s,x)=>s+(+x.balance||0)*(+x.apr||0)/100/12,0);
   const mins=d.reduce((s,x)=>s+(+x.minimum||0),0);
@@ -3347,7 +3477,7 @@ function renderDebtFigures(){
   if(run&&run.order.length){
     const today=new Date();
     $("orderBody").innerHTML=run.order.map(o=>{
-      const d=doc.debts.find(x=>x.id===o.id)||{};
+      const d=f.list.find(x=>x.id===o.id)||{};
       const when=new Date(today.getFullYear(),today.getMonth()+o.month,1);
       return `<tr><td class="dt">${when.toLocaleDateString("en-CA",{month:"short",year:"numeric"})}
         <span style="color:var(--ink-faint)">· month ${o.month}</span></td>
@@ -3386,6 +3516,7 @@ function renderPlanCard(){
       <label>First payment <input type="date" id="planStart" value="${esc(dp.start||iso(pv.start))}"></label>
       <label class="chk"><input type="checkbox" id="planReplace" ${dp.replace?"checked":""}>
         <span>Pause my <b>Debt payment</b> bills while the plan runs${debtBills.length?` <small>(${esc(debtBills.map(it=>it.name||"unnamed").join(", "))} · ${money2(billsMo)}/mo)</small>`:` <small>(you have none)</small>`}</span></label>
+      ${(doc.loans||[]).some(L=>L.fc)?`<span class="tiny" style="flex-basis:100%">Your loan and card schedules pause while the plan runs, because the plan pays those debts.</span>`:""}
     </div>
     <div class="planfoot">${dp.on?`<a class="btn fill sm" href="#/forecast">See it on the Forecast</a>`:`<button class="btn fill sm" id="planOnBtn">Add it to the forecast</button>`}
       <span class="tiny">Changing the finish line above changes the plan everywhere.</span></div>`;
@@ -3396,7 +3527,156 @@ function setPlan(on){
   planCache.key=""; render();
   flag(on?"Debt plan added to your forecast":"Debt plan removed from your forecast",2200);
 }
-function renderDebt(){ renderDebtRows(); renderDebtFigures(); safely(renderPlanCard); }
+function renderDebt(){ renderDebtRows(); safely(renderLoans); renderDebtFigures(); safely(renderPlanCard); }
+
+/* ---- Loans and cards: the inputs are drawn once; typing repaints only the figures ---- */
+const loanOpen=new Map();                          // id -> "all" | "year" while its schedule is showing
+const loanOf=row=>row&&(doc.loans||[]).find(L=>L.id===row.dataset.loan);
+const mYear=d=>d.toLocaleDateString("en-CA",{month:"short",year:"numeric"});
+function loanHTML(L){
+  const card=L.kind==="card";
+  const fld=(lab,html)=>`<label class="fld"><span class="mlabel">${lab}</span>${html}</label>`;
+  const num=(f,lab,ph)=>fld(lab,`<input class="amt" type="number" step="0.01" min="0" inputmode="decimal" data-lf="${f}" value="${esc(L[f]??"")}" placeholder="${ph}" aria-label="${lab}">`);
+  const ids=[MAIN,...accts().filter(a=>a.type!=="card").map(a=>a.id)], from=loanAcct(L,state);
+  const payFrom=ids.length>1?fld("Pay from",`<select data-lf="acct">${ids.map(v=>`<option value="${v}"${v===from?" selected":""}>${esc(acctName(v))}</option>`).join("")}</select>`):"";
+  return `<div class="lnrow" data-loan="${L.id}">
+    <div class="lnhead">
+      <span class="lnkind">${card?"Card":"Loan"}</span>
+      <input class="lnname" data-lf="name" value="${esc(L.name)}" placeholder="${card?"Visa, Mastercard…":"Car loan, student loan…"}" aria-label="Name">
+      <label class="lnfc" title="Put these payments in the forecast"><span>In forecast</span>
+        <span class="switch"><input type="checkbox" data-lf="fc" ${L.fc?"checked":""} aria-label="Put these payments in the forecast"><span></span></span></label>
+      <button class="kill" data-lkill title="Remove" aria-label="Remove">&times;</button>
+    </div>
+    <div class="lngrid">
+      ${card?num("amount","Balance owed","0.00"):num("amount","Amount borrowed","0.00")}
+      ${num("apr","Rate % (APR)","0.00")}
+      ${card?num("payment","Monthly payment","0.00")
+        :fld("Term",`<span class="lnterm"><input class="amt" type="number" step="1" min="0" inputmode="numeric" data-lf="term" value="${esc(L.term??"")}" placeholder="5" aria-label="Term">
+          <select data-lf="unit" aria-label="Term in"><option value="y"${L.unit!=="m"?" selected":""}>years</option><option value="m"${L.unit==="m"?" selected":""}>months</option></select></span>`)}
+      ${card?"":fld("Payments",`<select data-lf="freq">${LFREQS.map(([v,l])=>`<option value="${v}"${v===L.freq?" selected":""}>${l}</option>`).join("")}</select>`)}
+      ${fld("First payment",`<input type="date" data-lf="first" value="${esc(L.first||"")}" aria-label="First payment">`)}
+      ${payFrom}
+    </div>
+    <div class="lnsum" data-lsum></div>
+    <div class="lnbar" data-lbar></div>
+    <div class="lnsched" data-lsched hidden></div>
+  </div>`;
+}
+function loanSummary(L,a){
+  const card=L.kind==="card";
+  const msg={amount:card?"Enter the balance owed to see the payoff schedule.":"Enter the amount borrowed to see the schedule.",
+    first:"Pick the date of the first payment.",term:"Enter how long the loan runs.",
+    payment:"Enter the monthly payment you plan to make."}[a.err];
+  if(msg) return `<span>${msg}</span>`;
+  if(a.err==="low") return `<div class="note bad"><b>${money2(a.pay)} a month doesn't cover the interest</b>, which is about ${money2(a.minInt)} a month at ${(+L.apr||0).toFixed(2)}%. Pay more than that or the balance never falls.</div>`;
+  if(a.err==="long") return `<div class="note bad"><b>At ${money2(a.pay)} a month this takes more than 100 years to clear.</b> Raise the payment.</div>`;
+  const t=today0(), left=loanLeft(L,t), done=a.rows.filter(r=>r.date<=t).length;
+  const fq=card?"a month":({monthly:"a month",biweekly:"every 2 weeks",weekly:"a week"})[a.freq];
+  const stat=(v,l)=>`<span><b>${v}</b>${l}</span>`;
+  let h=stat(money2(a.pay),card?"a month":`payment ${fq}`)
+    +stat(a.rows.length,`payments${done?` · ${done} made`:""}`)
+    +stat(mYear(a.end),done>=a.rows.length?"paid off":"paid off by")
+    +stat(money2(a.interest),"total interest")
+    +stat(money2(left),"owed today");
+  if(L.fc&&debtPlan()) h+=`<div class="note warn">Your debt plan is in the forecast, so it pays this ${card?"card":"loan"} instead while it runs.</div>`;
+  else if(L.fc){                                    // the same payment already sitting on Overview would count twice
+    const nm=loanLabel(L).toLowerCase();
+    const dup=state.outflow.find(it=>!ended(it)&&((it.name||"").trim().toLowerCase()===nm
+      ||(it.cat==="debt"&&it.freq===a.freq&&Math.abs((+it.amount||0)-a.pay)<0.5)));
+    if(dup) h+=`<div class="note warn"><b>${esc(dup.name||"A bill")}</b> on Overview looks like this payment (${money2(+dup.amount||0)} ${(FREQS.find(f=>f[0]===dup.freq)||["",""])[1].toLowerCase()}). If it is, remove it there so it isn't counted twice.
+      <br><button class="chip" data-lrmbill="${dup.id}">Remove that bill</button></div>`;
+  }
+  return h;
+}
+function loanTable(a,view){
+  const t=today0(), next=a.rows.find(r=>r.date>t);
+  if(view==="year"){
+    const ys=new Map();
+    a.rows.forEach(r=>{ const y=r.date.getFullYear(); const e=ys.get(y)||{y,n:0,pay:0,int:0,prin:0,bal:0};
+      e.n++; e.pay+=r.pay; e.int+=r.int; e.prin+=r.prin; e.bal=r.bal; ys.set(y,e); });
+    return `<table><thead><tr><th>Year</th><th class="r">Payments</th><th class="r">Paid</th><th class="r">Interest</th><th class="r">Principal</th><th class="r">Balance at year end</th></tr></thead><tbody>
+      ${[...ys.values()].map(e=>`<tr class="${e.y<t.getFullYear()?"past":e.y===t.getFullYear()?"next":""}"><td>${e.y}</td><td class="r">${e.n}</td><td class="r">${money2(e.pay)}</td><td class="r">${money2(e.int)}</td><td class="r">${money2(e.prin)}</td><td class="r">${money2(e.bal)}</td></tr>`).join("")}
+      </tbody><tfoot><tr><td>Total</td><td class="r">${a.rows.length}</td><td class="r">${money2(a.paid)}</td><td class="r">${money2(a.interest)}</td><td class="r">${money2(r2(a.paid-a.interest))}</td><td></td></tr></tfoot></table>`;
+  }
+  return `<table><thead><tr><th>#</th><th>Date</th><th class="r">Payment</th><th class="r">Interest</th><th class="r">Principal</th><th class="r">Balance</th></tr></thead><tbody>
+    ${a.rows.map(r=>`<tr class="${r.date<=t?"past":r===next?"next":""}"><td>${r.n}</td><td>${r.date.toLocaleDateString("en-CA",{month:"short",day:"numeric",year:"numeric"})}</td><td class="r">${money2(r.pay)}</td><td class="r">${money2(r.int)}</td><td class="r">${money2(r.prin)}</td><td class="r">${money2(r.bal)}</td></tr>`).join("")}
+    </tbody><tfoot><tr><td></td><td>Total</td><td class="r">${money2(a.paid)}</td><td class="r">${money2(a.interest)}</td><td class="r">${money2(r2(a.paid-a.interest))}</td><td></td></tr></tfoot></table>`;
+}
+function paintLoan(L){
+  const row=$("loanList").querySelector(`[data-loan="${L.id}"]`); if(!row) return;
+  const a=amortize(L), ok=a.rows.length&&!a.err, view=loanOpen.get(L.id);
+  row.querySelector("[data-lsum]").innerHTML=loanSummary(L,a);
+  row.querySelector("[data-lbar]").innerHTML=ok?`<button class="linkbtn" data-lshow aria-expanded="${!!view}">${view?"Hide the schedule":"Show the schedule"}</button>
+    ${view?`<span class="chiprow" style="margin-left:auto"><button class="chip${view==="all"?" on":""}" data-lview="all">Every payment</button><button class="chip${view==="year"?" on":""}" data-lview="year">By year</button><button class="chip" data-lcsv>Download CSV</button></span>`:""}`:"";
+  const box=row.querySelector("[data-lsched]");
+  box.hidden=!(ok&&view);
+  if(ok&&view){ box.innerHTML=loanTable(a,view);
+    const nx=box.querySelector("tr.next"); if(nx&&view==="all"&&!box.dataset.scrolled){ box.dataset.scrolled="1"; box.scrollTop=Math.max(0,nx.offsetTop-80); } }
+  else{ box.innerHTML=""; delete box.dataset.scrolled; }
+}
+function paintLoanTot(){
+  const ls=doc.loans||[], t=today0();
+  const owed=ls.reduce((s,L)=>s+loanLeft(L,t),0);
+  $("loanTot").textContent=ls.length?money(Math.round(owed))+" owed":"";
+}
+function renderLoans(){
+  const box=$("loanList"); if(!box) return;
+  const ls=doc.loans||(doc.loans=[]);
+  box.innerHTML=ls.length?ls.map(loanHTML).join("")
+    :`<p class="empty">Add a loan with its amount, rate and term, or a credit card with the payment you plan to make. Waterline builds the schedule and puts every payment in your forecast.</p>`;
+  ls.forEach(paintLoan); paintLoanTot();
+}
+/* after any edit: this loan's figures, the debt totals and planner, and the plan card */
+function loanChanged(L){ planCache.key=""; if(L) paintLoan(L); paintLoanTot(); safely(renderDebtFigures); safely(renderPlanCard); save(); }
+$("loanCard").addEventListener("input",e=>{
+  const f=e.target.dataset.lf, L=loanOf(e.target.closest(".lnrow"));
+  if(!L||!["name","amount","apr","term","payment"].includes(f)) return;
+  L[f]=e.target.value; loanChanged(L);
+});
+$("loanCard").addEventListener("change",e=>{
+  const f=e.target.dataset.lf, L=loanOf(e.target.closest(".lnrow"));
+  if(!L||!["unit","freq","first","acct","fc"].includes(f)) return;
+  if(f==="fc"){ L.fc=e.target.checked; flag(L.fc?"Payments added to your forecast":"Payments taken out of your forecast",2000); }
+  else if(f==="acct") L.acct=e.target.value===MAIN?"":e.target.value;
+  else L[f]=e.target.value;
+  loanChanged(L);
+});
+$("loanCard").addEventListener("click",e=>{
+  const add=e.target.closest("[data-ladd]");
+  if(add){
+    const card=add.dataset.ladd==="card";
+    const L={id:id(),kind:card?"card":"loan",name:"",amount:"",apr:"",term:card?"":5,unit:"y",payment:"",
+      first:nextFirst(),freq:"monthly",acct:"",fc:true};
+    doc.loans.push(L); renderLoans(); loanChanged(null);
+    const inp=$("loanList").querySelector(`[data-loan="${L.id}"] .lnname`); if(inp) inp.focus();
+    return;
+  }
+  const row=e.target.closest(".lnrow"), L=loanOf(row); if(!L) return;
+  if(e.target.closest("[data-lkill]")){
+    const i=doc.loans.indexOf(L); doc.loans.splice(i,1); loanOpen.delete(L.id);
+    renderLoans(); loanChanged(null);
+    undoToast(`Removed ${nameOf(L,L.kind==="card"?"card":"loan")}`,()=>{ doc.loans.splice(Math.min(i,doc.loans.length),0,L); planCache.key=""; render(); });
+    return;
+  }
+  if(e.target.closest("[data-lshow]")){ if(loanOpen.has(L.id)) loanOpen.delete(L.id); else loanOpen.set(L.id,"all"); paintLoan(L); return; }
+  const v=e.target.closest("[data-lview]");
+  if(v){ loanOpen.set(L.id,v.dataset.lview); paintLoan(L); return; }
+  if(e.target.closest("[data-lcsv]")){
+    const a=amortize(L);
+    const csv=["Payment,Date,Payment amount,Interest,Principal,Balance",
+      ...a.rows.map(r=>[r.n,iso(r.date),r.pay.toFixed(2),r.int.toFixed(2),r.prin.toFixed(2),r.bal.toFixed(2)].join(","))].join("\n");
+    const url=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+    const link=Object.assign(document.createElement("a"),{href:url,download:`${loanLabel(L).replace(/[^\w\- ]+/g,"").trim()||"schedule"} schedule.csv`});
+    document.body.appendChild(link); link.click(); link.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+    return;
+  }
+  const rm=e.target.closest("[data-lrmbill]");
+  if(rm){
+    const sc=state, i=sc.outflow.findIndex(x=>x.id===rm.dataset.lrmbill); if(i<0) return;
+    const [gone]=sc.outflow.splice(i,1); loanChanged(L);
+    undoToast(`Removed ${nameOf(gone,"bill")} from Overview`,()=>{ sc.outflow.splice(Math.min(i,sc.outflow.length),0,gone); render(); });
+  }
+});
 
 /* ============================================================
    10b. REPORT — two A4 pages, printed to PDF by the browser
@@ -3908,7 +4188,7 @@ function wTotals(){
   return{assets,debts:f.total,other,liab,net:assets-liab};
 }
 function wSnap(){
-  const w=doc.wealth; if(!w.assets.length&&!w.liabs.length&&!doc.debts.length) return;
+  const w=doc.wealth; if(!w.assets.length&&!w.liabs.length&&!doc.debts.length&&!(doc.loans||[]).length) return;
   const t=wTotals(), m=iso(new Date()).slice(0,7);
   const a=Math.round(t.assets), l=Math.round(t.liab);
   const cur=w.history.find(h=>h.m===m);
@@ -4402,7 +4682,7 @@ function loadLocal(){ try{ const raw=local.get(KEY); return raw?JSON.parse(raw):
    ============================================================ */
 const BKEY="waterline:backups", BMAX=20;
 const worthKeeping=d=>!!d&&Array.isArray(d.scenarios)&&
-  (hasEntries(d)||(d.debts||[]).length>0||!!(d.wealth&&(d.wealth.assets||[]).length+(d.wealth.liabs||[]).length+(d.wealth.goals||[]).length)||d.scenarios.some(sc=>(+sc.balance||0)!==0));
+  (hasEntries(d)||(d.debts||[]).length>0||(d.loans||[]).length>0||!!(d.wealth&&(d.wealth.assets||[]).length+(d.wealth.liabs||[]).length+(d.wealth.goals||[]).length)||d.scenarios.some(sc=>(+sc.balance||0)!==0));
 const realDoc=()=>sandbox?sandbox.real:doc;
 function loadBackups(){ try{ const r=JSON.parse(local.get(BKEY)||"[]"); return Array.isArray(r)?r:[]; }catch(e){ return []; } }
 function storeBackups(list){
@@ -4556,6 +4836,8 @@ function fingerprint(d){
     f:(sc.oneoffs||[]).map(x=>[x.name||"",+x.amount||0,x.date,x.dir,x.cat||""])});
   return JSON.stringify({sc:d.scenarios.map(slim),
     dt:(d.debts||[]).map(x=>[x.name||"",+x.balance||0,+x.apr||0,+x.minimum||0]),
+    ln:(d.loans||[]).length?d.loans.map(L=>[L.kind,L.name||"",+L.amount||0,+L.apr||0,+L.term||0,L.unit||"",
+      +L.payment||0,L.first||"",L.freq||"",L.acct||"",!!L.fc]):undefined,
     dp:d.debtPlan?[!!d.debtPlan.on,d.debtPlan.start||"",d.debtPlan.replace!==false]:null,
     sp:d.split,pm:d.payoffMonths,
     w:d.wealth?[d.wealth.assets,d.wealth.liabs,d.wealth.goals,d.wealth.proj,d.wealth.history]:null});
@@ -4566,6 +4848,7 @@ function planBlurb(d,at){
   const bits=[`${items} budget ${items===1?"line":"lines"}`];
   if(d.scenarios.length>1) bits.push(`${d.scenarios.length} scenarios`);
   if(d.debts.length) bits.push(`${d.debts.length} ${d.debts.length===1?"debt":"debts"}`);
+  if((d.loans||[]).length) bits.push(`${d.loans.length} ${d.loans.length===1?"loan or card":"loans and cards"}`);
   if(at){ const t=new Date(at);
     if(!isNaN(t)) bits.push(`saved ${t.toLocaleDateString("en-CA",{month:"short",day:"numeric"})}, ${t.toLocaleTimeString("en-CA",{hour:"numeric",minute:"2-digit"})}`); }
   return bits.join(" · ");
