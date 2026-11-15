@@ -9,6 +9,42 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.2.0 — 15 November 2026
+
+**Import your bank statement, track more than one account, and get a net worth page in your report.**
+
+### New
+
+**Import a bank CSV.** On Overview, choose **Import a CSV** and pick a statement export. Waterline
+finds the income and bills that repeat on a steady rhythm (weekly, bi-weekly, monthly, every
+3 months or yearly) and lists them with a suggested name, amount, how often, category and next date.
+Tick the ones you want and they're added to your plan, with Undo straight after.
+- The file is read on your device only. It isn't uploaded or saved.
+- Works with the usual layouts: one amount column or separate money out and in, headers or none,
+  extra lines at the top, and the common date formats. If a guess is wrong, change the columns in
+  the window.
+- Things that look like an item already in your plan, or that seem to have stopped, start unticked.
+- The window also shows the statement's monthly average in and out next to your plan's.
+
+**Accounts.** Your plan can now have more than one account: savings, a credit card, or another bank
+account, each with its own starting balance (and a limit for cards). Open the starting balance and
+choose **Add an account**.
+- Each income and bill can be set to an account, and a bill can **move money** to another account.
+  A transfer leaves one account and lands in the other, and it isn't counted as spending.
+- A new **Accounts** card on the Forecast shows each account's tightest day: when a bank account
+  would go under, and when a card would pass its limit.
+- Everything else (the chart, the calendar, the lowest point) still shows your main account, so
+  plans with one account work exactly as before.
+- **Update** on an old starting balance carries every account forward to today.
+
+**Net worth in the report.** When the Wealth page has anything on it, the report gets a third page:
+net worth with the change since last month, what you own, what you owe, where it sits, goals, and
+where it's heading.
+
+### Fixed
+
+- The starting balance card's fields fit on the smallest phones.
+
 ## 3.1.1 — 15 November 2026
 
 **Fixes and clean-up: sync keeps every edit, the forecast tells you when your balance is out of date, and the Report prints at the right size.**

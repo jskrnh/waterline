@@ -746,6 +746,84 @@ svg.cwmini:active{cursor:grabbing}
   border-bottom-left-radius:inherit;border-bottom-right-radius:inherit}
 .seedroll p{flex:1 1 260px;margin:0}
 @media(max-width:420px){ .seedpill .pl{display:none} .seedpill .ps{display:inline} }
+/* bank CSV import */
+.importcard{display:flex;align-items:center;gap:14px 20px;flex-wrap:wrap;padding:18px 22px}
+.importcard>div{flex:1 1 280px;min-width:0}
+.importcard b{display:block;font-size:15.5px;font-weight:600;letter-spacing:-.01em;margin-bottom:3px}
+.importcard span{font-size:14px;color:var(--ink-soft);line-height:1.45}
+.sheet.csvsheet{max-width:820px;max-height:90vh;overflow:auto}
+#csvTitle:focus{outline:none}
+.csvsheet .mini{font-size:13px;color:var(--ink-faint);margin:10px 0 0}
+.csvdrop{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:34px 20px;margin-top:8px;
+  border:1.5px dashed var(--line);border-radius:var(--r-md);cursor:pointer;color:var(--ink-soft)}
+.csvdrop b{font-size:16px;color:var(--ink)} .csvdrop span{font-size:14px}
+.csvdrop.over,.csvdrop:hover{border-color:var(--accent);background:var(--accent-wash)}
+.csvsum{font-size:14px!important;margin:6px 0 10px!important}
+.csvmap{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px}
+.csvmap summary{cursor:pointer;font-size:14px;font-weight:500}
+.csvcols{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px 14px;margin-top:12px}
+.csvcols label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-faint)}
+.csvcols label.chk{flex-direction:row;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);grid-column:1/-1}
+.csvcols select,.csvrow input:not([type=checkbox]),.csvrow select{font-family:var(--font);font-size:14px;padding:8px 10px;
+  border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);min-width:0;width:100%}
+.csvavg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+.csvavg span{border:1px solid var(--hair);border-radius:12px;padding:10px 14px;font-size:12.5px;color:var(--ink-faint)}
+.csvavg b{display:block;font-size:15px;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;margin:2px 0}
+.csvh{font-size:15px;font-weight:600;margin:18px 0 4px}
+.csvrow{display:grid;grid-template-columns:22px minmax(0,1fr) 100px 124px 128px 148px;gap:8px 10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--hair)}
+.csvrow small{grid-column:2/-1;font-size:12.5px;color:var(--ink-faint);margin-top:-2px}
+.csvrow small b{font-weight:500;color:var(--amber)}
+.csvrow input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+.csvrow .amt{text-align:right;font-variant-numeric:tabular-nums}
+.csvrow .fld{display:block;min-width:0} .csvrow .mlabel{display:none}
+.csvin{font-size:14px;color:var(--ink-soft)}
+.csvacts{position:sticky;bottom:-30px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel);padding:14px 0 4px;margin-top:6px}
+.csvacts .btn[disabled]{opacity:.45;cursor:default}
+@media(max-width:760px){
+  .sheet.csvsheet{padding:22px 16px;max-height:94vh}
+  .csvavg{grid-template-columns:1fr}
+  .csvrow{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr)}
+  .csvrow>[data-k=name]{grid-column:2/-1}
+  .csvrow>.fld{grid-column:auto}
+  .csvrow>.fld:nth-of-type(odd){grid-column:2}
+  .csvrow .mlabel{display:block;font-size:11px;color:var(--ink-faint);margin-bottom:3px}
+  .importcard{padding:16px}
+}
+#seedCard .body>div{min-width:0}
+#seedCard .body.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+/* accounts */
+.acctbox{border-top:1px solid var(--hair)}
+.acnote{padding:14px 22px 0;margin:0;font-size:14px;color:var(--ink-soft);line-height:1.45}
+.acmain{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 22px 6px}
+.acmain input,.acrow input,.acrow select{font-family:var(--font);font-size:15px;padding:9px 11px;border:1px solid var(--line);
+  border-radius:10px;background:var(--paper);color:var(--ink);min-width:0;width:100%}
+.acmain input{max-width:240px}
+.achead,.acrow{display:grid;grid-template-columns:minmax(0,1fr) 170px 130px 110px 36px;gap:10px;align-items:center;padding:6px 22px}
+.achead{font-size:12px;color:var(--ink-faint);padding-top:10px}
+.achead span:nth-child(n+3){text-align:right}
+.acrow .amt{text-align:right;font-variant-numeric:tabular-nums}
+.acrow .fld{display:block;min-width:0}
+.acrow .mlabel{display:none}
+.acx{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:5px;font-size:12px;color:var(--ink-faint)}
+.acx select{font-family:var(--font);font-size:12px;padding:2px 4px;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--ink)}
+.acline{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,1fr);gap:6px 18px;align-items:center;padding:14px 22px;border-top:1px solid var(--hair)}
+.acline small{display:block;font-size:12.5px;color:var(--ink-faint);margin-top:2px;font-weight:400}
+.acline b{font-weight:600}
+.acl{font-variant-numeric:tabular-nums;font-size:14.5px}
+.acs{font-size:14px;font-weight:500;color:var(--gain);text-align:right}
+.acline.bad .acs{color:var(--signal)}
+.acfoot{margin:0;padding:12px 22px 16px;border-top:1px solid var(--hair);font-size:12.5px;color:var(--ink-faint)}
+@media(max-width:760px){
+  .achead{display:none}
+  .acrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 34px;padding:10px 16px;border-top:1px solid var(--hair)}
+  .acrow .an{grid-column:1/3;grid-row:1} .acrow .kill{grid-column:3;grid-row:1}
+  .acrow .fld:empty{display:none}
+  .acrow .fld:nth-of-type(odd){grid-column:1}
+  .acrow .mlabel{display:block;font-size:11px;color:var(--ink-faint);margin-bottom:3px}
+  .acmain,.acnote{padding-left:16px;padding-right:16px}
+  .acline{grid-template-columns:1fr;padding:12px 16px} .acs{text-align:left}
+  .acfoot{padding:10px 16px 14px}
+}
 .seedpill .ed{font-size:12.5px;font-weight:500;color:var(--accent);background:var(--accent-wash);
   padding:3px 10px;border-radius:var(--pill);flex:none}
 #seedCard{scroll-margin-top:80px}
@@ -1115,6 +1193,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .sheetpage:not(.measure) .rhead .bk{font-size:18px} .sheetpage:not(.measure) .rhead .ti{font-size:13px}
 }
 
+.sheetpage[hidden]{display:none!important}
 @page{size:A4;margin:13mm}
 @media print{
   html,body{background:#fff!important}
@@ -1468,6 +1547,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
               style="width:100%;font-family:var(--font);font-size:16px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--ink)">
           </div>
         </div>
+        <div class="acctbox" id="acctBox"></div>
         <div class="seedroll" id="seedRoll" hidden><p id="seedRollTxt"></p><button class="btn fill sm" id="seedRollBtn"></button></div>
       </div>
 
@@ -1485,6 +1565,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
         <div id="outList" class="paylist"></div>
         <div class="rowfoot" id="outFoot"></div>
         <button class="addrow" data-add="out">Add recurring bill</button>
+      </div>
+
+      <div class="card importcard">
+        <div><b>Have a bank statement?</b>
+          <span>Import a CSV export and Waterline picks out the income and bills that repeat. The file is read on this device and never uploaded.</span></div>
+        <button class="btn sm" id="csvOpen">Import a CSV</button>
       </div>
 
       <div class="card">
@@ -1580,6 +1666,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
             <span class="delta" id="cmpDelta"></span>
           </div>
         </div>
+      </div>
+
+      <div class="card" id="acctCard" hidden>
+        <header><h2 class="h3">Accounts</h2><span class="sub">each one's tightest day</span>
+          <button class="linkbtn" id="acctEdit" style="margin-left:auto">Edit accounts</button></header>
+        <div id="acctRows"></div>
       </div>
 
       <div class="card">
@@ -1855,6 +1947,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
     <div class="paper">
       <article class="sheetpage" id="rpt1"></article>
       <article class="sheetpage" id="rpt2"></article>
+      <article class="sheetpage" id="rpt3" hidden></article>
     </div>
   </div>
 </section>
@@ -1919,6 +2012,13 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <button class="linkbtn danger" id="bkFresh">Start a new blank plan</button>
       <span class="tiny">Your current plan is backed up first.</span>
     </div>
+  </div>
+</div>
+
+<div class="veil" id="csvVeil">
+  <div class="sheet csvsheet" role="dialog" aria-modal="true" aria-labelledby="csvTitle">
+    <div class="bkhead"><h2 id="csvTitle" tabindex="-1">Import from a bank CSV</h2><button class="linkbtn" id="csvClose">Close</button></div>
+    <div id="csvBody"></div>
   </div>
 </div>
 
@@ -2060,6 +2160,11 @@ function normalise(raw){
     });
     sc.oneoffs.forEach(o=>{ if(!o.id)o.id=id(); if(o.cat===undefined)o.cat="";
       if(o.cat==="save")o.cat="debt"; if(!o.dir)o.dir="out"; });
+    if(!Array.isArray(sc.accounts)) sc.accounts=[];
+    sc.accounts.forEach(a=>{ if(!a.id)a.id=id(); if(a.type!=="card")a.type="bank"; });
+    if(typeof sc.mainName!=="string") sc.mainName="";
+    const known=new Set(["main",...sc.accounts.map(a=>a.id)]);     // drop links to accounts that no longer exist
+    [...sc.inflow,...sc.outflow,...sc.oneoffs].forEach(it=>{ if(it.acct&&!known.has(it.acct)) it.acct=""; if(it.to&&!known.has(it.to)) it.to=""; });
   });
   const ids=d.scenarios.map(x=>x.id);
   if(!ids.includes(d.activeId)) d.activeId=ids[0];
@@ -2120,6 +2225,17 @@ function occurrences(item,from,to){
   while(i++<3000){ const d=at(k); if(d>to) break; if(d>=begin) out.push(d); k++; }
   return out;
 }
+/* Accounts. Every plan has one main account (its starting balance is sc.balance). Extra accounts
+   are optional; an item belongs to the main account unless it says otherwise, and a bill with a
+   "to" account is a transfer: it leaves one account and lands in the other, and isn't spending. */
+const MAIN="main";
+const acctOf=x=>x.acct||MAIN;
+const accts=sc=>(sc||state).accounts||[];
+const acctName=(a,sc)=>a===MAIN?((sc||state).mainName||"Main account"):((accts(sc).find(x=>x.id===a)||{}).name||"Account");
+const isMove=it=>!!it.to&&it.to!==acctOf(it);
+const flow=(it,kind,a)=>kind==="in"?(acctOf(it)===a?1:0):(acctOf(it)===a?-1:0)+(isMove(it)&&it.to===a?1:0);
+function acctStart(sc,a){ if(a===MAIN) return +sc.balance||0;
+  const x=accts(sc).find(y=>y.id===a); return !x?0:x.type==="card"?-(+x.balance||0):(+x.balance||0); }
 /* An item whose end date is before the plan starts no longer costs anything each month. */
 const ended=(it,start)=>!!it.end&&parseD(it.end)<parseD(start||(state&&state.start)||iso(new Date()));
 const monthly=(it,start)=>ended(it,start)?0:({weekly:(+it.amount||0)*52/12,biweekly:(+it.amount||0)*26/12,
@@ -2172,8 +2288,8 @@ function debtPlan(force){
 const pausedByPlan=(it,plan)=>!!plan&&plan.replace&&it.cat==="debt";
 
 function project(sc,opt){
-  sc=sc||state; opt=opt||{};
-  const plan=opt.plan==="none"?null:debtPlan(opt.plan==="force");
+  sc=sc||state; opt=opt||{}; const A=opt.account||MAIN;     // every page shows the main account unless asked
+  const plan=opt.plan==="none"||A!==MAIN?null:debtPlan(opt.plan==="force");
   const from=parseD(sc.start), to=new Date(from); to.setDate(to.getDate()+horizon);
   const map=new Map();
   const push=(d,name,amt,oid,cat,freq)=>{
@@ -2181,20 +2297,22 @@ function project(sc,opt){
     if(!map.has(k)) map.set(k,{date:new Date(d),items:[],delta:0});
     const e=map.get(k); e.items.push({name,amt,oid,cat:cat||"",freq}); e.delta+=amt;
   };
-  sc.inflow.forEach(it=>occurrences(it,from,to).forEach(d=>push(d,it.name||"Income",+it.amount||0,null,it.cat,it.freq)));
+  sc.inflow.forEach(it=>{ const k=flow(it,"in",A); if(k)
+    occurrences(it,from,to).forEach(d=>push(d,it.name||"Income",k*(+it.amount||0),null,it.cat,it.freq)); });
   sc.outflow.forEach(it=>{ if(pausedByPlan(it,plan)) return;   // the plan already pays these debts
-    occurrences(it,from,to).forEach(d=>push(d,it.name||"Bill",-(+it.amount||0),null,it.cat,it.freq)); });
+    const k=flow(it,"out",A); if(k)
+    occurrences(it,from,to).forEach(d=>push(d,it.name||"Bill",k*(+it.amount||0),null,it.cat,it.freq)); });
   if(plan) plan.schedule.forEach((pays,i)=>{
     const d=plan.dates[i]; if(d<from||d>to) return;
     pays.forEach(x=>push(d,x.name,-x.amt,null,"debt","plan"));
   });
   (sc.oneoffs||[]).forEach(o=>{
-    if(!o.date||!o.amount) return;
+    if(!o.date||!o.amount||acctOf(o)!==A) return;
     const d=parseD(o.date); if(d<from||d>to) return;
     push(d,o.name||"One-off",(o.dir==="in"?1:-1)*Math.abs(+o.amount||0),o.id,o.cat);
   });
   const days=[...map.values()].sort((a,b)=>a.date-b.date);
-  let bal=+sc.balance||0;
+  let bal=acctStart(sc,A);
   const series=[{date:new Date(from),bal,items:[],delta:0}];
   let low={bal,date:new Date(from)}, under=0, firstUnder=bal<0?new Date(from):null;
   days.forEach(d=>{ if(d.date<from) return; bal+=d.delta;
@@ -2577,7 +2695,7 @@ function budgetTotals(sc){
   const income=sc.inflow.reduce((a,i)=>a+monthly(i,sc.start),0);
   const t={need:0,want:0,debt:0,"":0};
   const plan=debtPlan();
-  sc.outflow.forEach(it=>{ if(!pausedByPlan(it,plan)) t[it.cat||""]+=monthly(it,sc.start); });
+  sc.outflow.forEach(it=>{ if(!pausedByPlan(it,plan)&&!isMove(it)) t[it.cat||""]+=monthly(it,sc.start); });
   if(plan) t.debt+=plan.pay;
   const span=spanMonths();
   (sc.oneoffs||[]).forEach(o=>{ if(o.dir!=="out") return; t[o.cat||""]+=Math.abs(+o.amount||0)/span; });
@@ -2600,7 +2718,7 @@ function rows(kind){
       <button class="grip" title="Drag to reorder" aria-label="Move ${esc(it.name||"item")} — use arrow keys">${GRIP}</button>
       <button class="sum" data-sum="${it.id}" aria-expanded="${it.id===openRow}"></button>
       <span class="nmc"><input class="nm" value="${esc(it.name)}" placeholder="${kind==="in"?"Paycheque":"Rent"}" aria-label="Name">
-        <small class="pv" data-pv="${it.id}"></small></span>
+        <small class="pv" data-pv="${it.id}"></small>${accts().length?acctPicker(it,kind):""}</span>
       <input class="amt" type="number" step="0.01" value="${esc(it.amount)}" aria-label="Amount">
       <select class="fq" aria-label="How often">${FREQS.map(([v,l])=>`<option value="${v}"${v===it.freq?" selected":""}>${l}</option>`).join("")}</select>
       <select class="cat" data-c="${esc(it.cat||"")}" aria-label="Category">${CATS.map(([v,l])=>`<option value="${v}"${v===(it.cat||"")?" selected":""}>${l}</option>`).join("")}</select>
@@ -2610,12 +2728,19 @@ function rows(kind){
     </div>`).join("");
   paintPay(kind); paintSortHeads(kind);
 }
+function acctPicker(it,kind){
+  const ids=[MAIN,...accts().map(a=>a.id)], from=acctOf(it);
+  const opt=(v,sel)=>`<option value="${v}"${v===sel?" selected":""}>${esc(acctName(v))}</option>`;
+  return `<span class="acx"><label>${kind==="in"?"Into":"From"} <select class="ac" aria-label="${kind==="in"?"Paid into account":"Paid from account"}">${ids.map(v=>opt(v,from)).join("")}</select></label>`+
+    (kind==="out"?`<label>Moves to <select class="to" aria-label="Transfer to account"><option value="">Not a transfer</option>${ids.filter(v=>v!==from).map(v=>opt(v,it.to||"")).join("")}</select></label>`:"")+`</span>`;
+}
 /* The preview line under each name, and the totals footer. Text only, so typing never loses focus. */
 function itemPreview(it){
   const start=state.start, m=monthly(it,start);
   if(pausedByPlan(it,debtPlan())) return `Paused — your <a href="#/debt">debt plan</a> pays this debt until ${debtPlan().end.toLocaleDateString("en-CA",{month:"short",year:"numeric"})}`;
   if(!it.amount||!it.start) return "";
   if(ended(it,start)) return `Ended ${dLabel(parseD(it.end))} — not counted`;
+  if(isMove(it)) return `Moves ≈ <b>${money(Math.round(m))}</b>/mo to ${esc(acctName(it.to))} · not counted as spending`;
   let txt=`≈ <b>${money(Math.round(m))}</b>/mo · ${money(Math.round(m*12))}/yr`;
   if(it.end){
     const n=occurrences(it,parseD(start),parseD(it.end)).length;
@@ -2633,7 +2758,7 @@ function sumHTML(it,kind){
   if(ended(it)) bits.push("ended");
   else if(nx) bits.push("next "+dLabel(nx));
   if(it.end&&!ended(it)) bits.push("ends "+parseD(it.end).toLocaleDateString("en-CA",{month:"short",year:"numeric"}));
-  const dot=kind==="in"?"var(--gain)":`var(--${it.cat||"ink-faint"})`;
+  const dot=kind==="in"?"var(--gain)":`var(--${isMove(it)?"ink-faint":it.cat||"ink-faint"})`;
   return `<i class="cdot" style="background:${dot}"></i>
     <span class="sn"><b>${esc(it.name||"Untitled")}</b><small><span class="sfq">${esc(bits[0])}</span><span class="sadv">${esc(bits.slice(1).map(x=>" · "+x).join(""))}</span></small></span>
     <span class="sa"><b>${kind==="in"?"+":""}${money2(+it.amount||0)}</b><small>${FQS[it.freq]||""}</small></span>
@@ -2645,15 +2770,16 @@ function paintPay(kind){
   list.forEach(it=>{ const el=document.querySelector(`[data-pv="${it.id}"]`); if(!el) return;
     el.classList.toggle("ended",ended(it)); el.innerHTML=itemPreview(it); });
   const foot=$(kind==="in"?"inFoot":"outFoot"); if(!foot) return;
-  const live=list.filter(it=>+it.amount&&!ended(it));
+  const live=list.filter(it=>+it.amount&&!ended(it)&&!isMove(it));
   if(!list.length){ foot.innerHTML=""; return; }
   const per=live.reduce((a,it)=>a+monthly(it),0);
+  const moved=list.filter(it=>+it.amount&&!ended(it)&&isMove(it)).reduce((a,it)=>a+monthly(it),0);
   const from=parseD(state.start), d30=new Date(from); d30.setDate(d30.getDate()+30);
   const next30=live.reduce((a,it)=>a+occurrences(it,from,d30).length*(+it.amount||0),0);
   const ends=list.filter(it=>it.end&&!ended(it)).length;
   const offs=(state.oneoffs||[]).filter(o=>o.dir===(kind==="in"?"in":"out"));
   const offM=offs.reduce((a,o)=>a+Math.abs(+o.amount||0),0)/spanMonths();
-  const offNote=offs.length?` · plus ${money(Math.round(offM))}/mo of one-offs on the Forecast`:"";
+  const offNote=(offs.length?` · plus ${money(Math.round(offM))}/mo of one-offs on the Forecast`:"")+(moved?` · ${money(Math.round(moved))}/mo moved between accounts, not counted`:"");
   foot.innerHTML=`<span class="tl">Total<small>${live.length} ${kind==="in"?"source":"payment"}${live.length===1?"":"s"}${ends?` · ${ends} with an end date`:""}${offNote}</small></span>
     <span>per month<b>${money2(per)}</b></span>
     <span>per year<b>${money(Math.round(per*12))}</b></span>
@@ -2816,7 +2942,7 @@ function budgetSlices(mode,sc){
   const {income,t,out,save}=budgetTotals(sc), span=spanMonths(), list=[];
   if(mode==="item"){
     const lines=[];
-    sc.outflow.forEach(it=>lines.push({label:it.name||"(unnamed)",cat:it.cat||"",val:monthly(it,sc.start),
+    sc.outflow.filter(it=>!isMove(it)).forEach(it=>lines.push({label:it.name||"(unnamed)",cat:it.cat||"",val:monthly(it,sc.start),
       sub:(FREQS.find(f=>f[0]===it.freq)||["",""])[1]}));
     (sc.oneoffs||[]).filter(o=>o.dir==="out").forEach(o=>lines.push({label:o.name||"(unnamed)",cat:o.cat||"",
       val:Math.abs(+o.amount||0)/span,sub:"one-off, spread"}));
@@ -3026,6 +3152,7 @@ function renderForecast(){
   safely(()=>renderCalendar(p));
   safely(()=>paintCompare(p,gp));
   safely(()=>drawChart("chart",p,gp));
+  safely(renderAccounts);
   $("calView").hidden=ledgerView!=="cal";
   $("listView").hidden=ledgerView==="cal";
   $("viewTitle").textContent=ledgerView==="cal"?"Calendar":"Day by day";
@@ -3296,7 +3423,8 @@ function renderReport(){
   const b=budgetTotals(), p=project(), f=debtFacts(), sp=doc.split, today=new Date();
   const pc=v=>b.income>0?v/b.income*100:0;
   const dShort=d=>d.toLocaleDateString("en-CA",{month:"short",day:"numeric",year:"numeric"});
-  const head=n=>`<div class="rhead"><span class="bk">Waterline</span><span class="ti">Financial overview · ${esc(state.name)}</span><span class="pg">Page ${n} of 2</span></div>`;
+  const W=doc.wealth, hasW=W.assets.length+W.liabs.length+W.goals.length>0, pages=hasW?3:2;
+  const head=n=>`<div class="rhead"><span class="bk">Waterline</span><span class="ti">Financial overview · ${esc(state.name)}</span><span class="pg">Page ${n} of ${pages}</span></div>`;
   const foot=`<div class="rfoot">Prepared ${dShort(today)} at wtrline.com from figures entered by the user. Projections assume every income and bill arrives as entered; they do not include interest on the bank balance, fees, or overdraft charges. A planning aid, not financial advice.</div>`;
 
   /* ---- page 1 ---- */
@@ -3412,6 +3540,49 @@ function renderReport(){
     </section>
     ${foot}`; };
 
+  /* ---- page 3: net worth, from the Wealth page ---- */
+  const page3=o=>{
+    const t=wTotals(), m=iso(today).slice(0,7), prev=[...W.history].reverse().find(x=>x.m<m);
+    const chg=prev?t.net-(prev.a-prev.l):null;
+    const run=wProject(600), {fi}=wFI(run);
+    const by={}; W.assets.forEach(a=>{ const v=+a.value||0; if(v>0){ const g=aType(a.type)[2]; by[g]=(by[g]||0)+v; } });
+    const assets=[...W.assets].sort((a,c)=>(+c.value||0)-(+a.value||0));
+    const owe=[...f.list.map(d=>({name:d.name||"Debt",kind:"Debt page",bal:+d.balance||0,apr:+d.apr||0})),
+      ...W.liabs.map(l=>({name:l.name||"Liability",kind:(L_TYPES.find(x=>x[0]===l.type)||["","Other"])[1],bal:+l.balance||0,apr:+l.apr||0}))].sort((a,c)=>c.bal-a.bal);
+    const more=(n,shown,what)=>n>shown?`<tr><td colspan="4" style="color:#6b6b70">and ${n-shown} more ${what} — the totals include them</td></tr>`:"";
+    return head(3)+`<h2 style="margin-bottom:2px">Net worth</h2>
+    <p class="mini" style="margin-bottom:12px">Balances as entered, on ${dShort(today)} · cards and loans from the Debt page included</p>
+    <div class="rstats">
+      ${stat("Net worth",money(Math.round(t.net)),chg===null?"first snapshot":`${chg>=0?"+":"−"}${money(Math.abs(Math.round(chg)))} since ${monLab(prev.m)}`,t.net<0?"neg":"")}
+      ${stat("You own",money(Math.round(t.assets)),`${W.assets.length} ${W.assets.length===1?"asset":"assets"}`)}
+      ${stat("You owe",money(Math.round(t.liab)),`${owe.length} ${owe.length===1?"balance":"balances"}`)}
+      ${stat(`In ${W.proj.years} years`,money(Math.round(run.net[W.proj.years*12])),"projected")}
+    </div>
+    <div class="two">
+      <section><h3>What you own</h3>
+        <table><thead><tr><th>Asset</th><th>Type</th><th class="r">Value</th></tr></thead><tbody>
+        ${assets.slice(0,o.assets).map(a=>`<tr><td>${esc(a.name||"—")}</td><td>${aType(a.type)[1]}</td><td class="r">${money2(+a.value||0)}</td></tr>`).join("")||`<tr><td colspan="3">None entered</td></tr>`}
+        ${more(assets.length,o.assets,"assets")}</tbody></table></section>
+      <section><h3>What you owe</h3>
+        <table><thead><tr><th>Balance</th><th>From</th><th class="r">Rate</th><th class="r">Owed</th></tr></thead><tbody>
+        ${owe.slice(0,o.owe).map(d=>`<tr><td>${esc(d.name)}</td><td>${esc(d.kind)}</td><td class="r">${d.apr?d.apr.toFixed(2)+"%":"—"}</td><td class="r">${money2(d.bal)}</td></tr>`).join("")||`<tr><td colspan="4">Nothing owed</td></tr>`}
+        ${more(owe.length,o.owe,"balances")}</tbody></table></section>
+    </div>
+    ${t.assets>0?`<section><h3>Where it sits</h3><table><thead><tr><th>Kind</th><th class="r">Value</th><th class="r">Share</th></tr></thead><tbody>
+      ${Object.keys(A_GROUPS).filter(k=>by[k]).map(k=>`<tr><td>${A_GROUPS[k][0]}</td><td class="r">${money2(by[k])}</td><td class="r">${(by[k]/t.assets*100).toFixed(0)}%</td></tr>`).join("")}
+      </tbody></table></section>`:""}
+    ${W.goals.length?`<section><h3>Goals</h3><table><thead><tr><th>Goal</th><th class="r">Target</th><th class="r">Saved</th><th class="r">By</th><th class="r">Needs</th></tr></thead><tbody>
+      ${W.goals.slice(0,o.goals).map(g=>{ const nd=goalNeed(g); return `<tr><td>${esc(g.name||"—")}</td><td class="r">${money2(+g.target||0)}</td><td class="r">${money2(+g.saved||0)}</td>
+        <td class="r">${g.by?parseD(g.by).toLocaleDateString("en-CA",{month:"short",year:"numeric"}):"—"}</td><td class="r">${nd.left===0?"Done":nd.mo?money(Math.round(nd.mo))+"/mo":"—"}</td></tr>`; }).join("")}
+      </tbody></table></section>`:""}
+    <section><h3>Where it's heading</h3><table><tbody>
+      ${[1,5,10].filter(y=>y<=Math.max(10,W.proj.years)).map(y=>`<tr><td>Net worth in ${y} year${y===1?"":"s"}</td><td class="r">${money2(run.net[y*12])}</td></tr>`).join("")}
+      <tr><td>Everything owed paid off</td><td class="r">${run.freeAt===null?(t.liab?"Not at these payments":"Nothing owed"):run.freeAt<24?`in ${run.freeAt} months`:`in ${(run.freeAt/12).toFixed(1)} years`}</td></tr>
+      <tr><td>Financial independence (25× a year's spending)</td><td class="r">${fi}</td></tr>
+      </tbody></table>
+      <p class="mini">Assumes ${money(Math.round(run.monthly))} a month saved at ${+W.proj.ret||0}% a year, assets growing at their own rates, and debts paid at their minimums.</p></section>
+    ${foot}`; };
+
   /* Fit each page to one A4 sheet: render into an off-screen print-width box and
      trim the longest lists until it fits. Whatever is trimmed is the least important. */
   const box=reportMeasure(), LIMIT=267*96/25.4;   // A4 minus 13mm margins is 271mm; keep 4mm in hand
@@ -3424,9 +3595,13 @@ function renderReport(){
   for(const [k,max] of [["debts",8],["order",8],["moves",12]]){
     while(o2[k]<max&&fits(page2({...o2,[k]:o2[k]+1}))) o2[k]++; }
   while(o1.items<12&&fits(page1({items:o1.items+1}))) o1.items++;
+  const o3={assets:14,owe:10,goals:8};
+  if(hasW) for(const [k,min] of [["assets",5],["owe",4],["goals",3]]){ while(!fits(page3(o3))&&o3[k]>min) o3[k]--; }
   box.innerHTML="";
   $("rpt1").innerHTML=page1(o1);
   $("rpt2").innerHTML=page2(o2);
+  $("rpt3").hidden=!hasW; $("rpt3").innerHTML=hasW?page3(o3):"";
+  $("rpt2").style.breakAfter=$("rpt2").style.pageBreakAfter=hasW?"":"auto";   // no blank page after page 2
   /* on phones some report tables scroll sideways: make those reachable from the keyboard */
   requestAnimationFrame(()=>document.querySelectorAll("#page-report .sheetpage section").forEach(sec=>{
     const wide=sec.scrollWidth>sec.clientWidth+1;
@@ -3450,6 +3625,238 @@ $("pdfBtn").addEventListener("click",()=>{
   setTimeout(()=>window.print(),30);
 });
 $("reportRefresh").addEventListener("click",()=>{ safely(renderReport); flag("Report rebuilt",1400); });
+
+/* ============================================================
+   10c. BANK CSV IMPORT
+   The file is read here in the browser and never uploaded or saved. Waterline finds the date,
+   description and amount columns, groups payments that repeat on a steady rhythm, and offers
+   them as income and bills. Nothing is added until you pick what to keep.
+   ============================================================ */
+function parseCSV(text){
+  text=String(text).replace(/^﻿/,"");
+  const head=text.slice(0,4000), delim=[",",";","\t"].sort((a,b)=>head.split(b).length-head.split(a).length)[0];
+  const rows=[]; let row=[], f="", q=false;
+  const end=()=>{ row.push(f); f=""; if(row.some(x=>x.trim()!=="")) rows.push(row.map(x=>x.trim())); row=[]; };
+  for(let i=0;i<text.length;i++){ const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===delim){ row.push(f); f=""; }
+    else if(c==="\n"||c==="\r"){ if(c==="\r"&&text[i+1]==="\n") i++; end(); }
+    else f+=c; }
+  end();
+  // banks put account details above the table: keep the rows with the usual column count
+  const n={}; rows.forEach(r=>{ n[r.length]=(n[r.length]||0)+1; });
+  const w=+Object.keys(n).sort((a,b)=>n[b]-n[a]||b-a)[0];
+  return rows.filter(r=>r.length===w);
+}
+function dateParts(s){
+  s=String(s||"").trim(); let m;
+  if((m=s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/))) return{y:+m[1],a:+m[2],b:+m[3],ymd:true};
+  if((m=s.match(/^(\d{4})(\d{2})(\d{2})$/))) return{y:+m[1],a:+m[2],b:+m[3],ymd:true};
+  if((m=s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})\b/))) return{y:m[3].length===2?2000+ +m[3]:+m[3],a:+m[1],b:+m[2]};
+  if(/[a-z]{3}/i.test(s)&&/\d{4}/.test(s)){ const t=Date.parse(s); if(!isNaN(t)){ const d=new Date(t); return{y:d.getFullYear(),a:d.getMonth()+1,b:d.getDate(),ymd:true}; } }
+  return null;
+}
+function toDate(p,dmy){
+  if(!p) return null;
+  const [mo,da]=p.ymd||!dmy?[p.a,p.b]:[p.b,p.a];
+  if(mo<1||mo>12||da<1||da>31) return null;
+  return new Date(p.y,mo-1,da);
+}
+function parseAmt(s){
+  s=String(s||"").trim(); if(!/\d/.test(s)) return null;
+  let neg=/^\(.*\)$/.test(s)||/^-|-$/.test(s.replace(/\s/g,""))||/\bDR\b/i.test(s);
+  if(/\bCR\b/i.test(s)) neg=false;
+  const n=parseFloat(s.replace(/[^0-9.,]/g,"").replace(/,(?=\d{3}(\D|$))/g,"").replace(",","."));
+  return isNaN(n)?null:neg?-n:n;
+}
+/* best guess at which column is which; the window lets you change it */
+function guessColumns(rows){
+  const first=rows[0]||[];
+  const header=!first.some(c=>dateParts(c))&&first.some(c=>/[a-z]/i.test(c));
+  const data=header?rows.slice(1):rows, cols=first.length;
+  const names=header?first:first.map((_,j)=>`Column ${j+1}`);
+  const stat=j=>{ let dates=0,nums=0,filled=0,len=0,txt=0,bigInt=0;
+    data.forEach(r=>{ const v=r[j]||""; if(!v) return; filled++;
+      if(dateParts(v)) dates++;
+      else if(parseAmt(v)!==null&&/^[\s$()+\-.,0-9CRDR]+$/i.test(v)){ nums++; if(/\d{9,}/.test(v.replace(/[,.\s]/g,""))&&!/[.,]\d{2}$/.test(v)) bigInt++; }
+      else{ txt++; len+=v.length; } });
+    return{j,dates,nums,filled,avg:txt?len/txt:0,bigInt,name:(names[j]||"").toLowerCase()}; };
+  const st=[...Array(cols).keys()].map(stat), N=Math.max(1,data.length);
+  const date=st.filter(c=>c.dates/N>0.6).sort((a,b)=>b.dates-a.dates)[0];
+  const skip=c=>/balance|solde|account|card|number|cheque|check/i.test(c.name)||c.bigInt>c.nums/2;
+  const nums=st.filter(c=>c!==date&&c.nums>0&&c.nums>=c.filled*0.8&&!skip(c));
+  const pick=re=>nums.find(c=>re.test(c.name));
+  let amount=-1, out=-1, inn=-1;
+  const o=pick(/debit|withdraw|paid out|money out|^out/), i=pick(/credit|deposit|paid in|money in|^in\b/), a=pick(/amount|montant|cad|value/);
+  if(o&&i){ out=o.j; inn=i.j; }
+  else if(a) amount=a.j;
+  else{ // two columns where each row fills exactly one: money out, then money in
+    let pair=null;
+    for(let x=0;x<nums.length&&!pair;x++) for(let y=x+1;y<nums.length&&!pair;y++){
+      const one=data.filter(r=>!!(r[nums[x].j]||"").trim()!==!!(r[nums[y].j]||"").trim()).length;
+      if(one/N>0.9) pair=[nums[x].j,nums[y].j]; }
+    if(pair){ out=pair[0]; inn=pair[1]; } else if(nums.length) amount=nums[0].j;
+  }
+  const desc=st.filter(c=>c!==date&&!nums.includes(c)).sort((a,b)=>b.avg-a.avg)[0];
+  // day-first only when some date can't be month-first
+  const dmy=date?data.some(r=>{ const p=dateParts(r[date.j]); return p&&!p.ymd&&p.a>12; }):false;
+  return{header,names,date:date?date.j:-1,desc:desc?desc.j:-1,amount,out,inn,dmy};
+}
+function readTransactions(rows,m){
+  const data=m.header?rows.slice(1):rows, list=[];
+  data.forEach(r=>{
+    const d=toDate(dateParts(r[m.date]),m.dmy); if(!d) return;
+    let amt=null;
+    if(m.amount>=0){ const v=parseAmt(r[m.amount]); if(v!==null) amt=m.flip?-v:v; }
+    else{ const o=parseAmt(r[m.out]), i=parseAmt(r[m.inn]); if(o!==null||i!==null) amt=Math.abs(i||0)-Math.abs(o||0); }
+    if(amt===null||Math.abs(amt)<0.005) return;
+    list.push({date:d,desc:(r[m.desc]||"").trim(),amt});
+  });
+  return list.sort((a,b)=>a.date-b.date);
+}
+const NOISE=/\b(pos|purchase|payment|pmt|pre-?auth(orized)?|preauthorized|debit|interac|e-?transfer|visa|mastercard|ach|online|bill pay(ment)?|tfr|ref|id|inc|ltd|corp|ca|on|qc|bc|ab|www|com)\b/g;
+const descKey=s=>s.toLowerCase().replace(/\d{3,}|#\S+|\*\S*/g," ").replace(NOISE," ").replace(/[^a-z& ]+/g," ").replace(/\s+/g," ").trim().split(" ").slice(0,3).join(" ")||s.toLowerCase().slice(0,24);
+const niceName=s=>s.replace(/\[[^\]]*\]|\(?\d{3}\)?[-. ]?\d{3}[-. ]?\d{0,4}|\d{4,}|#\S+|\*\S*|\.com\b/gi," ")
+  .replace(/\b(pre-?auth(ori[sz]ed)?|preauthori[sz]ed|pos|purchase|interac|e-?transfer|dep(osit)?)\b/gi," ")
+  .replace(/[-.,/ ]+$/,"").replace(/\s+/g," ").trim().toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase()).slice(0,32)||"Payment";
+const RHYTHMS=[["weekly",5,9,3],["biweekly",12,16,3],["monthly",26,35,3],["quarterly",80,100,2],["yearly",350,380,2]];
+const CAT_WORDS=[[/rent|mortgage|insur|hydro|enbridge|utility|water|gas|phone|mobile|rogers|bell|telus|fido|koodo|freedom|internet|grocer|loblaw|metro|sobeys|no frills|costco|walmart|pharma|daycare|tuition|transit|presto/,"need"],
+  [/netflix|spotify|disney|prime|apple|youtube|crave|xbox|playstation|steam|uber eats|doordash|skip|restaurant|cafe|coffee|starbucks|tim hortons|gym|fitness/,"want"],
+  [/loan|credit|card|line of|lending|financ|capital one|amex|easyfinancial|fairstone/,"debt"]];
+function findRecurring(tx,plan){
+  const groups=new Map();
+  tx.forEach(t=>{ const k=descKey(t.desc)+(t.amt>0?"+":"-"); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(t); });
+  const last=tx.length?tx[tx.length-1].date:new Date(), out=[];
+  const med=a=>{ const s=[...a].sort((x,y)=>x-y), h=s.length>>1; return s.length%2?s[h]:(s[h-1]+s[h])/2; };
+  groups.forEach((g,k)=>{
+    if(g.length<2) return;
+    const gaps=g.slice(1).map((t,i)=>Math.round((t.date-g[i].date)/864e5)).filter(x=>x>0); if(!gaps.length) return;
+    const gap=med(gaps), r=RHYTHMS.find(([,lo,hi])=>gap>=lo&&gap<=hi); if(!r) return;
+    const [freq,lo,hi,minN]=r;
+    if(g.length<minN||gaps.filter(x=>x>=lo-2&&x<=hi+2).length/gaps.length<0.6) return;
+    const amts=g.map(t=>Math.abs(t.amt)), amount=Math.round(med(amts)*100)/100;
+    const steady=amts.filter(a=>Math.abs(a-amount)<=amount*0.2).length/amts.length;
+    if(steady<0.6) return;
+    const kind=g[0].amt>0?"in":"out", lastSeen=g[g.length-1].date;
+    const stopped=(last-lastSeen)/864e5>gap*2.2;
+    let next=new Date(lastSeen), i=0; const from=parseD(state.start);
+    while(next<from&&i++<400) next=step(next,freq,1);
+    const raw=g.map(t=>t.desc).sort((a,b)=>g.filter(t=>t.desc===b).length-g.filter(t=>t.desc===a).length)[0];
+    const text=raw.toLowerCase(), cat=kind==="in"?"":((CAT_WORDS.find(([re])=>re.test(text))||[])[1]||"");
+    const mine=(kind==="in"?plan.inflow:plan.outflow).find(it=>it.freq===freq&&Math.abs((+it.amount||0)-amount)<=Math.max(2,amount*0.05)
+      ||descKey(it.name||"")===descKey(raw));
+    out.push({key:k,kind,name:niceName(raw),amount,freq,cat,start:iso(next),seen:g.length,lastSeen,stopped,
+      varies:steady<1,already:mine?mine.name||"an item":null,pick:!stopped&&!mine});
+  });
+  return out.sort((a,b)=>(a.kind===b.kind?0:a.kind==="in"?-1:1)||b.amount-a.amount);
+}
+
+/* ---- the import window ---- */
+const csv={file:"",rows:null,map:null,found:[]};
+function openCsv(){ $("csvVeil").dataset.open="1"; paintCsv(); setTimeout(()=>{ const f=$("csvVeil").querySelector("#csvPick,#csvAdd"); if(f) f.focus(); },30); }
+function closeCsv(){ $("csvVeil").dataset.open="0"; $("csvOpen").focus({preventScroll:true}); }
+function loadCsvFile(file){
+  if(!file) return;
+  if(file.size>5e6){ csvMsg("That file is over 5 MB. Export a shorter date range and try again.",true); return; }
+  const r=new FileReader();
+  r.onload=()=>{ const rows=parseCSV(r.result);
+    if(rows.length<3){ csvMsg("That file doesn't look like a bank statement CSV.",true); return; }
+    csv.file=file.name; csv.rows=rows; csv.map=guessColumns(rows);
+    const m=csv.map;
+    if(m.amount>=0){ const v=(m.header?rows.slice(1):rows).map(x=>parseAmt(x[m.amount])).filter(x=>x!==null);
+      m.flip=v.length>0&&v.filter(x=>x>0).length/v.length>0.7; }   // mostly positive: spending is shown as positive
+    rescan(); };
+  r.onerror=()=>csvMsg("Couldn't read that file.",true);
+  r.readAsText(file);
+}
+function rescan(){ const was=document.activeElement&&document.activeElement.id;
+  csv.tx=readTransactions(csv.rows,csv.map); csv.found=findRecurring(csv.tx,state); paintCsv();
+  const back=was&&$(was); (back&&$("csvVeil").contains(back)?back:$("csvTitle")).focus({preventScroll:true}); }
+function csvMsg(t,err){ const m=$("csvMsg"); if(m){ m.textContent=t; m.className="msg"+(err?" err":""); } }
+function paintCsv(){
+  const body=$("csvBody");
+  if(!csv.rows){
+    body.innerHTML=`<label class="csvdrop" id="csvDrop"><input type="file" id="csvFile" accept=".csv,text/csv" hidden>
+        <b>Choose a CSV file</b><span>or drop it here. Most banks offer “Download transactions” as CSV.</span>
+        <span class="btn fill sm" id="csvPick" tabindex="0" role="button">Choose file</span></label>
+      <p class="mini">Read on this device only. The file isn't uploaded or saved, and nothing is added until you choose.</p>
+      <p class="msg" id="csvMsg" role="alert"></p>`;
+    return;
+  }
+  const m=csv.map, tx=csv.tx, cols=m.names.map((n,j)=>[j,n||`Column ${j+1}`]);
+  const sel=(id,v,lbl,none)=>`<label>${lbl}<select id="${id}">${none?`<option value="-1">${none}</option>`:""}${cols.map(([j,n])=>`<option value="${j}"${j===v?" selected":""}>${esc(n)}</option>`).join("")}</select></label>`;
+  const two=m.amount<0;
+  const span=tx.length?Math.max(1,(tx[tx.length-1].date-tx[0].date)/864e5/30.44):1;
+  const tin=tx.filter(t=>t.amt>0).reduce((a,t)=>a+t.amt,0)/span, tout=-tx.filter(t=>t.amt<0).reduce((a,t)=>a+t.amt,0)/span;
+  const b=budgetTotals(), picked=csv.found.filter(f=>f.pick).length;
+  const row=(f,i)=>`<div class="csvrow${f.pick?"":" off"}" data-i="${i}">
+      <input type="checkbox" data-k="pick" ${f.pick?"checked":""} aria-label="Add ${esc(f.name)}">
+      <input data-k="name" value="${esc(f.name)}" aria-label="Name">
+      <label class="fld"><span class="mlabel">Amount</span><input class="amt" type="number" step="0.01" data-k="amount" value="${f.amount}" aria-label="Amount"></label>
+      <label class="fld"><span class="mlabel">How often</span><select data-k="freq" aria-label="How often">${FREQS.map(([v,l])=>`<option value="${v}"${v===f.freq?" selected":""}>${l}</option>`).join("")}</select></label>
+      <label class="fld"><span class="mlabel">Category</span>${f.kind==="in"?`<span class="csvin">Income</span>`:`<select data-k="cat" aria-label="Category">${CATS.map(([v,l])=>`<option value="${v}"${v===f.cat?" selected":""}>${l}</option>`).join("")}</select>`}</label>
+      <label class="fld"><span class="mlabel">Next</span><input type="date" data-k="start" value="${f.start}" aria-label="Next payment"></label>
+      <small>${f.seen} times · last ${dLabel(f.lastSeen)}${f.varies?" · amount varies, median shown":""}${f.already?` · <b>looks like “${esc(f.already)}” in your plan</b>`:""}${f.stopped?" · <b>seems to have stopped</b>":""}</small>
+    </div>`;
+  const ins=csv.found.map((f,i)=>[f,i]).filter(([f])=>f.kind==="in"), outs=csv.found.map((f,i)=>[f,i]).filter(([f])=>f.kind==="out");
+  body.innerHTML=`<p class="csvsum"><b>${tx.length} transactions</b>${tx.length?` · ${dLabel(tx[0].date)} ${tx[0].date.getFullYear()} to ${dLabel(tx[tx.length-1].date)} ${tx[tx.length-1].date.getFullYear()}`:""} · ${esc(csv.file)} <button class="linkbtn" id="csvAgain">Choose another file</button></p>
+    <details class="csvmap"${tx.length?"":" open"}><summary>Columns${tx.length?"":" — check these, nothing could be read"}</summary>
+      <div class="csvcols">${sel("mDate",m.date,"Date")}${sel("mDesc",m.desc,"Description")}
+        ${two?sel("mOut",m.out,"Money out")+sel("mIn",m.inn,"Money in"):sel("mAmt",m.amount,"Amount")}
+        <label><span>Layout</span><select id="mLayout"><option value="1"${two?"":" selected"}>One amount column</option><option value="2"${two?" selected":""}>Separate money out and in</option></select></label>
+        <label><span>Dates</span><select id="mDmy"><option value="0"${m.dmy?"":" selected"}>Month first (11/03)</option><option value="1"${m.dmy?" selected":""}>Day first (03/11)</option></select></label>
+        ${two?"":`<label class="chk"><input type="checkbox" id="mFlip"${m.flip?" checked":""}> Spending is shown as positive numbers</label>`}</div></details>
+    ${tx.length?`<div class="csvavg"><span>Statement average<b>${money(Math.round(tin))} in · ${money(Math.round(tout))} out</b><small>a month</small></span>
+      <span>Your plan<b>${money(Math.round(b.income))} in · ${money(Math.round(b.out))} out</b><small>a month</small></span></div>`:""}
+    ${csv.found.length?`${ins.length?`<h3 class="csvh">Repeating income</h3>${ins.map(([f,i])=>row(f,i)).join("")}`:""}
+      ${outs.length?`<h3 class="csvh">Repeating bills</h3>${outs.map(([f,i])=>row(f,i)).join("")}`:""}`
+      :`<p class="empty">${tx.length?"No payments repeat on a steady rhythm in this file. A longer date range (three months or more) helps.":"Pick the date and amount columns above."}</p>`}
+    <div class="csvacts"><button class="btn fill" id="csvAdd"${picked?"":" disabled"}>Add ${picked} to my plan</button>
+      <span class="mini">${csv.found.length?"Ticked items become recurring income and bills. You can edit them after.":""}</span></div>
+    <p class="msg" id="csvMsg" role="alert"></p>`;
+}
+(()=>{
+  const veil=$("csvVeil");
+  $("csvOpen").addEventListener("click",openCsv);
+  $("csvClose").addEventListener("click",closeCsv);
+  veil.addEventListener("click",e=>{
+    if(e.target===veil){ closeCsv(); return; }
+    if(e.target.id==="csvAgain"){ csv.rows=null; csv.found=[]; paintCsv(); return; }
+    if(e.target.id==="csvAdd"){
+      const pick=csv.found.filter(f=>f.pick&&+f.amount>0); if(!pick.length) return;
+      const added=pick.map(f=>{ const it={id:id(),name:f.name,amount:+f.amount,freq:f.freq,start:f.start,end:"",cat:f.kind==="in"?"":f.cat};
+        (f.kind==="in"?state.inflow:state.outflow).push(it); return [f.kind,it.id]; });
+      csv.rows=null; csv.found=[]; closeCsv(); renderBudget(); save();
+      undoToast(`Added ${added.length} from your statement`,()=>{ added.forEach(([k,i])=>{ const l=k==="in"?state.inflow:state.outflow, j=l.findIndex(x=>x.id===i); if(j>=0) l.splice(j,1); }); render(); });
+    }
+  });
+  document.addEventListener("keydown",e=>{
+    if(veil.dataset.open!=="1") return;
+    if(e.key==="Escape"){ closeCsv(); return; }
+    if(e.target.id==="csvPick"&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); $("csvFile").click(); }
+  });
+  veil.addEventListener("change",e=>{
+    const t=e.target, m=csv.map;
+    if(t.id==="csvFile"){ loadCsvFile(t.files[0]); return; }
+    const r=t.closest(".csvrow");
+    if(r){ const f=csv.found[+r.dataset.i], k=t.dataset.k; if(!f||!k) return;
+      f[k]=k==="pick"?t.checked:t.value; if(k==="pick"){ r.classList.toggle("off",!t.checked);
+        const n=csv.found.filter(x=>x.pick).length, b=$("csvAdd"); b.textContent=`Add ${n} to my plan`; b.disabled=!n; }
+      return; }
+    if(!m) return;
+    if(t.id==="mDate") m.date=+t.value; if(t.id==="mDesc") m.desc=+t.value;
+    if(t.id==="mAmt") m.amount=+t.value; if(t.id==="mOut") m.out=+t.value; if(t.id==="mIn") m.inn=+t.value;
+    if(t.id==="mDmy") m.dmy=t.value==="1"; if(t.id==="mFlip") m.flip=t.checked;
+    if(t.id==="mLayout"){ if(t.value==="2"){ m.amount=-1; if(m.out<0) m.out=0; if(m.inn<0) m.inn=Math.min(1,m.names.length-1); } else { m.amount=Math.max(0,m.out); } }
+    rescan();
+  });
+  veil.addEventListener("input",e=>{ const r=e.target.closest(".csvrow"), k=e.target.dataset.k;
+    if(r&&k&&k!=="pick"&&e.target.tagName==="INPUT") csv.found[+r.dataset.i][k]=e.target.value; });
+  veil.addEventListener("dragover",e=>{ if(e.target.closest("#csvDrop")){ e.preventDefault(); e.target.closest("#csvDrop").classList.add("over"); } });
+  veil.addEventListener("dragleave",e=>{ const d=e.target.closest("#csvDrop"); if(d) d.classList.remove("over"); });
+  veil.addEventListener("drop",e=>{ if(!e.target.closest("#csvDrop")) return; e.preventDefault(); loadCsvFile(e.dataTransfer.files[0]); });
+})();
 
 /* ============================================================
    10b. WEALTH (preview) — net worth, goals, projection
@@ -3663,6 +4070,13 @@ function wProject(months){
   }
   return{net,inv,monthly,freeAt};
 }
+/* financial independence: invested money reaching 25 times a year of spending (the 4% rule of thumb) */
+function wFI(run){
+  const yearly=budgetTotals().out*12, target=yearly*25, t=new Date();
+  if(!(yearly>0)) return{fi:"—",target};
+  const k=run.inv.findIndex(v=>v>=target);
+  return{target,fi:k<0?"Not within 50 years at this pace":k===0?"Already there":`in about ${(k/12).toFixed(k<120?1:0)} years (${t.getFullYear()+Math.floor((t.getMonth()+k)/12)})`};
+}
 function wProjection(){
   const pr=doc.wealth.proj, yrs=pr.years;
   $("wYears").value=yrs; $("wYearsLab").innerHTML=`${yrs} <small>year${yrs===1?"":"s"}</small>`;
@@ -3678,11 +4092,7 @@ function wProjection(){
     {label:"Projected net worth",legend:`<div class="mixleg" style="padding:6px 4px 0;grid-template-columns:repeat(auto-fit,minmax(150px,max-content))">
       <div style="border:0"><i class="dot" style="background:var(--accent)"></i><span>Net worth</span></div>
       <div style="border:0"><i class="dot" style="background:var(--gain)"></i><span>Invested and saved</span></div></div>`});
-  // financial independence: invested money reaching 25 times a year of spending (the 4% rule of thumb)
-  const yearly=budgetTotals().out*12, target=yearly*25;
-  let fi="—";
-  if(yearly>0){ const k=run.inv.findIndex(v=>v>=target);
-    fi=k<0?"Not within 50 years at this pace":k===0?"Already there":`in about ${(k/12).toFixed(k<120?1:0)} years (${y0+Math.floor((new Date().getMonth()+k)/12)})`; }
+  const {fi,target}=wFI(run);
   const kv=(a,b)=>`<div class="kv"><span>${a}</span><b>${b}</b></div>`;
   $("wProjKv").innerHTML=
     kv(`Net worth in ${yrs} year${yrs===1?"":"s"}`,money(Math.round(run.net[n])))+
@@ -4137,9 +4547,12 @@ function paintAccount(){
    flag and save stamps are left out, so cosmetic drift never triggers a question. */
 function fingerprint(d){
   if(!d||!Array.isArray(d.scenarios)) return "";
+  const ac=x=>x.acct||x.to?[x.acct||"",x.to||""]:[];
   const slim=sc=>({n:sc.name,b:+sc.balance||0,s:sc.start,
-    i:(sc.inflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||"",x.end||""]),
-    o:(sc.outflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||"",x.end||""]),
+    i:(sc.inflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||"",x.end||"",...ac(x)]),
+    o:(sc.outflow||[]).map(x=>[x.name||"",+x.amount||0,x.freq,x.start,x.cat||"",x.end||"",...ac(x)]),
+    a:(sc.accounts||[]).length?sc.accounts.map(a=>[a.name||"",a.type,+a.balance||0,+a.limit||0]):undefined,
+    m:sc.mainName||undefined,
     f:(sc.oneoffs||[]).map(x=>[x.name||"",+x.amount||0,x.date,x.dir,x.cat||""])});
   return JSON.stringify({sc:d.scenarios.map(slim),
     dt:(d.debts||[]).map(x=>[x.name||"",+x.balance||0,+x.apr||0,+x.minimum||0]),
@@ -4444,6 +4857,8 @@ document.addEventListener("change",e=>{
     if(e.target.classList.contains("en")&&it.end&&it.start&&it.end<it.start){
       it.end=it.start; e.target.value=it.start; flag("End date can't be before the first payment",2400); budgetLight(); }
     if(e.target.classList.contains("cat")){ it.cat=e.target.value; e.target.dataset.c=it.cat; renderBudget(); save(); }
+    if(e.target.classList.contains("ac")){ it.acct=e.target.value===MAIN?"":e.target.value; if(it.to===acctOf(it)) it.to=""; renderBudget(); save(); }
+    if(e.target.classList.contains("to")){ it.to=e.target.value; renderBudget(); save(); }
   }
 });
 $("horizRange").addEventListener("input",e=>{
@@ -4689,15 +5104,75 @@ window.__waterline={get doc(){return doc}, project:(o)=>project(state,o), debtPl
 /* ============================================================
    17. BOOT
    ============================================================ */
-function fillSeed(){ $("seedBal").value=state.balance; $("seedDate").value=state.start; paintSeed(); }
+function fillSeed(){ $("seedBal").value=state.balance; $("seedDate").value=state.start; safely(renderAcctBox); paintSeed(); }
+/* ---- accounts: edited in the Starting point card, all as of the same date ---- */
+function renderAcctBox(){
+  const list=accts();
+  $("acctBox").innerHTML=(list.length
+    ? `<div class="acmain"><label class="tiny" for="mainName">The balance above is for</label>
+        <input id="mainName" value="${esc(state.mainName)}" placeholder="Main account" aria-label="Main account name"></div>
+       <div class="achead"><span>Other accounts</span><span>Type</span><span>Balance or owed</span><span>Limit</span><span></span></div>`+
+      list.map(a=>{ const card=a.type==="card"; return `<div class="acrow" data-acct="${a.id}">
+        <input class="an" data-af="name" value="${esc(a.name)}" placeholder="${card?"Visa":"Savings"}" aria-label="Account name">
+        <label class="fld"><span class="mlabel">Type</span><select data-af="type" aria-label="Account type"><option value="bank"${card?"":" selected"}>Bank account</option><option value="card"${card?" selected":""}>Credit card</option></select></label>
+        <label class="fld"><span class="mlabel">${card?"Owed":"Balance"}</span><input class="amt" type="number" step="0.01" data-af="balance" value="${esc(a.balance)}" aria-label="${card?"Amount owed":"Balance"}"></label>
+        <label class="fld">${card?`<span class="mlabel">Limit</span><input class="amt" type="number" step="100" data-af="limit" value="${esc(a.limit)}" aria-label="Credit limit">`:""}</label>
+        <button class="kill" title="Remove" aria-label="Remove account">&times;</button></div>`; }).join("")
+    : `<p class="acnote">One account is enough for most plans. Add savings or a credit card to see each balance on its own and move money between them.</p>`)+
+    `<button class="addrow" id="addAcct">Add an account</button>`;
+}
+$("acctBox").addEventListener("input",e=>{
+  const t=e.target;
+  if(t.id==="mainName"){ state.mainName=t.value; save(); return; }
+  const row=t.closest("[data-acct]"), f=t.dataset.af; if(!row||!f||f==="type") return;
+  const a=accts().find(x=>x.id===row.dataset.acct); if(a){ a[f]=t.value; save(); }
+});
+$("acctBox").addEventListener("change",e=>{
+  const t=e.target, row=t.closest("[data-acct]");
+  if(t.dataset.af==="type"&&row){ const a=accts().find(x=>x.id===row.dataset.acct); if(a){ a.type=t.value; renderAcctBox(); save(); } return; }
+  if(t.id==="mainName"||t.dataset.af==="name") safely(renderBudget);     // names show in each row's account picker
+});
+$("acctBox").addEventListener("click",e=>{
+  if(e.target.closest("#addAcct")){
+    if(!state.accounts) state.accounts=[];
+    state.accounts.push({id:id(),name:"",type:"bank",balance:"",limit:""});
+    renderAcctBox(); safely(renderBudget); save();
+    const n=$("acctBox").querySelectorAll(".acrow .an"); if(n.length) n[n.length-1].focus();
+    return; }
+  const kill=e.target.closest(".kill"), row=kill&&kill.closest("[data-acct]"); if(!row) return;
+  e.stopPropagation();
+  const list=state.accounts, i=list.findIndex(x=>x.id===row.dataset.acct); if(i<0) return;
+  const [gone]=list.splice(i,1), moved=[];
+  [...state.inflow,...state.outflow,...(state.oneoffs||[])].forEach(it=>{
+    if(it.acct===gone.id||it.to===gone.id){ moved.push([it,it.acct,it.to]); if(it.acct===gone.id) it.acct=""; if(it.to===gone.id) it.to=""; } });
+  renderAcctBox(); safely(renderBudget); save();
+  undoToast(`Removed ${nameOf(gone,"account")}${moved.length?` · ${moved.length} item${moved.length===1?"":"s"} moved to ${acctName(MAIN)}`:""}`,
+    ()=>{ list.splice(Math.min(i,list.length),0,gone); moved.forEach(([it,a,t])=>{ it.acct=a; it.to=t; }); fillSeed(); render(); });
+});
+$("acctEdit").addEventListener("click",()=>{ seedOpen=true; location.hash="#/overview"; setTimeout(openSeed,60); });
+function renderAccounts(){
+  const list=accts(); $("acctCard").hidden=!list.length; if(!list.length) return;
+  $("acctRows").innerHTML=[MAIN,...list.map(a=>a.id)].map(a=>{
+    const x=list.find(y=>y.id===a), card=!!x&&x.type==="card", p=project(state,{account:a}), end=p.series[p.series.length-1].bal;
+    let low, status, bad;
+    if(card){ const lim=+x.limit||0, over=lim>0?p.series.find(v=>-v.bal>lim):null;
+      bad=!!over; low=`Most owed ${money2(Math.max(0,-p.low.bal))} · ${dLabel(p.low.date)}`;
+      status=over?`Over the ${money(lim)} limit on ${dLabel(over.date)}`:lim?`Stays under the ${money(lim)} limit`:"No limit set"; }
+    else{ bad=p.low.bal<0; low=`Lowest ${money2(p.low.bal)} · ${dLabel(p.low.date)}`;
+      status=bad?`Goes under on ${dLabel(p.firstUnder||p.low.date)}`:"Stays above zero"; }
+    return `<div class="acline${bad?" bad":""}"><span class="acn"><b>${esc(acctName(a))}</b><small>${a===MAIN?(state.mainName?"Main account":"Where most bills come from"):card?"Credit card":"Bank account"}</small></span>
+      <span class="acl">${low}<small>${card?`Owed at the end: ${money2(Math.max(0,-end))}`:`At the end: ${money2(end)}`}</small></span>
+      <span class="acs">${status}</span></div>`; }).join("")+
+    `<p class="acfoot">The chart, calendar and lowest point above are for ${esc(acctName(MAIN))}. A transfer counts as money out of one account and into the other.</p>`;
+}
 /* The card shows on a fresh plan; after that it folds into a pill under the page title. */
 let seedOpen=false;
 /* The balance is as of its date. Once that's a week old, the forecast starts in the past,
    so the pill says so and the card offers the balance the plan expects today. */
 function seedAge(){ if(!doc.seedSet||!state.start) return 0;
   const t=new Date(); t.setHours(0,0,0,0); return Math.round((t-parseD(state.start))/864e5); }
-function expectedToday(){
-  const t=new Date(); t.setHours(0,0,0,0); let p=null; try{ p=project(); }catch(e){}
+function expectedToday(a){
+  const t=new Date(); t.setHours(0,0,0,0); let p=null; try{ p=project(state,{account:a||MAIN}); }catch(e){}
   if(!p||t>p.to) return null;
   let bal=p.series[0].bal; for(const s of p.series){ if(s.date>t) break; bal=s.bal; } return bal;
 }
@@ -4722,6 +5197,7 @@ function paintSeed(){
   }
 }
 $("seedRollBtn").addEventListener("click",e=>{
+  accts().forEach(a=>{ const v=expectedToday(a.id); if(v!==null) a.balance=Math.round((a.type==="card"?-v:v)*100)/100; });
   state.balance=+e.currentTarget.dataset.v; state.start=iso(new Date()); calMonth=null;
   fillSeed(); render(); save(); flag("Starting balance moved to today");
 });

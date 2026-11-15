@@ -99,7 +99,7 @@ Everything is plain JavaScript. No framework, no bundler, no dependencies beyond
 - **Scenario comparison** — duplicate a plan, change one bill's date, see both troughs side by side. This is the most useful missing feature.
 - **Interest on debts** — carry a balance and an APR, accrue monthly.
 - **Shareable read-only link** — a plan you can send to a partner without giving them edit access.
-- **CSV import** — read a bank export and suggest recurring items automatically.
+- ~~**CSV import**~~ — done in 3.2.0, see below.
 
 ---
 
@@ -399,3 +399,30 @@ sign-in works because the page runs in Chrome rather than a WebView.
   a daily copy.
 - **Files:** export and import use `{app:"Waterline", format:1, exportedAt, plan}`. Import also
   accepts a bare plan object.
+
+---
+
+## Update — November 2026: accounts, CSV import, report page 3 (3.2.0)
+
+### Accounts
+- Each scenario has one main account (`sc.balance`, optional `sc.mainName`) plus optional extra
+  accounts in `sc.accounts: [{id, name, type: "bank"|"card", balance, limit}]`. A card's `balance`
+  is the amount owed, stored positive.
+- Income and bills carry an optional `acct` (empty = main). A bill with `to` set is a **transfer**:
+  it leaves `acct` and lands in `to`, and `budgetTotals` skips it so it never counts as spending.
+- `project(sc, {account})` plays one account forward; with no `account` it is the main account, so
+  every existing page is unchanged. The Forecast's Accounts card runs it once per account.
+- The sync fingerprint only includes these fields when they're set, so plans without accounts keep
+  the same fingerprint and updating never looks like an edit.
+
+### CSV import
+- Entirely in the browser (`FileReader`); nothing is uploaded or stored. Handles quoted fields,
+  comma/semicolon/tab, bank preamble lines, signed amounts or separate debit/credit columns,
+  `MM/DD`, `DD/MM`, `YYYY-MM-DD` and `YYYYMMDD` dates. The column guess can be corrected in the window.
+- Recurring detection groups by a cleaned description and direction, then needs a steady rhythm
+  (weekly, bi-weekly, monthly, quarterly, yearly) and a steady amount (60% within 20% of the median).
+  Items that look like something already in the plan, or that stopped, start unticked.
+
+### Report
+- A third page (net worth, assets, liabilities, goals, projection) appears when the Wealth page has
+  anything on it; otherwise the report stays two pages.
