@@ -9,6 +9,39 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.3.1 — 21 November 2026
+
+**Waterline feels more like an app on your phone: no more zooming into fields, stuck highlights or a white status bar in dark mode.**
+
+### Better on phones
+
+- **No more zooming in.** Tapping an amount or name field on an iPhone no longer zooms the page in
+  (and leaves it zoomed). Fields are now large enough that the phone doesn't need to.
+- **No stuck highlights.** Buttons, chips and legend rows no longer stay highlighted after you tap
+  them. Hover effects now only appear when you're using a mouse.
+- **Buttons respond the moment you touch them.** Buttons, chips and menu items press in slightly
+  under your finger, the grey flash on tap is gone, and taps no longer wait to check for a double-tap.
+- **Right keypad.** Amounts, rates, targets and limits open the number keypad with a decimal point.
+- **Status bar matches.** With the theme on System, the phone's status bar is now dark in dark mode
+  instead of white.
+- **Sheets fit the screen.** The forecast chart, bank import and backup sheets now size to the part
+  of the screen you can actually see, so their bottom edge isn't hidden behind the browser bar.
+- Holding a finger on a button no longer selects its text.
+
+### Smoother
+
+- Switching pages and opening menus is quicker and snappier.
+- With **Reduce motion** turned on in your phone or computer settings, fades are kept but nothing
+  slides or moves.
+
+### Fixed
+
+- "1 months", "1 items" and "1 days" now read "1 month", "1 item" and "1 day".
+- A very small negative amount no longer shows as "-$0".
+- Large totals in the middle of the pie chart shrink to stay inside the ring.
+- Names cut off with "…" in the pie chart legend and the day list show in full when you hover over them.
+- Name fields are limited to 80 characters.
+
 ## 3.3.0 — 15 November 2026
 
 **Loan and credit card schedules: enter the terms, get the full amortization table, and every payment lands in your forecast.**

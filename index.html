@@ -9,7 +9,8 @@
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000">
 <meta name="color-scheme" content="light dark">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Waterline">
@@ -52,7 +53,7 @@
   --save:#1a7a4f;
   --r-lg:20px; --r-md:14px; --pill:980px;
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  --ease:cubic-bezier(.25,.1,.25,1);
+  --ease:cubic-bezier(.25,.1,.25,1);--ease-out:cubic-bezier(.23,1,.32,1);
   --shadow:0 1px 3px rgba(0,0,0,.05);
   color-scheme:light;
 }
@@ -92,7 +93,7 @@ html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(60px + env(safe-area-
 body{font-family:var(--font);background:var(--bg);color:var(--ink);
   font-size:17px;line-height:1.47;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+@media (hover:hover) and (pointer:fine){a:hover{text-decoration:underline}}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
 svg{max-width:100%}
 
@@ -117,17 +118,17 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
 .mark{font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--ink);white-space:nowrap;
   display:inline-flex;align-items:center;gap:9px}
 .mark .logo{display:block;border-radius:7px;flex:none}
-.mark:hover{text-decoration:none}
+@media (hover:hover) and (pointer:fine){.mark:hover{text-decoration:none}}
 .nav-links{display:flex;gap:24px;list-style:none;margin-left:14px;overflow-x:auto;scrollbar-width:none}
 .nav-links::-webkit-scrollbar{display:none}
 .nav-links a{font-size:12.5px;color:var(--ink);opacity:.78;letter-spacing:0;padding:3px 0;
   border-bottom:1.5px solid transparent;white-space:nowrap}
-.nav-links a:hover{opacity:1;text-decoration:none}
+@media (hover:hover) and (pointer:fine){.nav-links a:hover{opacity:1;text-decoration:none}}
 .nav-links a.on{opacity:1;border-bottom-color:var(--ink)}
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
 .themebtn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;
   border:1px solid var(--line);border-radius:var(--pill);background:transparent;color:var(--ink-soft);cursor:pointer}
-.themebtn:hover{color:var(--ink);border-color:var(--ink-faint)}
+@media (hover:hover) and (pointer:fine){.themebtn:hover{color:var(--ink);border-color:var(--ink-faint)}}
 .whoami{font-size:12.5px;color:var(--ink);white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
 
 /* ---- account menu ---- */
@@ -135,7 +136,7 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
 .acctrig{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 10px 0 5px;
   border:1px solid var(--line);border-radius:var(--pill);background:transparent;color:var(--ink-soft);
   cursor:pointer;font-family:var(--font)}
-.acctrig:hover,.acctrig[aria-expanded="true"]{border-color:var(--ink-faint);color:var(--ink)}
+.acctrig[aria-expanded="true"]{border-color:var(--ink-faint);color:var(--ink)}@media (hover:hover) and (pointer:fine){.acctrig:hover{border-color:var(--ink-faint);color:var(--ink)}}
 .acctrig .avatar{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex:none;
   border-radius:var(--pill);background:var(--paper);color:var(--ink-soft);font-size:11.5px;font-weight:600;letter-spacing:0}
 .acctrig .avatar.on{background:var(--accent);color:#fff}
@@ -147,7 +148,7 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
   background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:6px;
   box-shadow:0 14px 44px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.06)}
 @media (prefers-reduced-motion:no-preference){
-  .acctmenu:not([hidden]){animation:menuin .16s var(--ease) both}
+  .acctmenu:not([hidden]){animation:menuin .16s var(--ease-out) both}
   @keyframes menuin{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
 }
 .acctmenu .ahead{padding:12px 12px 14px;border-bottom:1px solid var(--hair);margin-bottom:6px}
@@ -159,13 +160,13 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
 .aitem{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:0;background:none;
   border-radius:10px;color:var(--ink);font-family:var(--font);font-size:14.5px;letter-spacing:-.008em;
   text-align:left;cursor:pointer;text-decoration:none}
-.aitem:hover,.aitem:focus-visible{background:var(--paper);text-decoration:none;outline:none}
+.aitem:focus-visible{background:var(--paper);text-decoration:none;outline:none}@media (hover:hover) and (pointer:fine){.aitem:hover{background:var(--paper);text-decoration:none;outline:none}}
 .aitem svg{flex:none;color:var(--ink-faint)}
 .aitem small{display:block;font-size:12px;color:var(--ink-faint);letter-spacing:0;margin-top:1px}
 .adanger{margin-top:6px;padding-top:6px;border-top:1px solid var(--hair)}
 .adanger .alabel{display:block;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;text-transform:uppercase;padding:6px 12px 3px}
 .aitem.danger,.aitem.danger svg{color:var(--signal)}
-.aitem.danger:hover{background:var(--signal-wash)}
+@media (hover:hover) and (pointer:fine){.aitem.danger:hover{background:var(--signal-wash)}}
 @media(max-width:760px){
   .acctrig{padding:0 7px 0 7px;gap:6px}
   .acctmenu{position:fixed;right:12px;left:auto;top:calc(56px + env(safe-area-inset-top,0px));width:min(300px,calc(100vw - 24px))}
@@ -175,8 +176,8 @@ nav.top{position:sticky;top:0;z-index:900;padding-top:env(safe-area-inset-top,0p
 .page{display:none}
 .page.on{display:block}
 @media (prefers-reduced-motion:no-preference){
-  .page.on{animation:pagein .3s var(--ease) both}
-  @keyframes pagein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .page.on{animation:pagein .18s var(--ease-out) both}
+  @keyframes pagein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 }
 main{padding-block:44px 90px}
 .pagehead{margin-bottom:30px}
@@ -187,15 +188,15 @@ main{padding-block:44px 90px}
 .btn{display:inline-block;font-family:var(--font);font-size:17px;letter-spacing:-.01em;
   padding:12px 24px;border-radius:var(--pill);border:none;cursor:pointer;transition:background .2s var(--ease)}
 .fill{background:var(--accent);color:#fff}
-.fill:hover{background:var(--accent-deep);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.fill:hover{background:var(--accent-deep);text-decoration:none}}
 :root[data-theme="dark"] .fill{color:#06202b}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .fill{color:#06202b}}
 .ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-.ghost:hover{background:var(--accent-wash);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.ghost:hover{background:var(--accent-wash);text-decoration:none}}
 .sm{font-size:14px;padding:8px 16px}
 .chip{font-family:var(--font);font-size:13px;letter-spacing:0;padding:6px 14px;border-radius:var(--pill);
   border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);cursor:pointer}
-.chip:hover{border-color:var(--ink-faint);color:var(--ink)}
+@media (hover:hover) and (pointer:fine){.chip:hover{border-color:var(--ink-faint);color:var(--ink)}}
 .chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .chip.danger{color:var(--signal);border-color:var(--signal)}
 .chiprow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -385,19 +386,19 @@ select.cat option[value="need"]{color:var(--need)} select.cat option[value="want
 select.cat option[value="debt"]{color:var(--debt)} select.cat option[value=""]{color:var(--ink-faint)}
 .kill{border:0;background:none;color:var(--ink-faint);cursor:pointer;font-size:19px;line-height:1;
   padding:5px;border-radius:9px}
-.kill:hover{color:var(--signal);background:var(--signal-wash)}
+@media (hover:hover) and (pointer:fine){.kill:hover{color:var(--signal);background:var(--signal-wash)}}
 .addrow{display:block;width:100%;padding:14px;border:0;border-top:1px solid var(--hair);background:none;
   font-family:var(--font);font-size:15px;color:var(--accent);cursor:pointer;letter-spacing:-.005em}
-.addrow:hover{background:var(--accent-wash)}
+@media (hover:hover) and (pointer:fine){.addrow:hover{background:var(--accent-wash)}}
 .empty{padding:26px 22px;color:var(--ink-faint);font-size:15px;text-align:center}
 
 /* sortable headers */
 .sorth{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:2px 0;cursor:pointer;
   font-family:var(--font);font-size:12px;color:var(--ink-faint);letter-spacing:0;text-align:left;white-space:nowrap}
 .sorth.r{justify-content:flex-end}
-.sorth:hover{color:var(--ink)}
+@media (hover:hover) and (pointer:fine){.sorth:hover{color:var(--ink)}}
 .sorth i{display:inline-block;width:8px;height:8px;opacity:0;transition:opacity .15s}
-.sorth:hover i{opacity:.45}
+@media (hover:hover) and (pointer:fine){.sorth:hover i{opacity:.45}}
 .sorth i::before{content:"";display:block;width:0;height:0;margin-top:1px;
   border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor}
 .sorth.on{color:var(--ink);font-weight:600}
@@ -407,7 +408,7 @@ select.cat option[value="debt"]{color:var(--debt)} select.cat option[value=""]{c
 /* drag handle and drag state */
 .grip{width:20px;height:30px;display:flex;align-items:center;justify-content:center;border:0;background:none;
   color:var(--ink-faint);cursor:grab;touch-action:none;border-radius:6px;padding:0;opacity:.55}
-.grip:hover,.grip:focus-visible{opacity:1;background:var(--paper)}
+.grip:focus-visible{opacity:1;background:var(--paper)}@media (hover:hover) and (pointer:fine){.grip:hover{opacity:1;background:var(--paper)}}
 .grip svg{display:block;pointer-events:none}
 .erow.pay.dragging{position:relative;z-index:5;background:var(--panel);
   box-shadow:0 10px 30px rgba(0,0,0,.16),0 0 0 1px var(--line);border-radius:12px;cursor:grabbing}
@@ -427,11 +428,11 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 .endc{min-width:0;position:relative}
 .endbtn{width:100%;font-family:var(--font);font-size:14px;color:var(--ink-faint);background:none;
   border:1px dashed var(--line);border-radius:9px;padding:7px 10px;cursor:pointer;text-align:left;white-space:nowrap}
-.endbtn:hover{color:var(--ink);border-color:var(--ink-faint)}
+@media (hover:hover) and (pointer:fine){.endbtn:hover{color:var(--ink);border-color:var(--ink-faint)}}
 .endc input.en{padding-right:28px}
 .endx{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--ink-faint);
   font-size:15px;line-height:1;cursor:pointer;padding:4px 5px;border-radius:6px}
-.endx:hover{color:var(--signal);background:var(--signal-wash)}
+@media (hover:hover) and (pointer:fine){.endx:hover{color:var(--signal);background:var(--signal-wash)}}
 
 /* money in / money out: a light tint so the two tables read apart at a glance */
 .card.money{--tone:var(--gain);overflow:hidden;border-top:3px solid var(--tone);
@@ -445,7 +446,7 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 .card.money .erow input,.card.money .erow select{background:var(--panel);border-color:color-mix(in srgb,var(--tone) 12%,var(--hair))}
 .card.money .rowfoot{background:color-mix(in srgb,var(--tone) 8%,var(--panel));border-top-color:color-mix(in srgb,var(--tone) 18%,var(--hair))}
 .card.money .addrow{color:var(--tone)}
-.card.money .addrow:hover{background:color-mix(in srgb,var(--tone) 10%,var(--panel))}
+@media (hover:hover) and (pointer:fine){.card.money .addrow:hover{background:color-mix(in srgb,var(--tone) 10%,var(--panel))}}
 .card.money .endbtn{background:var(--panel)}
 
 /* Simple / Advanced (phones). Simple shows each bill's name, amount and how often — nothing else. */
@@ -475,7 +476,7 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
 /* forecast peek: a card at the top of desktop Overview, and a floating bar on every screen */
 .fcpeek{display:grid;grid-template-columns:minmax(0,1fr) 42%;grid-template-areas:"t sp" "go go";gap:6px 16px;padding:18px 20px 14px;
   text-decoration:none;color:var(--ink);border:1px solid var(--line);transition:border-color .15s}
-.fcpeek:hover{border-color:var(--accent)}
+@media (hover:hover) and (pointer:fine){.fcpeek:hover{border-color:var(--accent)}}
 .fcpeek,.fcpeek *,.fcbar,.fcbar *{text-decoration:none!important}
 .pk-t{grid-area:t;display:flex;flex-direction:column;gap:3px;min-width:0}
 .pk-k{font-size:12.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
@@ -493,7 +494,7 @@ body.dragging-row,body.dragging-row *{cursor:grabbing!important;user-select:none
   padding:10px 10px 10px 16px;border-radius:18px;background:var(--panel);border:1px solid var(--line);
   box-shadow:0 10px 32px rgba(0,0,0,.16);color:var(--ink);transition:opacity .35s ease,transform .45s cubic-bezier(.22,1,.36,1),border-color .15s}
 .fcbar:not([hidden]){display:flex}
-.fcbar:hover{border-color:var(--accent)}
+@media (hover:hover) and (pointer:fine){.fcbar:hover{border-color:var(--accent)}}
 .fcbar.away{opacity:0;transform:translateY(18px);pointer-events:none;visibility:hidden;transition:opacity .25s ease,transform .3s ease,visibility 0s .3s}
 .fcbar .spark{width:96px;height:34px;flex:none}
 .fb-t{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.2}
@@ -549,7 +550,7 @@ body.hasfcbar main,body.hasfcbar footer{padding-bottom:90px}
 .toast span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .toastbtn{flex:none;border:0;border-radius:var(--pill);background:color-mix(in srgb,var(--bg) 18%,transparent);color:var(--bg);
   font-family:var(--font);font-size:14px;font-weight:600;padding:9px 16px;min-height:36px;cursor:pointer}
-.toastbtn:hover{background:color-mix(in srgb,var(--bg) 28%,transparent)}
+@media (hover:hover) and (pointer:fine){.toastbtn:hover{background:color-mix(in srgb,var(--bg) 28%,transparent)}}
 body.hasfcbar .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
 @media (prefers-reduced-motion:no-preference){
   .toast:not([hidden]){animation:toastin .32s cubic-bezier(.22,1,.36,1) both}
@@ -626,11 +627,11 @@ body.hasfcbar .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
   padding:8px 10px 12px;box-shadow:0 18px 40px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:2px}
 .navmenu[hidden]{display:none}
 @media (prefers-reduced-motion:no-preference){
-  .navmenu:not([hidden]){animation:menudrop .18s var(--ease) both}
+  .navmenu:not([hidden]){animation:menudrop .18s var(--ease-out) both}
   @keyframes menudrop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 }
 .mitem{display:flex;align-items:center;gap:14px;padding:12px 12px;border-radius:12px;color:var(--ink);text-decoration:none}
-.mitem:hover{text-decoration:none;background:var(--paper)}
+@media (hover:hover) and (pointer:fine){.mitem:hover{text-decoration:none;background:var(--paper)}}
 .mitem svg{flex:none;color:var(--ink-faint)}
 .mitem span{font-size:17px;font-weight:500;letter-spacing:-.012em}
 .mitem small{display:block;font-size:12.5px;font-weight:400;color:var(--ink-faint);letter-spacing:0;margin-top:1px}
@@ -641,13 +642,13 @@ body.hasfcbar .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
 /* chart window: zoom, pick a day, overview strip */
 .chartcard svg.chart{cursor:zoom-in}
 .chartfoot .zoomhint{margin-left:auto;color:var(--accent)}
-.sheet.cwsheet{max-width:1000px;padding:20px 22px 16px;max-height:92vh;overflow:auto;overscroll-behavior:contain}
+.sheet.cwsheet{max-width:1000px;padding:20px 22px 16px;max-height:92vh;max-height:92dvh;overflow:auto;overscroll-behavior:contain}
 .cwhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .cwhead h2{margin:0;font-size:22px}
 .cwx{margin-left:auto;width:32px;height:32px;padding:0;display:inline-flex;align-items:center;justify-content:center;
   border-radius:var(--pill);border:0;background:color-mix(in srgb,var(--ink) 9%,transparent);color:var(--ink-soft);cursor:pointer;flex:none}
 .cwx svg{display:block}
-.cwx:hover{background:color-mix(in srgb,var(--ink) 16%,transparent);color:var(--ink)}
+@media (hover:hover) and (pointer:fine){.cwx:hover{background:color-mix(in srgb,var(--ink) 16%,transparent);color:var(--ink)}}
 .cwbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .cwbar .chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .cwzoom{margin-left:auto;display:flex;gap:6px}
@@ -670,7 +671,7 @@ svg.cwmini:active{cursor:grabbing}
 .cwstep{display:flex;gap:6px}
 .cwstep button{border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);border-radius:var(--pill);
   font-family:var(--font);font-size:12.5px;padding:5px 11px;cursor:pointer;white-space:nowrap}
-.cwstep button:hover{color:var(--ink);border-color:var(--ink-faint)}
+@media (hover:hover) and (pointer:fine){.cwstep button:hover{color:var(--ink);border-color:var(--ink-faint)}}
 .cwstep button:disabled{opacity:.4;cursor:default}
 .cwday .dlist{padding:0}
 .cwday .net{font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
@@ -680,7 +681,7 @@ svg.cwmini:active{cursor:grabbing}
 .cwhint .touch{display:none}
 @media (hover:none){ .cwhint .touch{display:inline} .cwhint .mouse{display:none} }
 @media(min-width:761px){
-  .sheet.cwsheet{height:min(860px,92vh);display:flex;flex-direction:column;overflow:hidden}
+  .sheet.cwsheet{height:min(860px,92vh);height:min(860px,92dvh);display:flex;flex-direction:column;overflow:hidden}
   .cwsheet>*{flex:none}
   .cwdetail{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
   .cwdetail .cwsum{flex:none}
@@ -689,7 +690,7 @@ svg.cwmini:active{cursor:grabbing}
 }
 @media(max-width:760px){
   .veil.cwveil{align-items:flex-end;padding:0}
-  .sheet.cwsheet{max-width:none;width:100%;border-radius:20px 20px 0 0;padding:14px 14px 18px;max-height:94vh}
+  .sheet.cwsheet{max-width:none;width:100%;border-radius:20px 20px 0 0;padding:14px 14px 18px;max-height:94vh;max-height:94dvh}
   .cwhead h2{font-size:19px}
   .chartfoot .zoomhint{margin-left:0;flex-basis:100%}
 }
@@ -705,7 +706,7 @@ svg.cwmini:active{cursor:grabbing}
 @media(max-width:760px){ .sandin{font-size:13px;gap:10px} .sandin svg{display:none} .sandin .long{display:none} .sandin .short{display:inline} }
 
 /* backups sheet */
-.bksheet{max-width:560px;max-height:88vh;overflow:auto}
+.bksheet{max-width:560px;max-height:88vh;max-height:88dvh;overflow:auto}
 .bkhead{display:flex;align-items:baseline;gap:12px}
 .bkhead .linkbtn{margin-left:auto}
 .bkacts{display:flex;gap:9px;flex-wrap:wrap}
@@ -722,8 +723,8 @@ svg.cwmini:active{cursor:grabbing}
 .bkrow .bb{display:flex;gap:2px;flex:none}
 .bkrow .bb button{border:0;background:none;font-family:var(--font);font-size:13px;color:var(--accent);cursor:pointer;
   padding:5px 8px;border-radius:8px}
-.bkrow .bb button:hover{background:var(--accent-wash)}
-.bkrow .bb button.rm{color:var(--ink-faint)} .bkrow .bb button.rm:hover{color:var(--signal);background:var(--signal-wash)}
+@media (hover:hover) and (pointer:fine){.bkrow .bb button:hover{background:var(--accent-wash)}}
+.bkrow .bb button.rm{color:var(--ink-faint)} @media (hover:hover) and (pointer:fine){.bkrow .bb button.rm:hover{color:var(--signal);background:var(--signal-wash)}}
 .bkempty{padding:16px 14px;font-size:14px;color:var(--ink-faint)}
 .bkfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--hair)}
 @media(max-width:520px){ .bkrow{flex-wrap:wrap} .bkrow .bb{width:100%;justify-content:flex-end} }
@@ -732,7 +733,7 @@ svg.cwmini:active{cursor:grabbing}
 .seedpill{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:7px 8px 7px 13px;
   border:1px solid var(--line);border-radius:var(--pill);background:var(--panel);color:var(--ink-soft);
   font-family:var(--font);font-size:14px;letter-spacing:-.006em;cursor:pointer;max-width:100%}
-.seedpill:hover{border-color:var(--ink-faint);color:var(--ink)}
+@media (hover:hover) and (pointer:fine){.seedpill:hover{border-color:var(--ink-faint);color:var(--ink)}}
 .seedpill svg{color:var(--accent);flex:none}
 .seedpill>span:not(.ed){min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .seedpill b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
@@ -751,13 +752,13 @@ svg.cwmini:active{cursor:grabbing}
 .importcard>div{flex:1 1 280px;min-width:0}
 .importcard b{display:block;font-size:15.5px;font-weight:600;letter-spacing:-.01em;margin-bottom:3px}
 .importcard span{font-size:14px;color:var(--ink-soft);line-height:1.45}
-.sheet.csvsheet{max-width:820px;max-height:90vh;overflow:auto}
+.sheet.csvsheet{max-width:820px;max-height:90vh;max-height:90dvh;overflow:auto}
 #csvTitle:focus{outline:none}
 .csvsheet .mini{font-size:13px;color:var(--ink-faint);margin:10px 0 0}
 .csvdrop{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:34px 20px;margin-top:8px;
   border:1.5px dashed var(--line);border-radius:var(--r-md);cursor:pointer;color:var(--ink-soft)}
 .csvdrop b{font-size:16px;color:var(--ink)} .csvdrop span{font-size:14px}
-.csvdrop.over,.csvdrop:hover{border-color:var(--accent);background:var(--accent-wash)}
+.csvdrop.over{border-color:var(--accent);background:var(--accent-wash)}@media (hover:hover) and (pointer:fine){.csvdrop:hover{border-color:var(--accent);background:var(--accent-wash)}}
 .csvsum{font-size:14px!important;margin:6px 0 10px!important}
 .csvmap{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px}
 .csvmap summary{cursor:pointer;font-size:14px;font-weight:500}
@@ -780,7 +781,7 @@ svg.cwmini:active{cursor:grabbing}
 .csvacts{position:sticky;bottom:-30px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel);padding:14px 0 4px;margin-top:6px}
 .csvacts .btn[disabled]{opacity:.45;cursor:default}
 @media(max-width:760px){
-  .sheet.csvsheet{padding:22px 16px;max-height:94vh}
+  .sheet.csvsheet{padding:22px 16px;max-height:94vh;max-height:94dvh}
   .csvavg{grid-template-columns:1fr}
   .csvrow{grid-template-columns:22px minmax(0,1fr) minmax(0,1fr)}
   .csvrow>[data-k=name]{grid-column:2/-1}
@@ -828,7 +829,7 @@ svg.cwmini:active{cursor:grabbing}
   padding:3px 10px;border-radius:var(--pill);flex:none}
 #seedCard{scroll-margin-top:80px}
 @media (prefers-reduced-motion:no-preference){
-  #seedCard.reveal{animation:seedin .28s var(--ease)}
+  #seedCard.reveal{animation:seedin .24s var(--ease-out)}
   @keyframes seedin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 }
 
@@ -863,10 +864,10 @@ td.mv{color:var(--ink-soft)} td.bal{font-weight:600;white-space:nowrap} td.dt{wh
 .pillchip{display:inline-flex;align-items:center;gap:4px;background:var(--accent-wash);
   border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:var(--pill);
   padding:1px 4px 1px 10px;margin:1px 4px 1px 0;font-size:13px;color:var(--ink);cursor:pointer}
-.pillchip:hover{border-color:var(--accent)}
+@media (hover:hover) and (pointer:fine){.pillchip:hover{border-color:var(--accent)}}
 .pillchip .x{border:0;background:none;color:var(--ink-faint);cursor:pointer;font-size:15px;
   line-height:1;padding:1px 4px;border-radius:var(--pill)}
-.pillchip .x:hover{color:var(--signal)}
+@media (hover:hover) and (pointer:fine){.pillchip .x:hover{color:var(--signal)}}
 
 /* ---- one-off editor ---- */
 .offbox{display:grid;grid-template-columns:150px minmax(0,1fr) 110px 128px 150px auto;gap:10px;
@@ -883,7 +884,7 @@ td.mv{color:var(--ink-soft)} td.bal{font-weight:600;white-space:nowrap} td.dt{wh
 .calhead .h3{margin-right:auto;letter-spacing:-.016em}
 .calnav{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;
   border:1px solid var(--line);border-radius:var(--pill);background:var(--panel);color:var(--ink);cursor:pointer;font-size:15px}
-.calnav:hover{border-color:var(--ink-faint)}
+@media (hover:hover) and (pointer:fine){.calnav:hover{border-color:var(--ink-faint)}}
 .calnav:disabled{opacity:.35;cursor:default}
 .dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:var(--paper);border-bottom:1px solid var(--hair)}
 .dow span{padding:8px 4px;text-align:center;font-size:11.5px;color:var(--ink-faint);letter-spacing:.02em}
@@ -893,9 +894,9 @@ td.mv{color:var(--ink-soft)} td.bal{font-weight:600;white-space:nowrap} td.dt{wh
   padding:7px 8px;cursor:pointer;background:var(--panel);text-align:left;font-family:var(--font);
   display:flex;flex-direction:column;gap:3px;align-items:stretch}
 .cell:nth-child(7n){border-right:0}
-.cell:hover{background:var(--accent-wash)}
+@media (hover:hover) and (pointer:fine){.cell:hover{background:var(--accent-wash)}}
 .cell.blank{background:var(--paper);cursor:default}
-.cell.blank:hover{background:var(--paper)}
+@media (hover:hover) and (pointer:fine){.cell.blank:hover{background:var(--paper)}}
 .cell .d{font-size:12.5px;color:var(--ink-faint);letter-spacing:0}
 .cell .dk{display:none}
 .cell.today .d{color:var(--accent);font-weight:600}
@@ -995,12 +996,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 .sheet .msg.err{color:var(--signal)}
 .linkbtn{font-family:var(--font);font-size:13.5px;border:0;background:none;color:var(--accent);
   cursor:pointer;padding:3px 0;letter-spacing:-.005em}
-.linkbtn:hover{text-decoration:underline}
+@media (hover:hover) and (pointer:fine){.linkbtn:hover{text-decoration:underline}}
 .linkbtn.danger{color:var(--signal)}
 .gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;
   font-family:var(--font);font-size:15px;color:var(--ink);background:var(--panel);
   border:1px solid var(--line);border-radius:12px;cursor:pointer}
-.gbtn:hover{background:var(--paper)}
+@media (hover:hover) and (pointer:fine){.gbtn:hover{background:var(--paper)}}
 .or{display:flex;align-items:center;gap:13px;margin:17px 0 5px;color:var(--ink-faint);font-size:12.5px}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 
@@ -1105,11 +1106,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 .donutbox .mid b{font-size:25px;font-weight:600;letter-spacing:-.024em;line-height:1.1;font-variant-numeric:tabular-nums}
 .donutbox .mid span{font-size:12px;color:var(--ink-faint);letter-spacing:0;margin-top:3px;line-height:1.3}
 .donutbox path{cursor:pointer;transition:opacity .18s var(--ease)}
-.donutbox path:hover{opacity:.82}
+@media (hover:hover) and (pointer:fine){.donutbox path:hover{opacity:.82}}
 .legend{display:flex;flex-direction:column;gap:1px}
 .legend .lrow{display:grid;grid-template-columns:13px minmax(0,1fr) auto 62px;gap:11px;align-items:center;
   padding:8px 10px;border-radius:10px;cursor:default;font-size:14.5px;letter-spacing:-.005em}
-.legend .lrow:hover{background:var(--paper)}
+@media (hover:hover) and (pointer:fine){.legend .lrow:hover{background:var(--paper)}}
 .legend .lrow i{width:9px;height:9px;border-radius:var(--pill);display:block}
 .legend .lrow .nm{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .legend .lrow .nm small{color:var(--ink-faint);font-size:12.5px;margin-left:6px}
@@ -1136,7 +1137,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 .daypanel .dhead .bal b{color:var(--ink);font-weight:600}
 .daypanel .dhead .x{margin-left:8px;background:none;border:0;color:var(--ink-faint);font-size:19px;
   line-height:1;cursor:pointer;font-family:var(--font);padding:0 2px}
-.daypanel .dhead .x:hover{color:var(--ink)}
+@media (hover:hover) and (pointer:fine){.daypanel .dhead .x:hover{color:var(--ink)}}
 .dlist{list-style:none;padding:0 22px}
 .dlist li{display:grid;grid-template-columns:9px minmax(0,1fr) auto auto;gap:12px;align-items:center;
   padding:11px 0;border-top:1px solid var(--hair);font-size:15px;letter-spacing:-.006em}
@@ -1148,8 +1149,8 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 .dlist li .acts{display:flex;gap:4px}
 .dlist li .acts button{background:none;border:0;cursor:pointer;font-family:var(--font);font-size:12.5px;
   color:var(--ink-faint);padding:4px 7px;border-radius:7px;letter-spacing:0}
-.dlist li .acts button:hover{background:var(--panel);color:var(--ink)}
-.dlist li .acts button.rm:hover{color:var(--signal)}
+@media (hover:hover) and (pointer:fine){.dlist li .acts button:hover{background:var(--panel);color:var(--ink)}}
+@media (hover:hover) and (pointer:fine){.dlist li .acts button.rm:hover{color:var(--signal)}}
 .dlist .none{display:block;grid-template-columns:none;color:var(--ink-faint);font-size:14.5px;padding:14px 0}
 .dayadd{display:flex;gap:9px;flex-wrap:wrap;padding:14px 22px 18px}
 .dayslot:not(:empty){padding:0 22px 18px}
@@ -1241,12 +1242,15 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .sheetpage section,.sheetpage table,.rstats,.rverdict{break-inside:avoid;page-break-inside:avoid}
 }
 
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){
+  /* fewer, gentler animations: keep fades and colour changes, drop anything that moves */
+  *,*::before,*::after{transition-property:opacity,color,background-color,border-color!important;animation:none!important}
+}
 /* ---- wealth (preview) ---- */
 .prevtag{display:inline-block;vertical-align:middle;margin-left:10px;font-size:12px;font-weight:600;letter-spacing:.02em;
   padding:3px 9px;border-radius:var(--pill);background:var(--amber-wash);color:var(--amber);border:1px solid var(--amber)}
 #wStats .stat a{color:inherit;text-decoration:none}
-#wStats .stat a:hover b{color:var(--accent)}
+@media (hover:hover) and (pointer:fine){#wStats .stat a:hover b{color:var(--accent)}}
 #wStats .stat b.neg{color:var(--signal)} #wStats .stat b.pos{color:var(--gain)}
 #wStats .stat .up{color:var(--gain)} #wStats .stat .down{color:var(--signal)}
 .wcols{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;align-items:start}
@@ -1328,6 +1332,25 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
   .wnote{padding:4px 16px 16px}
   body.simple .erow.wrow .wg{display:none}
 }
+
+/* ---- feel native on phones (3.3.1) ---- */
+html{-webkit-tap-highlight-color:transparent}
+button,a,[role="button"],select,label,summary,.chip{touch-action:manipulation}
+button,[role="button"],.btn,.chip,.mitem,.aitem{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+/* iOS zooms into any field under 16px and never zooms back out */
+@media (pointer:coarse){input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{font-size:16px!important}}
+/* press feedback: the control answers the instant a finger lands */
+.btn,.chip,.addrow,.themebtn,.menubtn,.acctrig,.calnav,.modeswitch button,.mitem,.aitem,.pillchip,.seedpill{
+  transition-property:background-color,border-color,color,opacity,transform;transition-duration:.16s;transition-timing-function:var(--ease-out)}
+@media (prefers-reduced-motion:no-preference){
+  .btn:active:not(:disabled),.chip:active:not(:disabled),.themebtn:active,.menubtn:active,.acctrig:active,
+  .calnav:active:not(:disabled),.modeswitch button:active,.pillchip:active,.seedpill:active{transform:scale(.97)}
+  .addrow:active,.mitem:active,.aitem:active{transform:scale(.99)}
+}
+/* long names that get cut off can be read in full */
+.legend .lrow .nm,.dlist li .nm{cursor:default}
+.donutbox .mid b.long{font-size:19px}
+.donutbox .mid b.xlong{font-size:15px}
 </style>
 </head>
 <body>
@@ -1624,9 +1647,9 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
       <div class="card advonly">
         <header><h2 class="h3">Your target split</h2><span class="sub">of take-home income</span></header>
         <div class="splitrow">
-          <label>Needs <input type="number" id="tNeed" min="0" max="100" step="1">%</label>
-          <label>Wants <input type="number" id="tWant" min="0" max="100" step="1">%</label>
-          <label>Savings <input type="number" id="tSave" min="0" max="100" step="1">%</label>
+          <label>Needs <input inputmode="decimal" type="number" id="tNeed" min="0" max="100" step="1">%</label>
+          <label>Wants <input inputmode="decimal" type="number" id="tWant" min="0" max="100" step="1">%</label>
+          <label>Savings <input inputmode="decimal" type="number" id="tSave" min="0" max="100" step="1">%</label>
           <span id="tSum" style="font-size:14px;font-weight:500"></span>
           <span class="presets">
             <button class="chip" data-preset="70,20,10">70 / 20 / 10</button>
@@ -1718,7 +1741,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:18px 0 6px}
 
         <div class="offbox" id="addOff" hidden>
           <input type="date" id="offDate" aria-label="Date">
-          <input type="text" class="wide-f" id="offName" placeholder="Car repair, tax refund, tuition…" aria-label="What it is">
+          <input type="text" class="wide-f" maxlength="80" id="offName" placeholder="Car repair, tax refund, tuition…" aria-label="What it is">
           <input type="number" step="0.01" class="amt" id="offAmt" placeholder="0.00" aria-label="Amount">
           <select id="offDir" aria-label="In or out">
             <option value="out">Money out</option>
@@ -2123,8 +2146,9 @@ const CATS=[["","No category"],["need","Need"],["want","Want"],["debt","Debt pay
 const CATLABEL={need:"Need",want:"Want",debt:"Debt payment","":"Uncategorised"};
 const iso=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
 const parseD=s=>{const[a,b,c]=String(s).split("-").map(Number);return new Date(a,(b||1)-1,c||1)};
-const money=n=>(n<0?"-":"")+"$"+Math.abs(n).toLocaleString("en-CA",{minimumFractionDigits:0,maximumFractionDigits:0});
-const money2=n=>(n<0?"-":"")+"$"+Math.abs(n).toLocaleString("en-CA",{minimumFractionDigits:2,maximumFractionDigits:2});
+const money=n=>{const r=Math.round(Number.isFinite(+n)?+n:0);return (r<0?"-":"")+"$"+Math.abs(r).toLocaleString("en-CA",{minimumFractionDigits:0,maximumFractionDigits:0});};
+const money2=n=>{const r=Math.round((Number.isFinite(+n)?+n:0)*100)/100;return (r<0?"-":"")+"$"+Math.abs(r).toLocaleString("en-CA",{minimumFractionDigits:2,maximumFractionDigits:2});};
+const plural=(n,w)=>`${n} ${w}${n===1?"":"s"}`;
 const dLabel=d=>d.toLocaleDateString("en-CA",{month:"short",day:"numeric"});
 const dLong=d=>d.toLocaleDateString("en-CA",{weekday:"long",month:"long",day:"numeric"});
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -2730,7 +2754,7 @@ function cwDetail(){
         const what=i.freq==="plan"?"debt plan payment":i.freq==="loan"?"loan payment":i.freq==="card"?"card payment":i.oid?(i.amt>0?"one-off income":"one-off")+(i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:"")
           :`${freqL(i.freq).toLowerCase()} ${i.amt>0?"income":"bill"}${i.cat&&i.amt<0?` · ${CATLABEL[i.cat].toLowerCase()}`:""}`;
         return `<li style="grid-template-columns:9px minmax(0,1fr) auto"><i style="background:var(--${c})"></i>
-          <span class="nm">${esc(i.name)}<small>${esc(what)}</small></span>
+          <span class="nm" title="${esc(i.name)}">${esc(i.name)}<small>${esc(what)}</small></span>
           <span class="mv ${i.amt>0?"pos":"neg"}">${i.amt>0?"+":"−"}${money2(Math.abs(i.amt))}</span></li>`;}).join("")}</ul>`
         :`<p class="cwempty">Nothing lands on this day. Use Previous / Next to jump between payment days.</p>`}
     </div>`;
@@ -2844,7 +2868,7 @@ function rows(kind){
     <div class="erow pay${it.id===openRow?" open":""}" data-id="${it.id}" data-kind="${kind}">
       <button class="grip" title="Drag to reorder" aria-label="Move ${esc(it.name||"item")} — use arrow keys">${GRIP}</button>
       <button class="sum" data-sum="${it.id}" aria-expanded="${it.id===openRow}"></button>
-      <span class="nmc"><input class="nm" value="${esc(it.name)}" placeholder="${kind==="in"?"Paycheque":"Rent"}" aria-label="Name">
+      <span class="nmc"><input inputmode="decimal" maxlength="80" class="nm" value="${esc(it.name)}" placeholder="${kind==="in"?"Paycheque":"Rent"}" aria-label="Name">
         <small class="pv" data-pv="${it.id}"></small>${accts().length?acctPicker(it,kind):""}</span>
       <input class="amt" type="number" step="0.01" value="${esc(it.amount)}" aria-label="Amount">
       <select class="fq" aria-label="How often">${FREQS.map(([v,l])=>`<option value="${v}"${v===it.freq?" selected":""}>${l}</option>`).join("")}</select>
@@ -3077,7 +3101,7 @@ function budgetSlices(mode,sc){
       if(L.fc&&a.end&&a.end>=parseD(sc.start)) lines.push({label:loanLabel(L),cat:"debt",val:a.pay*a.ppy/12,sub:L.kind==="card"?"card payment":"loan payment"}); });
     lines.sort((a,b)=>b.val-a.val);
     const top=lines.slice(0,9), rest=lines.slice(9);
-    if(rest.length) top.push({label:"Everything else",cat:"",val:rest.reduce((s,x)=>s+x.val,0),sub:`${rest.length} items`});
+    if(rest.length) top.push({label:"Everything else",cat:"",val:rest.reduce((s,x)=>s+x.val,0),sub:plural(rest.length,"item")});
     const seen={};
     top.forEach(l=>{ const k=l.cat||"ink-faint"; seen[k]=(seen[k]||0)+1;
       const mix=Math.max(38,100-(seen[k]-1)*17);
@@ -3121,9 +3145,10 @@ function renderDonut(){
     : save>=0 ? `<b>${money(Math.round(save))}</b><span>left of ${money(Math.round(income))} coming in</span>`
               : `<b style="color:var(--signal)">${money(Math.round(-save))}</b><span>more going out than coming in</span>`;
   $("donutBox").innerHTML=donutSVG(list)+`<div class="mid">${mid}</div>`;
+  const midB=$("donutBox").querySelector(".mid b"); if(midB){const L=midB.textContent.length; midB.classList.toggle("long",L>8&&L<=11); midB.classList.toggle("xlong",L>11);}
   $("donutLegend").innerHTML = list.length
     ? list.map((s,i)=>`<div class="lrow" data-li="${i}"><i style="background:${s.color}"></i>
-        <span class="nm">${esc(s.label)}${s.sub?`<small>${esc(s.sub)}</small>`:""}</span>
+        <span class="nm" title="${esc(s.label)}">${esc(s.label)}${s.sub?`<small>${esc(s.sub)}</small>`:""}</span>
         <span class="amt">${money2(s.val)}</span>
         <span class="shr">${income>0?(s.val/income*100).toFixed(1)+"%":(base>0?(s.val/base*100).toFixed(1)+"%":"—")}</span></div>`).join("")
       +`<div class="lrow tot"><i></i><span class="nm">${income>0?"Share of income":"Share of spending"}</span>
@@ -3247,7 +3272,7 @@ function renderDayPanel(dm){
       const acts=i.oid?`<span class="acts"><button data-editoff="${i.oid}">Edit</button><button class="rm" data-killoff="${i.oid}">Remove</button></span>`
         :i.freq==="loan"||i.freq==="card"?`<span class="acts"><a href="#/debt" style="font-size:12.5px;color:var(--ink-faint);padding:4px 7px">On Debt</a></span>`
         :`<span class="acts"><a href="#/overview" style="font-size:12.5px;color:var(--ink-faint);padding:4px 7px">On Overview</a></span>`;
-      return `<li><i style="background:var(--${c})"></i><span class="nm">${esc(i.name)}<small>${esc(what)}</small></span>
+      return `<li><i style="background:var(--${c})"></i><span class="nm" title="${esc(i.name)}">${esc(i.name)}<small>${esc(what)}</small></span>
         <span class="mv ${i.amt>0?"pos":"neg"}">${i.amt>0?"+":"−"}${money2(Math.abs(i.amt))}</span>${acts}</li>`;
     }).join(""):`<li class="none">Nothing lands on this day.</li>`}</ul>
     <div class="dayadd">
@@ -3409,11 +3434,11 @@ function renderDebtRows(){
         <span class="rank ${i===0?"r1":""}">${i+1}</span>
         <input class="dn" value="${esc(d.name)}" placeholder="Card or loan" aria-label="Debt name"></span>
       <label class="fld db"><span class="mlabel">Balance</span>
-        <input class="amt" type="number" step="0.01" value="${esc(d.balance)}" aria-label="Balance" data-f="balance"></label>
+        <input inputmode="decimal" class="amt" type="number" step="0.01" value="${esc(d.balance)}" aria-label="Balance" data-f="balance"></label>
       <label class="fld dr"><span class="mlabel">Rate %</span>
-        <input class="amt" type="number" step="0.01" value="${esc(d.apr)}" aria-label="Interest rate" data-f="apr"></label>
+        <input inputmode="decimal" class="amt" type="number" step="0.01" value="${esc(d.apr)}" aria-label="Interest rate" data-f="apr"></label>
       <label class="fld dm"><span class="mlabel">Minimum</span>
-        <input class="amt" type="number" step="0.01" value="${esc(d.minimum)}" aria-label="Minimum payment" data-f="minimum"></label>
+        <input inputmode="decimal" class="amt" type="number" step="0.01" value="${esc(d.minimum)}" aria-label="Minimum payment" data-f="minimum"></label>
       <span class="cost ${hot?"hot":cool?"cool":""}"><span class="mlabel">Costs you</span>${money2(int)}/mo</span>
       <button class="kill" title="Remove" aria-label="Remove">&times;</button>
     </div>`;
@@ -3461,16 +3486,16 @@ function renderDebtFigures(){
   const sg=suggestMonths();
   let box="";
   if(atMins&&minOnly){
-    box=`<div class="note bad">Your minimum payments alone clear this in <b>${minOnly.months} months</b>.
+    box=`<div class="note bad">Your minimum payments alone clear this in <b>${plural(minOnly.months,"month")}</b>.
       A longer finish line does not lower the payment — ${money(Math.round(f.mins))} a month is the floor.
-      ${months>minOnly.months?`<br><button class="chip" id="useFloor">Set it to ${minOnly.months} months</button>`:""}</div>`;
+      ${months>minOnly.months?`<br><button class="chip" id="useFloor">Set it to ${plural(minOnly.months,"month")}</button>`:""}</div>`;
   } else if(sg){
     const needAt=requiredMonthly(f.list,sg.months);
-    box=`<div class="note good"><b>A realistic finish line is ${sg.months} months</b> — about ${money2(needAt)} a month.
+    box=`<div class="note good"><b>A realistic finish line is ${plural(sg.months,"month")}</b> — about ${money2(needAt)} a month.
       ${sg.basis==="budget"
         ? `That is your minimums plus the ${money(Math.round(budgetTotals().save))} your budget actually leaves over.`
         : `That is a stretch above your ${money(Math.round(f.mins))} of minimums. Fill in the Overview page and this gets sharper.`}
-      <br><button class="chip" id="useSuggest">Use ${sg.months} months</button></div>`;
+      <br><button class="chip" id="useSuggest">Use ${plural(sg.months,"month")}</button></div>`;
   }
   $("suggestBox").innerHTML=box;
 
@@ -3542,7 +3567,7 @@ function loanHTML(L){
   return `<div class="lnrow" data-loan="${L.id}">
     <div class="lnhead">
       <span class="lnkind">${card?"Card":"Loan"}</span>
-      <input class="lnname" data-lf="name" value="${esc(L.name)}" placeholder="${card?"Visa, Mastercard…":"Car loan, student loan…"}" aria-label="Name">
+      <input maxlength="80" class="lnname" data-lf="name" value="${esc(L.name)}" placeholder="${card?"Visa, Mastercard…":"Car loan, student loan…"}" aria-label="Name">
       <label class="lnfc" title="Put these payments in the forecast"><span>In forecast</span>
         <span class="switch"><input type="checkbox" data-lf="fc" ${L.fc?"checked":""} aria-label="Put these payments in the forecast"><span></span></span></label>
       <button class="kill" data-lkill title="Remove" aria-label="Remove">&times;</button>
@@ -3693,7 +3718,7 @@ function reportObservations(ctx){
   if(f.total>0){
     const top=[...f.list].sort((a,c)=>(+c.apr||0)-(+a.apr||0))[0];
     out.push(`<b>Debt costs ${money(Math.round(f.monthInt))} a month in interest alone.</b> ${esc(top.name||"The top debt")} at ${(+top.apr||0).toFixed(2)}% is the one to send every spare dollar to first.`);
-    if(run&&need>f.mins+1) out.push(`<b>Paying ${money2(need)} a month</b> instead of the ${money2(f.mins)} minimums clears everything in ${run.months} months.`);
+    if(run&&need>f.mins+1) out.push(`<b>Paying ${money2(need)} a month</b> instead of the ${money2(f.mins)} minimums clears everything in ${plural(run.months,"month")}.`);
   }
   const unc=state.outflow.filter(x=>!x.cat).length;
   if(unc) out.push(`<b>${unc} bill${unc>1?"s are":" is"} uncategorised</b> and sit${unc>1?"":"s"} outside the split.`);
@@ -3783,7 +3808,7 @@ function renderReport(){
       ${more>0?`<tr><td colspan="5" style="color:#6b6b70">and ${more} more, lower-rate ${more===1?"debt":"debts"} — totals above include ${more===1?"it":"them"}</td></tr>`:""}
       </tbody></table>
     </section>
-    <section><h3>Clearing it in ${months} months</h3>
+    <section><h3>Clearing it in ${plural(months,"month")}</h3>
       <div class="two">
         <div>
           <p style="font-size:15pt;font-weight:600;letter-spacing:-.022em;margin-bottom:2px">${money2(need)} <span style="font-size:9.4pt;font-weight:400;color:#6e6e73">a month</span></p>
@@ -3791,7 +3816,7 @@ function renderReport(){
           <table><tbody>
             <tr><td>Total interest</td><td class="r">${run?money2(run.interest):"—"}</td></tr>
             <tr><td>Total paid back</td><td class="r">${run?money2(run.paid):"—"}</td></tr>
-            <tr><td>Minimums only</td><td class="r">${minOnly?`${minOnly.months} months, ${money(Math.round(minOnly.interest))} interest`:"never clears"}</td></tr>
+            <tr><td>Minimums only</td><td class="r">${minOnly?`${plural(minOnly.months,"month")}, ${money(Math.round(minOnly.interest))} interest`:"never clears"}</td></tr>
           </tbody></table>
         </div>
         <div>
@@ -3857,7 +3882,7 @@ function renderReport(){
       </tbody></table></section>`:""}
     <section><h3>Where it's heading</h3><table><tbody>
       ${[1,5,10].filter(y=>y<=Math.max(10,W.proj.years)).map(y=>`<tr><td>Net worth in ${y} year${y===1?"":"s"}</td><td class="r">${money2(run.net[y*12])}</td></tr>`).join("")}
-      <tr><td>Everything owed paid off</td><td class="r">${run.freeAt===null?(t.liab?"Not at these payments":"Nothing owed"):run.freeAt<24?`in ${run.freeAt} months`:`in ${(run.freeAt/12).toFixed(1)} years`}</td></tr>
+      <tr><td>Everything owed paid off</td><td class="r">${run.freeAt===null?(t.liab?"Not at these payments":"Nothing owed"):run.freeAt<24?`in ${plural(run.freeAt,"month")}`:`in ${(run.freeAt/12).toFixed(1)} years`}</td></tr>
       <tr><td>Financial independence (25× a year's spending)</td><td class="r">${fi}</td></tr>
       </tbody></table>
       <p class="mini">Assumes ${money(Math.round(run.monthly))} a month saved at ${+W.proj.ret||0}% a year, assets growing at their own rates, and debts paid at their minimums.</p></section>
@@ -4072,7 +4097,7 @@ function paintCsv(){
   const b=budgetTotals(), picked=csv.found.filter(f=>f.pick).length;
   const row=(f,i)=>`<div class="csvrow${f.pick?"":" off"}" data-i="${i}">
       <input type="checkbox" data-k="pick" ${f.pick?"checked":""} aria-label="Add ${esc(f.name)}">
-      <input data-k="name" value="${esc(f.name)}" aria-label="Name">
+      <input maxlength="80" data-k="name" value="${esc(f.name)}" aria-label="Name">
       <label class="fld"><span class="mlabel">Amount</span><input class="amt" type="number" step="0.01" data-k="amount" value="${f.amount}" aria-label="Amount"></label>
       <label class="fld"><span class="mlabel">How often</span><select data-k="freq" aria-label="How often">${FREQS.map(([v,l])=>`<option value="${v}"${v===f.freq?" selected":""}>${l}</option>`).join("")}</select></label>
       <label class="fld"><span class="mlabel">Category</span>${f.kind==="in"?`<span class="csvin">Income</span>`:`<select data-k="cat" aria-label="Category">${CATS.map(([v,l])=>`<option value="${v}"${v===f.cat?" selected":""}>${l}</option>`).join("")}</select>`}</label>
@@ -4225,9 +4250,9 @@ function wRows(){
   const w=doc.wealth;
   const opts=(list,v)=>list.map(t=>`<option value="${t[0]}"${t[0]===v?" selected":""}>${t[1]}</option>`).join("");
   $("wAssets").innerHTML=w.assets.length?w.assets.map(a=>`<div class="erow wrow" data-w="assets" data-wid="${a.id}">
-      <input class="wn" data-f="name" value="${esc(a.name)}" placeholder="e.g. TD chequing" aria-label="Asset name">
+      <input maxlength="80" class="wn" data-f="name" value="${esc(a.name)}" placeholder="e.g. TD chequing" aria-label="Asset name">
       <label class="fld"><span class="mlabel">Type</span><select data-f="type" aria-label="Asset type">${opts(A_TYPES,a.type)}</select></label>
-      <label class="fld"><span class="mlabel">Value</span><input class="amt" type="number" step="0.01" data-f="value" value="${esc(a.value)}" aria-label="Value"></label>
+      <label class="fld"><span class="mlabel">Value</span><input inputmode="decimal" class="amt" type="number" step="0.01" data-f="value" value="${esc(a.value)}" aria-label="Value"></label>
       <label class="fld wg"><span class="mlabel">Grows %/yr</span><input class="amt" type="number" step="0.5" data-f="growth" value="${esc(a.growth)}" aria-label="Growth or depreciation per year"></label>
       <button class="kill" title="Remove" aria-label="Remove">&times;</button></div>`).join("")
     :`<p class="empty">Add your accounts, investments, car or home.</p>`;
@@ -4241,18 +4266,18 @@ function wRows(){
       <span class="ro"><span class="mlabel">Payment/mo</span>${money(Math.round(num(d.minimum)))}</span><span></span></div>`).join(""):"";
 
   $("wLiabs").innerHTML=w.liabs.length?w.liabs.map(l=>`<div class="erow wrow lb" data-w="liabs" data-wid="${l.id}">
-      <input class="wn" data-f="name" value="${esc(l.name)}" placeholder="e.g. Mortgage" aria-label="Liability name">
+      <input maxlength="80" class="wn" data-f="name" value="${esc(l.name)}" placeholder="e.g. Mortgage" aria-label="Liability name">
       <label class="fld"><span class="mlabel">Type</span><select data-f="type" aria-label="Liability type">${opts(L_TYPES,l.type)}</select></label>
       <label class="fld"><span class="mlabel">Balance</span><input class="amt" type="number" step="0.01" data-f="balance" value="${esc(l.balance)}" aria-label="Balance"></label>
       <label class="fld"><span class="mlabel">Rate %</span><input class="amt" type="number" step="0.01" data-f="apr" value="${esc(l.apr)}" aria-label="Interest rate"></label>
-      <label class="fld"><span class="mlabel">Payment/mo</span><input class="amt" type="number" step="0.01" data-f="payment" value="${esc(l.payment)}" aria-label="Monthly payment"></label>
+      <label class="fld"><span class="mlabel">Payment/mo</span><input inputmode="decimal" class="amt" type="number" step="0.01" data-f="payment" value="${esc(l.payment)}" aria-label="Monthly payment"></label>
       <button class="kill" title="Remove" aria-label="Remove">&times;</button></div>`).join("")
     :`<p class="empty">${f.list.length?"Cards and loans come from your Debt page. Add a mortgage or car loan here.":"Nothing owed yet. Debts from your Debt page show up here too."}</p>`;
 
   $("wGoals").innerHTML=w.goals.length?w.goals.map(g=>`<div class="erow wrow gl" data-w="goals" data-wid="${g.id}">
-      <input class="wn" data-f="name" value="${esc(g.name)}" placeholder="e.g. Emergency fund" aria-label="Goal name">
-      <label class="fld"><span class="mlabel">Target</span><input class="amt" type="number" step="10" data-f="target" value="${esc(g.target)}" aria-label="Target amount"></label>
-      <label class="fld"><span class="mlabel">Saved so far</span><input class="amt" type="number" step="10" data-f="saved" value="${esc(g.saved)}" aria-label="Saved so far"></label>
+      <input maxlength="80" class="wn" data-f="name" value="${esc(g.name)}" placeholder="e.g. Emergency fund" aria-label="Goal name">
+      <label class="fld"><span class="mlabel">Target</span><input inputmode="decimal" class="amt" type="number" step="10" data-f="target" value="${esc(g.target)}" aria-label="Target amount"></label>
+      <label class="fld"><span class="mlabel">Saved so far</span><input inputmode="decimal" class="amt" type="number" step="10" data-f="saved" value="${esc(g.saved)}" aria-label="Saved so far"></label>
       <label class="fld"><span class="mlabel">By</span><input type="date" data-f="by" value="${esc(g.by)}" aria-label="Target date"></label>
       <span class="gstat" data-gs="${g.id}"></span>
       <button class="kill" title="Remove" aria-label="Remove">&times;</button>
@@ -4378,7 +4403,7 @@ function wProjection(){
     kv(`Net worth in ${yrs} year${yrs===1?"":"s"}`,money(Math.round(run.net[n])))+
     kv("Change from today",(run.net[n]-run.net[0]>=0?"+":"−")+money(Math.abs(Math.round(run.net[n]-run.net[0]))))+
     kv("Invested and saved by then",money(Math.round(run.inv[n])))+
-    kv("Everything owed paid off",run.freeAt===null?(wTotals().liab?"Not at these payments":"Nothing owed"):`in ${run.freeAt<24?run.freeAt+" months":(run.freeAt/12).toFixed(1)+" years"}`)+
+    kv("Everything owed paid off",run.freeAt===null?(wTotals().liab?"Not at these payments":"Nothing owed"):`in ${run.freeAt<24?plural(run.freeAt,"month"):(run.freeAt/12).toFixed(1)+" years"}`)+
     kv(`Financial independence <small style="color:var(--ink-faint)">(25× a year's spending, ${mk(target)})</small>`,fi)+
     kv("Assumed saving",`${money(Math.round(run.monthly))}/mo at ${num(pr.ret)}%`);
 }
@@ -4387,7 +4412,7 @@ function wRoom(){
   $("wRoom").innerHTML=list.length?list.map(a=>`<div class="erow wrow rm" data-w="assets" data-wid="${a.id}">
       <span class="nmro">${esc(a.name||aType(a.type)[1])} <small style="color:var(--ink-faint);font-weight:400">${aType(a.type)[1]}</small></span>
       <span class="ro"><span class="mlabel">Value</span>${money(Math.round(num(a.value)))}</span>
-      <label class="fld"><span class="mlabel">Room left</span><input class="amt" type="number" step="100" data-f="room" value="${esc(a.room??"")}" placeholder="from CRA" aria-label="Contribution room left"></label>
+      <label class="fld"><span class="mlabel">Room left</span><input inputmode="decimal" class="amt" type="number" step="100" data-f="room" value="${esc(a.room??"")}" placeholder="from CRA" aria-label="Contribution room left"></label>
       <span class="ro l" style="font-size:13px">${num(a.room)>0?`${money(Math.round(num(a.room)))} you can still put in`:"Check CRA My Account"}</span></div>`).join("")
     :`<p class="empty">Add a TFSA, RRSP, FHSA or RESP above to track how much room is left.</p>`;
 }
@@ -4488,8 +4513,11 @@ function applyTheme(){
   btn.innerHTML = t==="light"?SUN : t==="dark"?MOON : AUTO;
   btn.title = t==="system"?"Theme: follows your device":`Theme: ${t}`;
   btn.setAttribute("aria-label",btn.title);
-  const meta=document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.setAttribute("content", t==="dark"?"#000000":"#ffffff");
+  // "system" keeps one colour per scheme; a forced theme paints both the same
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>{
+    const dark=(m.media||"").includes("dark");
+    m.setAttribute("content", t==="dark"||(t==="system"&&dark)?"#000000":"#ffffff");
+  });
 }
 
 /* ============================================================
@@ -5396,10 +5424,10 @@ function renderAcctBox(){
         <input id="mainName" value="${esc(state.mainName)}" placeholder="Main account" aria-label="Main account name"></div>
        <div class="achead"><span>Other accounts</span><span>Type</span><span>Balance or owed</span><span>Limit</span><span></span></div>`+
       list.map(a=>{ const card=a.type==="card"; return `<div class="acrow" data-acct="${a.id}">
-        <input class="an" data-af="name" value="${esc(a.name)}" placeholder="${card?"Visa":"Savings"}" aria-label="Account name">
+        <input maxlength="80" class="an" data-af="name" value="${esc(a.name)}" placeholder="${card?"Visa":"Savings"}" aria-label="Account name">
         <label class="fld"><span class="mlabel">Type</span><select data-af="type" aria-label="Account type"><option value="bank"${card?"":" selected"}>Bank account</option><option value="card"${card?" selected":""}>Credit card</option></select></label>
         <label class="fld"><span class="mlabel">${card?"Owed":"Balance"}</span><input class="amt" type="number" step="0.01" data-af="balance" value="${esc(a.balance)}" aria-label="${card?"Amount owed":"Balance"}"></label>
-        <label class="fld">${card?`<span class="mlabel">Limit</span><input class="amt" type="number" step="100" data-af="limit" value="${esc(a.limit)}" aria-label="Credit limit">`:""}</label>
+        <label class="fld">${card?`<span class="mlabel">Limit</span><input inputmode="decimal" class="amt" type="number" step="100" data-af="limit" value="${esc(a.limit)}" aria-label="Credit limit">`:""}</label>
         <button class="kill" title="Remove" aria-label="Remove account">&times;</button></div>`; }).join("")
     : `<p class="acnote">One account is enough for most plans. Add savings or a credit card to see each balance on its own and move money between them.</p>`)+
     `<button class="addrow" id="addAcct">Add an account</button>`;
@@ -5468,12 +5496,12 @@ function paintSeed(){
     p.hidden = pid==="seedPill" ? open : false;
     p.classList.toggle("stale",stale);
     const b=p.querySelector(".pb"); b.textContent=money2(bal); b.classList.toggle("neg",bal<0);
-    p.querySelector(".pd").textContent=when?`· ${stale?`${age} days old`:`from ${when}`}`:"";
+    p.querySelector(".pd").textContent=when?`· ${stale?`${plural(age,"day")} old`:`from ${when}`}`:"";
     p.querySelector(".ed").textContent=stale?"Update":"Edit"; });
   const exp=stale?expectedToday():null;
   $("seedRoll").hidden=!stale;
   if(stale){
-    $("seedRollTxt").textContent=`This balance is from ${when}, ${age} days ago, so the forecast starts there. `+
+    $("seedRollTxt").textContent=`This balance is from ${when}, ${plural(age,"day")} ago, so the forecast starts there. `+
       (exp===null?"Enter today's balance and date to bring it up to date.":`Going by your plan, today it should be about ${money2(exp)}.`);
     $("seedRollBtn").hidden=exp===null;
     if(exp!==null){ $("seedRollBtn").textContent=`Use ${money2(exp)} from today`; $("seedRollBtn").dataset.v=Math.round(exp*100)/100; }
