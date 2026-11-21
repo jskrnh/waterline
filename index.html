@@ -1339,6 +1339,8 @@ button,a,[role="button"],select,label,summary,.chip{touch-action:manipulation}
 button,[role="button"],.btn,.chip,.mitem,.aitem{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 /* iOS zooms into any field under 16px and never zooms back out */
 @media (pointer:coarse){input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{font-size:16px!important}}
+/* at 16px the date's calendar icon no longer fits narrow rows; on touch, tapping the field opens the picker anyway */
+@media (pointer:coarse){input[type=date]{padding-left:8px;padding-right:6px}input[type=date]::-webkit-calendar-picker-indicator{display:none}}
 /* press feedback: the control answers the instant a finger lands */
 .btn,.chip,.addrow,.themebtn,.menubtn,.acctrig,.calnav,.modeswitch button,.mitem,.aitem,.pillchip,.seedpill{
   transition-property:background-color,border-color,color,opacity,transform;transition-duration:.16s;transition-timing-function:var(--ease-out)}
