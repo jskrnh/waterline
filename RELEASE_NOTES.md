@@ -9,6 +9,38 @@ runs entirely in your browser and never asks for a bank login.
 
 # Release notes
 
+## 3.4.0 — 24 November 2026
+
+**Meet Waterline Lite: the same plan with streaks, goals and a droplet named Drip cheering you on. Open it at [wtrline.com/lite](https://wtrline.com/lite/).**
+
+### Waterline Lite
+
+- **A living header.** Your balance sits above animated water. The lower your lowest point, the lower
+  the water. In dark mode the sky turns to night with stars and a moon.
+- **Drip.** A droplet who floats on the water and reacts to your plan: happy when you're well above
+  water, nervous when you're close to your cushion, worried when you'd go under. Tap Drip for a new message.
+- **Today's goals.** Three small goals every day (pay your next bill, check this week's calendar, add to
+  savings). Finish all three for a Perfect day celebration.
+- **Streaks, XP and levels.** Paying a bill, finishing a goal or saving earns XP. Levels run from Puddle
+  to Deep, and you keep a streak for every day you check in.
+- **Savings goal.** Your first Wealth goal shows as a filling bar with +$25 and +$100 buttons, with a
+  celebration at halfway and at the finish line.
+- **Debt-free journey** and **8 badges** to earn on the Goals tab.
+- **Mark bills paid** with one tap, with a little burst of confetti and Undo.
+- **Calendar** coloured by your balance (amber below your cushion, red under zero), and **Insights**
+  with a ring chart you can tap into.
+- **Add bills and income** with a big number pad, how often and when.
+- **Install it** on your home screen from the Settings page in Lite.
+
+### How it fits with Waterline
+
+- Lite uses the same account and the same plan. Anything you add or change in Lite shows up in the full
+  app, and the other way round.
+- The numbers are identical: Lite uses the same forecast engine as the full app, including your debt plan
+  and loan payments.
+- Streaks, XP, badges and paid ticks are kept on your phone, not in your plan.
+- The full app's menu has a new **Waterline Lite** link.
+
 ## 3.3.1 — 21 November 2026
 
 **Waterline feels more like an app on your phone: no more zooming into fields, stuck highlights or a white status bar in dark mode.**

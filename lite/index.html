@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Waterline Lite</title>
+<meta name="description" content="Waterline Lite: your balance forecast with streaks, goals and a droplet named Drip cheering you on.">
+<meta name="theme-color" content="#bfe6ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Lite">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="/lite/manifest.webmanifest">
+<link rel="icon" href="/lite/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/lite/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Waterline Lite.
+   VOICE everyday money app, friendly and calm, never alarming without a reason
+   IDEA your money is a body of water; the header is the sea, the low point is how close it gets to the line
+   PICTURE a living sea header: waves, sky that turns to night, and Drip the droplet riding the surface with a mood
+   COLOUR white ground, sea blue #1479ff to aqua #3cc8e8, sand #ffc94a support, coral #ff5a5f only for trouble, kelp green #18b26b for money in
+   TYPE Nunito 900 for figures, Nunito 700 for text
+   LAYOUT one phone column (max 440px, centred on wide screens); sea band on top, tiles overlap it, lists below, floating tab pill */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#061829);--card:light-dark(#ffffff,#0c2740);--soft:light-dark(#eef6ff,#11314f);
+--ink:light-dark(#0d2238,#eaf4ff);--mute:light-dark(#5d7187,#93abc4);--line:light-dark(#e3edf7,#1b3d5e);
+--sea:#1479ff;--aqua:#3cc8e8;--deep:light-dark(#0b56c9,#0a3f8f);--sand:#ffc94a;--coral:#ff5a5f;--kelp:#18b26b;
+--sky1:light-dark(#bfe6ff,#071a33);--sky2:light-dark(#eaf7ff,#123a66);
+--shadow:light-dark(0 6px 20px rgba(13,60,120,.10),0 6px 20px rgba(0,0,0,.35))}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:700 16px/1.45 Nunito,ui-rounded,"SF Pro Rounded",system-ui,sans-serif;overflow:hidden}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--aqua);outline-offset:2px}
+#app{position:relative;height:100%;max-width:440px;margin:0 auto;overflow:hidden;background:var(--bg)}
+@media(min-width:520px){body{background:light-dark(#dcecfb,#020c16)}#app{box-shadow:0 0 60px rgba(0,30,80,.18)}}
+.view{position:absolute;inset:0;overflow-y:auto;padding-bottom:120px;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .28s,transform .38s cubic-bezier(.2,1.2,.4,1)}
+.view.on{opacity:1;transform:none;pointer-events:auto}
+.num{font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* sea */
+.sea{position:relative;height:calc(330px + env(safe-area-inset-top,0px));background:linear-gradient(var(--sky1),var(--sky2));overflow:hidden;transition:background .6s}
+.sea svg.waves{position:absolute;left:0;width:200%;height:100%;bottom:0}
+.w1{animation:drift 9s linear infinite}.w2{animation:drift 14s linear infinite reverse}
+@keyframes drift{to{transform:translateX(-50%)}}
+.celestial{position:absolute;right:28px;top:calc(26px + env(safe-area-inset-top,0px));width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff7cf,#ffc94a);box-shadow:0 0 0 10px rgba(255,201,74,.18),0 0 0 22px rgba(255,201,74,.08);transition:all .6s}
+.night .celestial{background:radial-gradient(circle at 35% 35%,#ffffff,#cfe0ff);box-shadow:inset -12px -4px 0 0 #9fb8e8,0 0 0 12px rgba(207,224,255,.08)}
+.stars{position:absolute;inset:0;opacity:0;transition:opacity .6s}.night .stars{opacity:1}
+.stars i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25}}
+.head{position:absolute;left:20px;top:calc(22px + env(safe-area-inset-top,0px));z-index:3}
+.head small{display:block;color:light-dark(#2a4e73,#a9c4e6);font-size:15px}
+.head .big{font-size:clamp(40px,12vw,52px);line-height:1.05;letter-spacing:-.02em;color:light-dark(#0b2e57,#ffffff)}
+.drip{position:absolute;right:26px;width:58px;height:70px;z-index:2;transition:bottom 1s cubic-bezier(.3,1.3,.5,1)}
+.drip{cursor:pointer}.drip svg{width:100%;height:100%;animation:bob 2.6s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes bob{50%{transform:translateY(-6px) rotate(4deg)}}
+.drip.cheer svg{animation:cheer .7s cubic-bezier(.3,1.6,.5,1) 2}
+@keyframes cheer{40%{transform:translateY(-34px) rotate(-12deg) scale(1.08)}}
+.bubble{position:absolute;left:16px;right:104px;top:calc(150px + env(safe-area-inset-top,0px));z-index:3;background:var(--card);border-radius:18px;padding:10px 14px;font-size:15px;box-shadow:var(--shadow);transform-origin:100% 80%;animation:pop .5s cubic-bezier(.3,1.5,.5,1) both .9s}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.bubble b{color:light-dark(#0b56c9,#7fd0ff)}.bubble.bad b{color:var(--coral)}
+/* tiles */
+.tiles{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding:0 16px;margin-top:-34px;position:relative;z-index:4}
+.tile{background:var(--card);border-radius:22px;padding:14px;box-shadow:var(--shadow);text-align:left;transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+.tile:active{transform:scale(.96)}
+.tile small{color:var(--mute);font-size:14px;display:block}
+.tile .num{font-size:24px;line-height:1.15;display:block}
+.tile em{font-style:normal;font-size:14px;color:var(--mute)}
+.tile.bad .num{color:var(--coral)}
+.meter{height:8px;border-radius:8px;background:var(--soft);margin-top:8px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--sea),var(--aqua));transition:width .9s cubic-bezier(.3,1.2,.5,1)}
+/* lists */
+h2{font-size:15px;color:var(--mute);margin:22px 20px 8px;font-weight:800}
+.list{margin:0 16px;background:var(--card);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.row{display:grid;grid-template-columns:44px minmax(0,1fr) auto 40px;align-items:center;gap:12px;padding:10px 8px 10px 12px;min-height:66px;border-top:1px solid var(--line);transition:background .2s,opacity .3s,transform .3s;animation:rowIn .45s cubic-bezier(.2,1.3,.4,1) both}
+.row:first-child{border-top:0}
+@keyframes rowIn{from{opacity:0;transform:translateY(12px)}}
+.row:active{background:var(--soft)}
+.ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.ico svg{width:22px;height:22px}
+.row .nm{font-size:16px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .st{font-size:14px;color:var(--mute)}
+.st.now{color:var(--coral)}.st.soon{color:#e0981a}
+.row .amt{font-size:16px;text-align:right}.amt.in{color:var(--kelp)}
+.row.paid .nm,.row.paid .amt{opacity:.45;text-decoration:line-through}
+.chk{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;position:relative}
+.chk span{width:26px;height:26px;border-radius:50%;border:2.5px solid var(--line);display:grid;place-items:center;transition:all .35s cubic-bezier(.3,1.7,.5,1)}
+.chk svg{width:15px;height:15px;stroke:#fff;stroke-width:3.5;fill:none;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .3s .1s}
+.paid .chk span{background:var(--kelp);border-color:var(--kelp);transform:scale(1.1)}
+.paid .chk svg{stroke-dashoffset:0}
+.alert{margin:16px 16px 0;padding:14px 16px;border-radius:20px;background:color-mix(in srgb,var(--coral) 14%,var(--card));border:2px solid color-mix(in srgb,var(--coral) 40%,transparent);display:flex;gap:12px;align-items:center}
+.alert b{color:var(--coral)}
+.empty{padding:22px;text-align:center;color:var(--mute)}
+/* confetti */
+.cf{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:60;animation:cf .7s cubic-bezier(.2,.8,.4,1) forwards}
+@keyframes cf{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+/* tab bar */
+.tabs{position:absolute;left:16px;right:84px;bottom:calc(14px + env(safe-area-inset-bottom,0px));height:64px;border-radius:32px;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:6px;z-index:20}
+.tabs button{position:relative;z-index:1;border-radius:26px;display:grid;place-items:center;font-size:12px;color:var(--mute);padding-top:2px;transition:color .25s}
+.tabs button svg{width:22px;height:22px;transition:transform .35s cubic-bezier(.3,1.7,.5,1)}
+.tabs button.on{color:light-dark(#0b56c9,#7fd0ff)}.tabs button.on svg{transform:translateY(-1px) scale(1.12)}
+.blob{position:absolute;top:6px;bottom:6px;left:6px;border-radius:26px;background:var(--soft);transition:transform .45s cubic-bezier(.3,1.35,.5,1)}
+.fab{position:absolute;right:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:64px;height:64px;border-radius:50%;background:var(--sea);color:#fff;z-index:20;display:grid;place-items:center;box-shadow:0 5px 0 var(--deep),0 10px 24px rgba(20,121,255,.4);transition:transform .15s,box-shadow .15s}
+.fab:active{transform:translateY(4px);box-shadow:0 1px 0 var(--deep),0 4px 10px rgba(20,121,255,.3)}
+.fab svg{width:28px;height:28px}
+/* page titles */
+.ptitle{padding:calc(22px + env(safe-area-inset-top,0px)) 20px 6px;display:flex;align-items:center;justify-content:space-between}
+.ptitle h1{font-size:34px;line-height:1.05;letter-spacing:-.02em;margin:0;font-weight:900}
+.round{width:44px;height:44px;border-radius:50%;background:var(--soft);display:grid;place-items:center}
+.round svg{width:20px;height:20px}
+/* calendar */
+.cal{margin:8px 16px 0;background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:12px 10px 14px;overflow:hidden}
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:0 4px 8px}
+.mhead b{font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.grid .dow{font-size:13px;color:var(--mute);padding:4px 0}
+.day{aspect-ratio:1/1.08;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:15px;position:relative;transition:transform .2s cubic-bezier(.3,1.6,.5,1),background .2s}
+.day:active{transform:scale(.9)}
+.day.out{opacity:.25;pointer-events:none}
+.day.tight{background:color-mix(in srgb,var(--sand) 26%,transparent)}
+.day.under{background:color-mix(in srgb,var(--coral) 22%,transparent)}
+.day.today{color:var(--sea);font-weight:900}
+.day.sel{background:var(--sea);color:#fff}
+.dots{display:flex;gap:3px;height:6px}.dots i{width:6px;height:6px;border-radius:50%}
+.gridwrap.slideL{animation:sl .35s cubic-bezier(.2,1.2,.4,1)}.gridwrap.slideR{animation:sr .35s cubic-bezier(.2,1.2,.4,1)}
+@keyframes sl{from{transform:translateX(40px);opacity:0}}@keyframes sr{from{transform:translateX(-40px);opacity:0}}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--mute);padding:10px 6px 0}
+.legend span{display:flex;align-items:center;gap:6px}.legend i{width:12px;height:12px;border-radius:4px}
+.daysum{margin:18px 20px 8px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.daysum b{font-size:18px}
+/* insights */
+.donut{position:relative;width:min(240px,64vw);aspect-ratio:1;margin:10px auto 4px}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut circle{fill:none;stroke-width:26;stroke-linecap:round;transition:stroke-dasharray 1s cubic-bezier(.3,1.1,.5,1),stroke-dashoffset 1s cubic-bezier(.3,1.1,.5,1)}
+.donut .mid{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.donut .mid small{color:var(--mute);font-size:14px}.donut .mid .num{font-size:30px}
+.say{margin:6px 20px 0;padding:12px 14px;border-radius:18px;background:var(--soft);display:flex;gap:10px;align-items:center;font-size:15px}
+.say svg{flex:none;width:34px;height:40px}
+.cat{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px;border-top:1px solid var(--line);width:100%;text-align:left}
+.cat:first-child{border-top:0}
+.bar{height:7px;border-radius:7px;background:var(--soft);margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;border-radius:7px;width:0;transition:width .9s cubic-bezier(.3,1.2,.5,1)}
+.cat small{color:var(--mute);font-size:13px}
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 16px}
+.flow div{background:var(--card);box-shadow:var(--shadow);border-radius:18px;padding:12px}
+.flow small{color:var(--mute);font-size:13px;display:block}.flow .num{font-size:19px}
+/* settings */
+.set{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid var(--line);min-height:60px}
+.set:first-child{border-top:0}
+.seg{display:inline-grid;grid-auto-flow:column;background:var(--soft);border-radius:14px;padding:4px;gap:2px}
+.seg button{padding:8px 12px;border-radius:10px;font-size:14px;color:var(--mute);min-height:36px}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.step{display:flex;align-items:center;gap:10px}
+.step button{width:40px;height:40px;border-radius:12px;background:var(--soft);font-size:22px;font-weight:900}
+a.link{color:var(--sea);text-decoration:none;font-weight:800}
+.note{font-size:13px;color:var(--mute);margin:10px 20px}
+/* sheets */
+.veil{position:absolute;inset:0;background:rgba(3,20,40,.38);opacity:0;pointer-events:none;transition:opacity .3s;z-index:40}
+.veil.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:92%;overflow-y:auto;background:var(--bg);border-radius:28px 28px 0 0;z-index:41;transform:translateY(105%);transition:transform .5s cubic-bezier(.2,1.15,.35,1);padding:8px 18px calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet.on{transform:none}
+.sheet.drag{transition:none}
+.grab{height:28px;display:grid;place-items:center;cursor:grab;touch-action:none}.grab i{width:44px;height:5px;border-radius:5px;background:var(--line)}
+.dhead{text-align:center;padding:4px 0 14px}
+.dhead .ico{width:64px;height:64px;border-radius:20px;margin:0 auto 10px;animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+.dhead .ico svg{width:30px;height:30px}
+.dhead h3{margin:0;font-size:24px;font-weight:900}
+.dhead .num{font-size:30px}
+.dhead small{color:var(--mute)}
+.facts{background:var(--card);border-radius:20px;box-shadow:var(--shadow);margin-bottom:14px}
+.facts div{display:flex;justify-content:space-between;padding:13px 16px;border-top:1px solid var(--line)}
+.facts div:first-child{border-top:0}.facts span{color:var(--mute)}
+.btn{display:block;width:100%;min-height:54px;border-radius:18px;font-size:17px;font-weight:900;color:#fff;background:var(--sea);box-shadow:0 5px 0 var(--deep);transition:transform .12s,box-shadow .12s;margin-top:8px}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--deep)}
+.btn.green{background:var(--kelp);box-shadow:0 5px 0 #0e7d4a}
+.btn.ghost{background:var(--soft);color:var(--ink);box-shadow:0 5px 0 var(--line)}
+.btn.red{background:transparent;color:var(--coral);box-shadow:none;min-height:44px}
+/* add sheet */
+.inout{display:grid;grid-template-columns:1fr 1fr;background:var(--soft);border-radius:16px;padding:4px;margin-bottom:10px;position:relative}
+.inout button{min-height:44px;border-radius:12px;position:relative;z-index:1;color:var(--mute);transition:color .25s}
+.inout button.on{color:#fff}
+.inout .pill{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:12px;background:var(--coral);transition:transform .4s cubic-bezier(.3,1.4,.5,1),background .3s}
+.inout.in .pill{transform:translateX(100%);background:var(--kelp)}
+.amtshow{text-align:center;font-size:clamp(44px,14vw,56px);font-weight:900;letter-spacing:-.02em;padding:6px 0}
+.amtshow.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:6px 0 12px}
+.pad button{min-height:52px;border-radius:16px;background:var(--card);font-size:22px;font-weight:900;box-shadow:0 4px 0 var(--line),0 1px 0 var(--line) inset;transition:transform .08s,box-shadow .08s}
+.pad button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.field{width:100%;min-height:52px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:800 16px Nunito,system-ui,sans-serif;padding:0 14px;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chips button{min-height:40px;padding:0 14px;border-radius:20px;background:var(--soft);font-size:15px;transition:transform .2s cubic-bezier(.3,1.6,.5,1),background .2s,color .2s}
+.chips button.on{background:var(--ink);color:var(--bg);transform:scale(1.04)}
+.lbl{font-size:14px;color:var(--mute);margin:4px 2px 6px}
+/* toast */
+.toast{position:absolute;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;background:var(--ink);color:var(--bg);border-radius:20px;padding:10px 10px 10px 16px;display:flex;gap:12px;align-items:center;z-index:50;transition:all .4s cubic-bezier(.3,1.5,.5,1);white-space:nowrap;font-size:15px}
+.toast.on{transform:translate(-50%,0);opacity:1}
+.toast button{background:color-mix(in srgb,var(--bg) 18%,transparent);border-radius:14px;padding:6px 12px;color:var(--bg)}
+/* splash */
+.splash{position:absolute;inset:0;z-index:80;background:linear-gradient(var(--sea),var(--deep));display:grid;place-items:center;transition:opacity .45s,visibility .45s}
+.splash.done{opacity:0;visibility:hidden}
+.splash .d{width:84px;height:100px;animation:fall .8s cubic-bezier(.5,0,.75,0) both}
+@keyframes fall{from{transform:translateY(-60vh) scaleY(1.2)}80%{transform:translateY(0) scaleY(1.1)}90%{transform:scaleY(.8) scaleX(1.15)}}
+.splash .ring{position:absolute;width:30px;height:10px;border-radius:50%;border:3px solid rgba(255,255,255,.7);top:calc(50% + 46px);left:calc(50% - 15px);opacity:0;animation:ring .9s ease-out .75s}
+@keyframes ring{0%{opacity:1}100%{transform:scale(7);opacity:0}}
+.splash p{position:absolute;bottom:22%;width:100%;text-align:center;color:#fff;font-size:22px;font-weight:900;margin:0;opacity:0;animation:pop .5s .8s both}
+.sample{font-size:13px;color:var(--mute);text-align:center;margin:18px 20px 0}
+/* motivation */
+.chipsrow{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.pchip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 8px;border-radius:16px;background:color-mix(in srgb,var(--card) 80%,transparent);font-size:14px;font-weight:900;box-shadow:0 2px 0 rgba(0,40,90,.08)}
+.pchip svg{width:20px;height:20px}
+.pchip.streak{color:#e0681a}.pchip.lvl{color:light-dark(#0b56c9,#7fd0ff)}
+.card{margin:16px 16px 0;background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:16px}
+.chead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.chead b{font-size:18px;font-weight:900}.chead small{color:var(--mute);font-size:14px}
+.xp{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:13px;background:color-mix(in srgb,var(--sand) 35%,transparent);color:light-dark(#9a6400,#ffd77a);font-size:13px;font-weight:900;white-space:nowrap}
+.mis{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.mis:first-of-type{border-top:0}
+.mis .tick{width:32px;height:32px;border-radius:50%;border:2.5px solid var(--line);display:grid;place-items:center;transition:all .4s cubic-bezier(.3,1.7,.5,1)}
+.mis .tick svg{width:16px;height:16px;stroke:#fff;stroke-width:3.5;fill:none;opacity:0}
+.mis.done .tick{background:var(--sand);border-color:var(--sand);transform:rotate(-8deg) scale(1.08)}
+.mis.done .tick svg{opacity:1}
+.mis.done .mt{opacity:.5;text-decoration:line-through}
+.mis .mt{font-size:16px}.mis small{display:block;color:var(--mute);font-size:13px;text-decoration:none}
+.mis button.go{min-height:36px;padding:0 12px;border-radius:12px;background:var(--soft);font-size:14px;font-weight:900;color:light-dark(#0b56c9,#7fd0ff)}
+.ringsm{width:46px;height:46px;flex:none}
+.goalbar{height:18px;border-radius:10px;background:var(--soft);overflow:hidden;position:relative;margin:6px 0 4px}
+.goalbar i{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--kelp),#5fe0a0);transition:width 1s cubic-bezier(.3,1.3,.5,1);position:relative}
+.goalbar i::after{content:"";position:absolute;left:8px;right:8px;top:4px;height:4px;border-radius:4px;background:rgba(255,255,255,.45)}
+.goalnums{display:flex;justify-content:space-between;font-size:14px;color:var(--mute)}
+.goalnums b{color:var(--ink);font-size:18px}
+.btnrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:10px}
+.btnrow .btn{margin:0;min-height:48px;font-size:16px}
+.float{position:fixed;z-index:70;font-weight:900;font-size:18px;color:#e0981a;pointer-events:none;animation:flt 1s ease-out forwards;white-space:nowrap;text-shadow:0 2px 0 var(--bg)}
+@keyframes flt{to{transform:translateY(-60px);opacity:0}}
+.cele{position:absolute;inset:0;z-index:75;display:grid;place-items:center;background:linear-gradient(light-dark(#e9f7ff,#071a33),light-dark(#c4ecff,#0b3566));opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;padding:24px;text-align:center}
+.cele.on{opacity:1;visibility:visible}
+.cele .cd{width:120px;height:144px;margin:0 auto 10px}
+.cele.on .cd svg{animation:cheer .8s cubic-bezier(.3,1.6,.5,1) .2s 3}
+.cele h2{font-size:34px;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin:0 0 8px;font-weight:900}
+.cele p{color:var(--mute);margin:0 0 18px;font-size:17px}
+.cele .xpbig{display:inline-block;font-size:22px;padding:8px 18px;border-radius:18px;background:var(--sand);color:#5a3a00;font-weight:900;margin-bottom:24px;animation:pop .5s cubic-bezier(.3,1.6,.5,1) .5s both}
+.cele .btn{max-width:340px;margin:0 auto}
+.rain{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;animation:rain linear forwards;pointer-events:none}
+@keyframes rain{to{transform:translateY(110vh) rotate(720deg)}}
+.lvlcard{display:grid;grid-template-columns:86px minmax(0,1fr);gap:14px;align-items:center}
+.lvlcard svg.big{width:86px;height:104px}
+.lvlcard b{font-size:24px;font-weight:900;display:block;line-height:1.1}
+.lvlcard small{color:var(--mute)}
+.xpbar{height:14px;border-radius:8px;background:var(--soft);overflow:hidden;margin-top:8px}
+.xpbar i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--sand),#ffdf85);transition:width 1s cubic-bezier(.3,1.3,.5,1)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;text-align:center}
+.week div{font-size:13px;color:var(--mute)}
+.week span{display:grid;place-items:center;margin:4px auto 0;width:36px;height:36px;border-radius:50%;background:var(--soft)}
+.week span.on{background:linear-gradient(#ffb547,#ff7a1a);color:#fff;box-shadow:0 3px 0 #c65a0c}
+.week span svg{width:18px;height:18px}
+.badges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.badge{text-align:center;font-size:12px;line-height:1.2;color:var(--mute)}
+.badge .med{width:62px;height:62px;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.15);transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.badge .med svg{width:28px;height:28px}
+.badge.lock .med{background:var(--soft)!important;color:var(--mute);box-shadow:none}
+.badge.lock{opacity:.7}
+.badge:active .med{transform:scale(.92) rotate(-6deg)}
+.badge b{display:block;color:var(--ink);font-size:13px}
+.quote{font-size:15px;color:var(--mute);text-align:center;margin:18px 28px 0}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+[hidden]{display:none!important}
+.banner{border:2px solid color-mix(in srgb,var(--sea) 30%,transparent)}
+.set small{font-size:13px}
+form{margin:0}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="splash" id="splash"><svg class="d" viewBox="0 0 60 72"><use href="#dripShape"/></svg><div class="ring"></div><p>Waterline Lite</p></div>
+
+  <section class="view on" id="v-today">
+    <div class="sea" id="sea">
+      <div class="stars" id="stars"></div>
+      <div class="celestial"></div>
+      <div class="head"><small>Balance today</small><div class="big num" id="bal">$0</div><div class="chipsrow"><button class="pchip streak" id="streakChip"></button><button class="pchip lvl" id="lvlChip"></button></div></div>
+      <svg class="waves" id="waves" viewBox="0 0 800 300" preserveAspectRatio="none"></svg>
+      <div class="drip" id="drip" role="button" aria-label="Talk to Drip"><svg viewBox="0 0 60 72"><use href="#dripShape"/><g id="face"></g></svg></div>
+      <div class="bubble" id="bubble"></div>
+    </div>
+    <div class="tiles">
+      <button class="tile" id="tLow"><small id="lowLbl">Lowest point</small><span class="num" id="low">$0</span><em id="lowWhen"></em></button>
+      <button class="tile" id="tPaid"><small>This month</small><span class="num" id="paidCt">0/0</span><em>bills paid</em><div class="meter"><i id="paidBar"></i></div></button>
+    </div>
+    <div id="modeBox"></div>
+    <div id="alertBox"></div>
+    <div id="missions"></div>
+    <div id="goalCard"></div>
+    <h2>Next 7 days</h2><div class="list" id="soon"></div>
+    <h2>After that</h2><div class="list" id="later"></div>
+    <p class="quote" id="quote"></p>
+  </section>
+
+  <section class="view" id="v-cal">
+    <div class="ptitle"><h1>Calendar</h1></div>
+    <div class="cal">
+      <div class="mhead"><button class="round" id="mPrev" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><b id="mName"></b><button class="round" id="mNext" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
+      <div class="gridwrap" id="gridwrap"><div class="grid" id="grid"></div></div>
+      <div class="legend"><span><i style="background:color-mix(in srgb,var(--sand) 40%,transparent)"></i>Below cushion</span><span><i style="background:color-mix(in srgb,var(--coral) 35%,transparent)"></i>Under zero</span></div>
+    </div>
+    <div class="daysum"><b id="dName"></b><span>ends at <span class="num" id="dBal"></span></span></div>
+    <div class="list" id="dList"></div>
+  </section>
+
+  <section class="view" id="v-ins">
+    <div class="ptitle"><h1 id="insTitle">Where it goes</h1><button class="round" id="insBack" hidden aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+    <div class="donut"><svg viewBox="0 0 200 200" id="donut"></svg><div class="mid"><small id="dMidL">Every month</small><span class="num" id="dMid"></span></div></div>
+    <div class="say" id="say"></div>
+    <h2 id="catHead">By kind</h2><div class="list" id="cats"></div>
+    <h2>A typical month</h2>
+    <div class="flow"><div><small>Coming in</small><span class="num" id="fIn" style="color:var(--kelp)"></span></div><div><small>Going out</small><span class="num" id="fOut"></span></div><div><small>Left over</small><span class="num" id="fLeft"></span></div></div>
+    <p class="note">From the bills and income in your plan. Weekly and bi-weekly items are turned into a monthly amount; yearly ones are spread over twelve months.</p>
+  </section>
+
+  <section class="view" id="v-goals">
+    <div class="ptitle"><h1>Goals</h1><button class="round" id="gearBtn" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></button></div>
+    <div class="card lvlcard" id="lvlCard"></div>
+    <div class="card"><div class="chead"><b id="wkTitle"></b><small>this week</small></div><div class="week" id="week"></div></div>
+    <div class="card" id="goalCard2"></div>
+    <div class="card" id="debtCard"></div>
+    <div class="card"><div class="chead"><b>Badges</b><small id="bdCount"></small></div><div class="badges" id="badges"></div></div>
+  </section>
+
+  <section class="view" id="v-you">
+    <div class="ptitle"><h1>Settings</h1><button class="round" id="youBack" aria-label="Back to goals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+    <h2>Account</h2>
+    <div class="list" id="acctBox"></div>
+    <h2>Money</h2>
+    <div class="list">
+      <button class="set" id="balRow" style="width:100%;text-align:left"><span>Balance today</span><b class="num" id="bVal"></b></button>
+      <div class="set"><span>Cushion</span><div class="step"><button id="cMinus" aria-label="Less">−</button><span class="num" id="cVal"></span><button id="cPlus" aria-label="More">+</button></div></div>
+    </div>
+    <p class="note">The cushion is the amount you'd rather not dip below. Drip gets nervous under it.</p>
+    <h2>Look</h2>
+    <div class="list"><div class="set"><span>Appearance</span><div class="seg" id="themeSeg"><button data-t="light">Light</button><button data-t="dark">Dark</button><button data-t="">Auto</button></div></div></div>
+    <h2>App</h2>
+    <div class="list">
+      <div class="set" id="installRow"><span>Put it on your home screen</span><button class="link" id="installBtn">Install</button></div>
+      <div class="set"><span>Full Waterline</span><a class="link" href="/">Open</a></div>
+      <div class="set"><span>Reset streak, XP and badges</span><button class="link" id="resetG" style="color:var(--coral)">Reset</button></div>
+    </div>
+    <p class="note" id="installNote"></p>
+    <p class="note">Your plan is the same one the full Waterline uses. Streaks, XP, badges and paid ticks are kept on this device.</p>
+  </section>
+
+  <nav class="tabs" id="tabs">
+    <div class="blob" id="blob"></div>
+    <button data-v="today" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 20c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M12 3l3 5a3.5 3.5 0 1 1-6 0z"/></svg>Today</button>
+    <button data-v="cal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
+    <button data-v="ins"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg>Insights</button>
+    <button data-v="goals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>Goals</button>
+  </nav>
+  <button class="fab" id="fab" aria-label="Add a bill or income"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+
+  <div class="veil" id="veil"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab" id="grab"><i></i></div><div id="sheetBody"></div></div>
+  <div class="cele" id="cele"><div><div class="cd"><svg viewBox="0 0 60 72"><use href="#dripShape"/><g id="celeFace"></g></svg></div><h2 id="celeT"></h2><p id="celeS"></p><div class="xpbig" id="celeX"></div><button class="btn green" id="celeGo">Keep going</button></div></div>
+  <div class="toast" id="toast"><span id="toastMsg"></span><button id="toastUndo">Undo</button></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fe0f5"/><stop offset="1" stop-color="#1479ff"/></linearGradient>
+  <symbol id="dripShape" viewBox="0 0 60 72"><path d="M30 2C30 2 6 32 6 46a24 24 0 0 0 48 0C54 32 30 2 30 2z" fill="url(#dg)"/><path d="M18 40c0-6 4-12 7-16" stroke="#fff" stroke-opacity=".6" stroke-width="4" stroke-linecap="round" fill="none"/></symbol>
+</defs></svg>
+
+<script type="module" src="/lite/app.js"></script>
+</body>
+</html>

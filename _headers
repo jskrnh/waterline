@@ -28,6 +28,16 @@
 /manifest.webmanifest
   Cache-Control: public, max-age=0, must-revalidate
 
+# Waterline Lite lives in /lite/ and follows the same rules.
+/lite/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/lite/*.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/lite/manifest.webmanifest
+  Cache-Control: public, max-age=0, must-revalidate
+
 # Icons and the share card change rarely — a day of caching is fine.
 /*.png
   Cache-Control: public, max-age=86400
